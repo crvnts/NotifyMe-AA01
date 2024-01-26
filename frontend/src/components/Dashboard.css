@@ -1,0 +1,111 @@
+.background{
+    background: #F0F0F0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: fill;
+}
+
+.dash-body{
+    margin: auto;
+    position: fixed;
+    width: 70%;
+    height: 90%;
+    background: #FEFEFE;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+    justify-content: center;
+}
+
+.dash-container{
+    margin: auto;
+    position: absolute;
+    align-items: center;
+    top: 5%;
+    left: 16%;
+    /* transform: translate(0, -50%); */
+    width: 70%;
+    /* padding: 16px; */
+    /* background: rgba(180, 180, 180, 0.9); */
+    filter: brightness(110%);
+    border-radius: 4px;
+}
+
+.dash-side-menu{
+    position: absolute;
+    width: 30%;
+    height: 839px;
+    left: 33px;
+    top: 30px;
+    bottom:auto;
+    align-items: center;
+
+    background: #323484;
+    border-radius: 25px;
+}
+
+.dash-smenu-text{
+    color: white;
+    font-family: 'Poppins';
+    font-size: 46px;
+    font-weight: 700;
+}
+
+.plan-trip-widget{
+    position:absolute;
+    width: 20%;
+    height: 31%;
+    left: 361px;
+    top: 121px;
+
+    background: rgba(249, 239, 239, 0.9);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
+
+.widget-text{
+    /* position: absolute;
+    left: 6%;
+    width: fit-content;     */
+    font-family: 'Zen Maru Gothic';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 70px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    color: #1E1E1E;
+}
+
+.weather-widget{
+    position: relative;
+    width: 20%;
+    height: 31%;
+    left: 50%;
+    top: 121px;
+
+    background: radial-gradient(57.07% 48.18% at 50% 39.45%, rgba(255, 255, 255, 0.2) 0%, rgba(30, 30, 30, 0.05) 71.87%), #134CB4;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+
+}
+
+.ad-widget{
+    position: relative;
+    width: 20%;
+    height: 31%;
+    left: 60%;
+    top: 121px;
+
+    background: rgba(249, 239, 239, 0.9);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}
