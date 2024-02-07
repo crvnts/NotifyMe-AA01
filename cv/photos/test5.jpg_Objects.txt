@@ -1,0 +1,1 @@
+{"Object 1, bounding box": {"xmin": 346, "ymin": 339, "xmax": 494, "ymax": 436}, "Object 2, bounding box": {"xmin": 480, "ymin": 237, "xmax": 586, "ymax": 316}, "Object 3, bounding box": {"xmin": 52, "ymin": 545, "xmax": 227, "ymax": 738}}
