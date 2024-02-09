@@ -30,7 +30,7 @@ def trained_yolov4_model():
         training=False,
         yolo_max_boxes=100,
         yolo_iou_threshold=0.5,
-        yolo_score_threshold=0.50,
+        yolo_score_threshold=0.30,
     )
     model.load_weights('yolov4.h5')
     return model
@@ -99,25 +99,6 @@ def Car_detection_single_photo(input_photo):
     image= cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     return image
 
-def Car_detection_video(input_video_name, output_video_name, frames_to_save = 50):
-    model = trained_yolov4_model()
-    # load video
-    my_video = cv2.VideoCapture(input_video_name)
-    # write resulted frames to file
-    out = cv2.VideoWriter(output_video_name, cv2.VideoWriter_fourcc(*'MJPG'), 30, (WIDTH ,HEIGHT))
-    success = 1
-    i = 0
-    while success and i < frames_to_save:                                 # While there are more frames in the video
-        # function extract frames
-        success, image = my_video.read()                                  # extract a frame
-        if success:
-            result_img = proccess_frame(tf.convert_to_tensor(image), model)   # tag cars on the frame
-
-            out.write((result_img*255).astype('uint8'))                                             # write resulted frame to the video file
-            i = i + 1
-            print(i)
-    out.release()                                                         # Close the video writer
-
 #######   main   ####################################################################
 
 if __name__ == "__main__":
@@ -131,5 +112,3 @@ if __name__ == "__main__":
     cv2.destroyAllWindows()
     # Save photo
     cv2.imwrite(imagefile+'_object_detected.jpg', output_image*255)
-    ####   Detect Cars on a video and save ######
-    ##Car_detection_video(input_video_name='photos/car_chase_01.mp4', output_video_name ='photos/delete.avi', frames_to_save = 20)
