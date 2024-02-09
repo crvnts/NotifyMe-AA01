@@ -2,21 +2,6 @@ import React from 'react';
 //import Navbar from './Navbar';
 import './Dashboard.css';
 
-/*
-function Dashboard() {
-    return(
-        <>
-        <Router>
-            <Navbar />
-            <Switch>
-                <Route path='/' exact />
-            </Switch>
-        </Router>
-        </>
-    );
-};
-*/
-
 function Dashboard() {
     /*
     useEffect( () => {
@@ -39,14 +24,16 @@ function Dashboard() {
                         <div className="dash-smenu-text">NotifyMe</div>
                     </div>
                 </div>
-                <div className="plan-trip-widget">
-                    <div className="widget-text">Plan a Trip</div>
-                </div>
-                <div className="weather-widget">
-                    <div className="widget-text">Headed out?</div>
-                </div>
-                <div className="ad-widget">
-                    <div className="widget-text">Uber Eatz Ad</div>
+                <div className='widget-top-row'>
+                    <div className="plan-trip-widget">
+                        <div className="widget-text">Plan a Trip</div>
+                    </div>
+                    <div className="weather-widget">
+                        <div className="widget-text">Headed out?</div>
+                    </div>
+                    <div className="ad-widget">
+                        <div className="widget-text">Uber Eatz Ad</div>
+                    </div>
                 </div>
             </div>
         </div>
