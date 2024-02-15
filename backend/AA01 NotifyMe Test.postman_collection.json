@@ -68,6 +68,34 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/authTest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlc3QxMjM0In0.x8QqB7Y4q4IKFa4b8WoYfUIQ2_SeMuZby6LCC4myeqA",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:5000/authTest",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"authTest"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

@@ -1,7 +1,7 @@
-from src import app
-from flask import render_template, request, redirect, flash, url_for, Response
+from src import app, jwtokenUtil
+from flask import render_template, request, redirect, flash, url_for, Response, jsonify
 from bson import ObjectId, json_util
-import json
+import json, jwt
 import bcrypt
 from src import db
 from datetime import datetime
@@ -52,10 +52,34 @@ def login():
         password = request_data['password']
     try:
         user = db.users.find_one({"username":username})
-        #return Response(json.loads(json_util.dumps(user)),status=201)
     except Exception as e:
         print("error", e)
     
     if (check_password(password, user['password'])):
-        return Response("Logged into " + user['username'], status =201 )
+        try:
+            # token should expire after 24 hrs
+            user["token"] = jwt.encode(
+                {"username": user["username"]},
+                app.config["SECRET_KEY"],
+                algorithm="HS256"
+            )
+            return {
+                "message": "Successfully fetched auth token",
+                "data": user["token"]
+            }
+        except Exception as e:
+            return {
+                "error": "Something went wrong",
+                "message": str(e)
+            }, 500
+    return {
+        "message": "Error fetching auth token!, invalid email or password",
+        "data": None,
+        "error": "Unauthorized"
+    }, 404
+
+@app.route("/authTest",methods = {'POST'})
+@jwtokenUtil.token_required
+def authTest(current_user):
+    return jsonify(current_user['username'])
     
