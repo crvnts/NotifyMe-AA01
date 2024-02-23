@@ -42,7 +42,15 @@ def insert_user():
             "postal":postal
         },
         "tripCount": 0
-    }    
+    }
+    if db.users.find_one({"username":username}):
+        return {
+            "error":"Username is already taken"
+        }, 400
+    if db.users.find_one({"email":email}):
+        return {
+            "error":"Email is already used"
+        }, 400
     try: 
         db.users.insert_one(newUser)
         return Response("User added successfully", status = 201)
@@ -102,6 +110,11 @@ def login():
 def authTest(current_user):
     return jsonify(current_user['username'])
 
+@app.route("/userAddress",methods ={'GET'})
+@jwtokenUtil.token_required
+def userAddress(current_user):
+    return jsonify(current_user['address'])
+
 @app.route("/addTripCounter",methods ={'POST'})
 @jwtokenUtil.token_required
 def addTripCounter(current_user):
@@ -117,8 +130,4 @@ def addTripCounter(current_user):
             "error": "Unable to update trip count",
             "message": str(e)
         }, 500
-    return {
-        "error": "Something went wrong",
-        "message": str(e)
-    }, 500
     
