@@ -4,15 +4,21 @@
     
 }
 
-.Side-Menu-Button {
+.side-menu-button {
     color:'white';
     font-size: '16px';
     width: 64;
     height: 64;
 }
 
-.Side-Menu-Text {
+.side-menu-text {
     color: white;
     font-family: 'Zen Maru Gothic';
     margin: '16px 0';
+}
+
+.plan-trip-widget {
+    font-family: 'Zen Maru Gothic';
+    background-color: '#0092ff';
+    padding: '8px 0';
 }
