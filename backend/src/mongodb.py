@@ -131,3 +131,17 @@ def addTripCounter(current_user):
             "message": str(e)
         }, 500
     
+@app.route("/getUser",methods={'GET'})
+@jwtokenUtil.token_required
+def getUserInfo(current_user):
+    newUser ={
+        "name": current_user['name'],       
+        "email": current_user['email'],
+        "username": current_user['username'],
+        "address": current_user['address'],
+        "tripCount": current_user['tripCount']
+    }
+    return {
+        "data": newUser,
+        "message": "Retrieved user"
+    }, 201
