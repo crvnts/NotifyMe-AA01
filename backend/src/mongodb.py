@@ -16,15 +16,20 @@ def check_password(plain_password, hashed_password):
 def insert_user():
     request_data = request.get_json()
     if request.method == "POST":
-        name = request_data['name']
-        email = request_data['email']
-        username = request_data['username']
-        password = request_data['password']
-        street = request_data['street']
-        city = request_data['city']
-        province = request_data['province']
-        postal = request_data['postal']
-    
+        try:
+            name = request_data['name']
+            email = request_data['email']
+            username = request_data['username']
+            password = request_data['password']
+            street = request_data['street']
+            city = request_data['city']
+            province = request_data['province']
+            postal = request_data['postal']
+        except Exception as e:
+            return {
+                "error": "Missing field data",
+                "message": str(e)
+            }, 500     
     newUser ={
         "name": name,       
         "email": email,
@@ -35,25 +40,46 @@ def insert_user():
             "city":city,
             "province":province,
             "postal":postal
-        }
-}    
+        },
+        "tripCount": 0
+    }
+    if db.users.find_one({"username":username}):
+        return {
+            "error":"Username is already taken"
+        }, 400
+    if db.users.find_one({"email":email}):
+        return {
+            "error":"Email is already used"
+        }, 400
     try: 
         db.users.insert_one(newUser)
         return Response("User added successfully", status = 201)
     except Exception as e:
-        print("An exception has occurred ::",e)
-        return False
+        return {
+            "error": "Something went wrong",
+            "message": str(e)
+        }, 500
     
 @app.route("/login",methods = {'POST'})
 def login():
     request_data = request.get_json()
     if request.method == "POST":
-        username = request_data['username']
-        password = request_data['password']
+        try:
+            username = request_data['username']
+            password = request_data['password']
+        except Exception as e:
+            return {
+                "error": "Missing field data",
+                "message": str(e)
+            }, 500
+    
     try:
         user = db.users.find_one({"username":username})
     except Exception as e:
-        print("error", e)
+        return {
+            "error": "Unable to find user",
+            "message": str(e)
+        }, 500
     
     if (check_password(password, user['password'])):
         try:
@@ -69,9 +95,10 @@ def login():
             }
         except Exception as e:
             return {
-                "error": "Something went wrong",
+                "error": "Error fetching auth token",
                 "message": str(e)
             }, 500
+        
     return {
         "message": "Error fetching auth token!, invalid email or password",
         "data": None,
@@ -82,4 +109,39 @@ def login():
 @jwtokenUtil.token_required
 def authTest(current_user):
     return jsonify(current_user['username'])
+
+@app.route("/userAddress",methods ={'GET'})
+@jwtokenUtil.token_required
+def userAddress(current_user):
+    return jsonify(current_user['address'])
+
+@app.route("/addTripCounter",methods ={'POST'})
+@jwtokenUtil.token_required
+def addTripCounter(current_user):
+    newCounter = current_user['tripCount']+1
+    try:
+        user = db.users.update_one({"username":current_user['username']},{"$set":{"tripCount":newCounter}})
+        return {
+            "message": "Updated user trip count",
+            "data": newCounter,
+        }
+    except Exception as e:
+        return {
+            "error": "Unable to update trip count",
+            "message": str(e)
+        }, 500
     
+@app.route("/getUser",methods={'GET'})
+@jwtokenUtil.token_required
+def getUserInfo(current_user):
+    newUser ={
+        "name": current_user['name'],       
+        "email": current_user['email'],
+        "username": current_user['username'],
+        "address": current_user['address'],
+        "tripCount": current_user['tripCount']
+    }
+    return {
+        "data": newUser,
+        "message": "Retrieved user"
+    }, 201
