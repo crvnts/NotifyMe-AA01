@@ -1,59 +1,101 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Form, Input, Button, Alert, Layout } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+const { Content } = Layout;
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent the form from refreshing the page
+  const handleLogin = async () => {
+    const loginDetails = {
+      username: username,
+      password: password,
+    };
+
     try {
-      const response = await fetch("/login", {
+      const response = await fetch("http://127.0.0.1:5000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username, password: password }),
+        body: JSON.stringify(loginDetails),
       });
+
       if (response.ok) {
         const data = await response.json();
         setLoginStatus("Success");
         console.log("login success", data);
+        navigate("/dashboard"); // Redirect to dashboard or another route on success
       } else {
-        // Handle server-side validation errors or other issues
         setLoginStatus("Login failed. Please check your credentials.");
       }
     } catch (error) {
-      // Handle network errors
       console.error("Login error:", error);
       setLoginStatus("Login failed. Please try again later.");
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      {loginStatus && <p>{loginStatus}</p>}
-    </div>
+    <Layout
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Content style={{ maxWidth: "300px", width: "100%", padding: "20px" }}>
+        <Form
+          name="normal_login"
+          className="login-form"
+          initialValues={{ remember: true }}
+          onFinish={handleLogin}
+        >
+          <Form.Item
+            name="username"
+            rules={[{ required: true, message: "Please input your Username!" }]}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: "Please input your Password!" }]}
+          >
+            <Input
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-form-button"
+              style={{ width: "100%" }}
+            >
+              Log in
+            </Button>
+          </Form.Item>
+          {loginStatus && (
+            <Alert
+              message={loginStatus}
+              type={loginStatus === "Success" ? "success" : "error"}
+              showIcon
+            />
+          )}
+        </Form>
+      </Content>
+    </Layout>
   );
 };
 
