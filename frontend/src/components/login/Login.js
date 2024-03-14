@@ -12,8 +12,8 @@ const Login = () => {
 
   const handleLogin = async () => {
     const loginDetails = {
-      username: "username",
-      password: "password",
+      username: username,
+      password: password,
     };
 
     try {
