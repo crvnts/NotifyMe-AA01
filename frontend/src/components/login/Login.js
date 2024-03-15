@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Button, Alert, Layout } from "antd";
+import { Form, Input, Button, Alert, Layout, Typography } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-const { Content } = Layout;
+const { Title } = Typography;
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -42,59 +42,110 @@ const Login = () => {
       style={{
         minHeight: "100vh",
         display: "flex",
-        alignItems: "center",
         justifyContent: "center",
+        alignItems: "center",
       }}
     >
-      <Content style={{ maxWidth: "300px", width: "100%", padding: "20px" }}>
-        <Form
-          name="normal_login"
-          className="login-form"
-          initialValues={{ remember: true }}
-          onFinish={handleLogin}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "300px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Title
+          level={0}
+          style={{
+            textAlign: "center",
+            marginBottom: "20px",
+            fontFamily: "Zen Maru Gothic",
+            fontWeight: "bold",
+          }}
         >
-          <Form.Item
-            name="username"
-            rules={[{ required: true, message: "Please input your Username!" }]}
+          NotifyMe System
+        </Title>
+        <div
+          style={{
+            padding: "24px", // Add some padding around the
+            borderRadius: "25px", // Rounded edges
+            boxShadow: "11px 11px 22px #e0e0e0,-11px -11px 22px #ffffff", // Optional: add a subtle shadow
+            background: "#ffffff", // White background
+            maxWidth: "300px", // Maintain the form size
+            width: "100%", // Responsive to container width
+            margin: "auto", // Center the box if the outer div is flex
+          }}
+        >
+          <Title
+            level={2}
+            style={{
+              textAlign: "center",
+              marginBottom: "20px",
+              fontFamily: "Zen Maru Gothic",
+            }}
           >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[{ required: true, message: "Please input your Password!" }]}
+            Login
+          </Title>
+          <Form
+            name="normal_login"
+            className="login-form"
+            initialValues={{ remember: true }}
+            onFinish={handleLogin}
           >
-            <Input
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-              style={{ width: "100%" }}
+            <Form.Item
+              name="username"
+              rules={[
+                { required: true, message: "Please input your Username!" },
+              ]}
             >
-              Log in
-            </Button>
-          </Form.Item>
-          {loginStatus && (
-            <Alert
-              message={loginStatus}
-              type={loginStatus === "Success" ? "success" : "error"}
-              showIcon
-            />
-          )}
-        </Form>
-      </Content>
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[
+                { required: true, message: "Please input your Password!" },
+              ]}
+            >
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="login-form-button"
+                style={{ width: "100%" }}
+              >
+                Log in
+              </Button>
+              <Button
+                type="link"
+                onClick={() => navigate("/register")} // Use navigate to redirect to the Register page
+                style={{ width: "100%" }}
+              >
+                Create New Account
+              </Button>
+            </Form.Item>
+            {loginStatus && (
+              <Alert
+                message={loginStatus}
+                type={loginStatus === "Success" ? "success" : "error"}
+                showIcon
+              />
+            )}
+          </Form>
+        </div>
+      </div>
     </Layout>
   );
 };
