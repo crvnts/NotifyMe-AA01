@@ -10,6 +10,8 @@ import {
 import Dashboard from "./components/dashboard/Dashboard";
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
+import DirectionsApp from "./components/directions/DirectionsApp";
+
 
 //const rootElement = document.getElementById("root");
 const App = () => {
@@ -21,6 +23,7 @@ const App = () => {
           <Route exact path="/" element={<Login />} />
           <Route exact path="/Register" element={<Register />} />
           <Route exact path="/Login" element={<Login />} />
+          <Route exact path="/directions" element={<DirectionsApp />} /> {/* Add the directions route */}
         </Routes>
       </Fragment>
     </Router>
