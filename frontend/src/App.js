@@ -1,9 +1,15 @@
-import './App.css';
-import React, { Fragment } from 'react';
-import { ReactDOM } from 'react';
-import { BrowserRouter as Router, Route, Routes, Switch } from 'react-router-dom';
-import Dashboard from './components/Dashboard/Dashboard';
-import Login from './components/Login/Login';
+import "./App.css";
+import React, { Fragment } from "react";
+import { ReactDOM } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Switch,
+} from "react-router-dom";
+import Dashboard from "./components/dashboard/Dashboard";
+import Login from "./components/login/Login";
+import Register from "./components/register/Register";
 
 //const rootElement = document.getElementById("root");
 const App = () => {
@@ -11,8 +17,10 @@ const App = () => {
     <Router>
       <Fragment>
         <Routes>
-          <Route exact path="/Dashboard" element={<Dashboard/>}/>
-          <Route exact path="/Login" element={<Login/>}/>
+          <Route exact path="/Dashboard" element={<Dashboard />} />
+          <Route exact path="/" element={<Login />} />
+          <Route exact path="/Register" element={<Register />} />
+          <Route exact path="/Login" element={<Login />} />
         </Routes>
       </Fragment>
     </Router>

@@ -11,7 +11,6 @@ def token_required(f):
         token = None
         if "Authorization" in request.headers:
             token = request.headers["Authorization"]
-            print(token)
         if not token:
             return {
                 "message": "Authentication Token is missing!",
@@ -20,9 +19,7 @@ def token_required(f):
             }, 401
         try:
             data=jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
-            print(data)
             current_user=db.users.find_one({"username":data['username']})
-            print(current_user)
             if current_user is None:
                 return {
                 "message": "Invalid Authentication token!",
