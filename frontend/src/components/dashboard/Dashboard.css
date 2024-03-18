@@ -1,8 +1,3 @@
-.Dashboard {
-    min-height: 100vh;
-    height: 100%;
-}
-
 .collapse-button {
     display: flex;
     margin-left: 1.5vw;
@@ -70,9 +65,3 @@
     background-color: '#0092ff';
     padding: '8px 10px';
 }
-
-.plan-trip-widget {
-    font-family: "Zen Maru Gothic";
-    background-color: "#0092ff";
-    padding: "8px 0";
-  }
