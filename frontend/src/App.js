@@ -8,7 +8,7 @@ import {
   Switch,
 } from "react-router-dom";
 import Dashboard from "./components/dashboardv2/Dashboard";
-import Login from "./components/Login/Login";
+import Login from "./components/login/Login";
 import Register from "./components/register/Register";
 
 //const rootElement = document.getElementById("root");
