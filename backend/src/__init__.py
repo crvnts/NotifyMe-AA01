@@ -8,4 +8,4 @@ app.config["MONGO_URI"] = "mongodb+srv://ryanj1534:Fe5uemCVwY8Rq1no@testaa01.2rn
 mongo = PyMongo(app)
 db = mongo.db
 
-from src import mongodb, jwtokenUtil
+from src import mongodb, ttcService, jwtokenUtil
