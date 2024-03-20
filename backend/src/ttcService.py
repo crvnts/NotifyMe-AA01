@@ -51,7 +51,11 @@ def getTTCAlerts():
         for route in response['generalCustom']:
             counter+=1
             alert_id =route['routeType']
-            description = route['description']
+            soup = BeautifulSoup(route['description'], 'html.parser')
+
+            # Get the cleaned text
+            cleaned_text = soup.get_text()
+            description = cleaned_text
             newAlert = {
                 'route':alert_id,
                 'description':description
