@@ -83,14 +83,92 @@ def detected_photo(boxes, scores, classes, detections,image,input_photo):
     # Save to name of file
     return objects
 
+def calculate_roi_area(roi_coordinates):
+    # Calculate area of the ROI defined by three points
+    x1, y1 = roi_coordinates[0]
+    x2, y2 = roi_coordinates[1]
+    x3, y3 = roi_coordinates[2]
+    
+    area = abs((x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2)) / 2)
+    return area
+
+def calculate_roi_coordinates(bounding_boxes_data):
+    if not bounding_boxes_data:
+        return None
+
+    all_x_coordinates = []
+    all_y_coordinates = []
+
+    # Parse bounding box data and collect all x and y coordinates
+    for object_data in bounding_boxes_data.values():
+        xmin = object_data["xmin"]
+        ymin = object_data["ymin"]
+        xmax = object_data["xmax"]
+        ymax = object_data["ymax"]
+
+        all_x_coordinates.extend([xmin, xmax])
+        all_y_coordinates.extend([ymin, ymax])
+
+    # Find extreme points
+    min_x = min(all_x_coordinates)
+    max_x = max(all_x_coordinates)
+    min_y = min(all_y_coordinates)
+    max_y = max(all_y_coordinates)
+
+    # Define ROI points: 2 at min y and 1 at max y
+    roi_coordinates = [
+        (min_x, min_y),  # Bottom-left
+        (max_x, min_y),  # Bottom-right
+        ((min_x + max_x) / 2, max_y)  # Top-middle
+    ]
+
+    return roi_coordinates
+
+def calculate_intersection_area(box, roi):
+    # Calculate the intersection area between a bounding box and the ROI
+    x_min = max(box[0], roi[0][0])
+    y_min = max(box[1], roi[0][1])
+    x_max = min(box[2], roi[1][0])
+    y_max = min(box[3], roi[2][1])
+
+    if x_max <= x_min or y_max <= y_min:
+        return 0
+    else:
+        return (x_max - x_min) * (y_max - y_min)
+
+def calculate_coverage_and_total_area(bounding_boxes_data, roi_coordinates):
+    total_area_covered = 0
+    for object_data in bounding_boxes_data.values():
+        box = (object_data["xmin"], object_data["ymin"], object_data["xmax"], object_data["ymax"])
+        intersection_area = calculate_intersection_area(box, roi_coordinates)
+        total_area_covered += intersection_area
+
+    roi_area = calculate_roi_area(roi_coordinates)
+    coverage_percentage = (total_area_covered / roi_area) * 100 if roi_area > 0 else 0
+
+    return total_area_covered, coverage_percentage
+
+def read_bounding_boxes_from_txt(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            bounding_boxes_data = json.load(file)
+        return bounding_boxes_data
+    except FileNotFoundError:
+        print("File not found.")
+        return None
+    except json.JSONDecodeError:
+        print("Error decoding JSON.")
+        return None
+
 @app.route("/test",methods={'GET'})
 def testApp():
     try:
-        my_image = load_image_to_tensor("photos/test4.jpg")
+        my_image = load_image_to_tensor("photos/test1.jpg")
         #Get trained yolov4 model
-        image = proccess_frame(my_image,"photos/test4.jpg")
+        image = proccess_frame(my_image,"photos/test1.jpg")
+        roi =calculate_roi_coordinates(image)
         return {
-            "data":image
+            "data":calculate_coverage_and_total_area(image,roi)
         },201
     except Exception as e:
         return {
