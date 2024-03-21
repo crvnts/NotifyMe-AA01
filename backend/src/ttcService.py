@@ -17,6 +17,38 @@ Alerts = {
     "alerts": [Alert]
 }
 
+def filter_df_by_current_hour(df):
+    est = pytz.timezone('America/New_York')
+    current_datetime = datetime.now(est)
+    current_hour = current_datetime.hour  # Get current hour
+
+    start_hour = current_hour - 6
+    end_hour = current_hour + 6
+
+    filtered_data = []
+    # Extract data for current day
+    current_day = current_datetime.strftime("%A")
+    
+    df_current_day = df[current_day]
+    if start_hour < 0:
+        # Adjust start hour to account for previous day
+        start_hour += 24
+
+        # Get the name of the previous day
+        previous_day = (current_datetime - timedelta(days=1)).strftime("%A")
+        df_prev_day = df[previous_day]
+        for i in range(start_hour, 24):
+            filtered_data.append([df_prev_day.name,i,df_prev_day[i]])  
+        for i in range(0,end_hour):
+            filtered_data.append([df_current_day.name,i,df_current_day[i]])  
+        return filtered_data
+
+    
+    for i in range(max(0, start_hour), min(24, end_hour + 1)):
+        filtered_data.append([df_current_day.name,i,df_current_day[i]])  
+
+    return filtered_data
+
 @app.route("/getAlerts", methods ={'GET'})
 def getTTCAlerts():
     alerts_list=[]
@@ -76,38 +108,6 @@ def getTTCAlerts():
         'data':updatedAlerts,
         'message':"Updated TTC Alerts"
     }, 200
-
-def filter_df_by_current_hour(df):
-    est = pytz.timezone('America/New_York')
-    current_datetime = datetime.now(est)
-    current_hour = current_datetime.hour  # Get current hour
-
-    start_hour = current_hour - 5
-    end_hour = current_hour + 6
-
-    filtered_data = []
-    # Extract data for current day
-    current_day = current_datetime.strftime("%A")
-    
-    df_current_day = df[current_day]
-    if start_hour < 0:
-        # Adjust start hour to account for previous day
-        start_hour += 24
-
-        # Get the name of the previous day
-        previous_day = (current_datetime - timedelta(days=1)).strftime("%A")
-        df_prev_day = df[previous_day]
-        for i in range(start_hour, 24):
-            filtered_data.append([df_prev_day.name,i,df_prev_day[i]])  
-        for i in range(0,end_hour):
-            filtered_data.append([df_current_day.name,i,df_current_day[i]])  
-        return filtered_data
-
-    
-    for i in range(max(0, start_hour), min(24, end_hour + 1)):
-        filtered_data.append([df_current_day.name,i,df_current_day[i]])  
-
-    return filtered_data
 
 @app.route("/getBusDelayData", methods ={'GET'})
 def getBusDelay():

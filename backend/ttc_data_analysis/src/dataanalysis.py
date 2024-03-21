@@ -16,11 +16,23 @@ def filter_non_zero_delay(df):
     """Filters out rows with Min Delay not equal to 0."""
     return df[df['Min Delay'] != 0]
 
-def separate_by_day_hour(df):
+def separate_by_day_hour_filter(df):
     """Separates the dataframe into separate dataframes based on day and hour, excluding 3 am to 5 am."""
     df['Time'] = pd.to_datetime(df['Time'])
     # Filter out hours from 3 am to 5 am inclusive
     df = df[~df['Time'].dt.hour.isin(range(3, 6))]
+    grouped_by_day_hour = df.groupby([df['Day'], df['Time'].dt.hour])
+    
+    day_hour_dataframes = {}
+    for (day, hour), group_df in grouped_by_day_hour:
+        day_hour_dataframes.setdefault(day, {}).setdefault(hour, group_df)
+    
+    return day_hour_dataframes
+
+def separate_by_day_hour(df):
+    """Separates the dataframe into separate dataframes based on day and hour, excluding 3 am to 5 am."""
+    df['Time'] = pd.to_datetime(df['Time'])
+    # Filter out hours from 3 am to 5 am inclusive
     grouped_by_day_hour = df.groupby([df['Day'], df['Time'].dt.hour])
     
     day_hour_dataframes = {}
@@ -79,7 +91,7 @@ def print_averages_and_frequency(average_delays, hourly_non_zero_delay_percentag
 
 def main():
         # URLs of the CSV files
-    url_2021 = 'https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/csv/ttc-subway-delay-data-2021.csv'
+    """ url_2021 = 'https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/csv/ttc-subway-delay-data-2021.csv'
     url_2022 = 'https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/csv/ttc-subway-delay-data-2022.csv'
     url_2023 = 'https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/csv/ttc-subway-delay-data-2023.csv'
     url_2024 = 'https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/csv/ttc-subway-delay-data-2024.csv'
@@ -105,8 +117,8 @@ def main():
     save_to_csv(average_delays, 'average_delays_subway.csv')
     
     # Save frequency data to CSV
-    save_to_csv(frequency, 'frequency_data_subway.csv')
-    """ url_2021 = 'https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/csv/ttc-bus-delay-data-2021.csv'
+    save_to_csv(frequency, 'frequency_data_subway.csv') """
+    url_2021 = 'https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/csv/ttc-bus-delay-data-2021.csv'
     url_2022 = 'https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/csv/ttc-bus-delay-data-2022.csv'
     url_2023 = 'https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/csv/ttc-bus-delay-data-2023.csv'
     url_2024 = 'https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/csv/ttc-bus-delay-data-2024.csv'
@@ -130,6 +142,6 @@ def main():
     save_to_csv(average_delays, 'average_delays_bus.csv')
     
     # Save frequency data to CSV
-    save_to_csv(frequency, 'frequency_data_bus.csv')  """
+    save_to_csv(frequency, 'frequency_data_bus.csv') 
 if __name__ == "__main__":
     main()
