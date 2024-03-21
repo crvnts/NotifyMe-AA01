@@ -7,7 +7,7 @@ import {
   Routes,
   Switch,
 } from "react-router-dom";
-import Dashboard from "./components/dashboard/Dashboard";
+import Dashboard from "./components/dashboardv2/Dashboard";
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
 import DirectionsApp from "./components/directions/DirectionsApp"
