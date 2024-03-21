@@ -128,9 +128,7 @@ def getTTCAlerts():
 def getBusDelay():
     try:
         average_delays=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/average_delays_bus.csv')
-        frequency=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/frequency_data_bus.csv')
         average_delays=filter_df_by_current_hour(average_delays)
-        frequency=modify_values(filter_df_by_current_hour(frequency))
     except Exception as e: 
         return {
             "message":"Error getting data",
@@ -139,16 +137,13 @@ def getBusDelay():
 
     return {
         'average delays': average_delays,
-        'frequency': frequency
     }, 200
 
 @app.route("/getSubwayDelayData", methods ={'GET'})
 def getSubwayDelay():
     try:
         average_delays=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/average_delays_subway.csv')
-        frequency=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/frequency_data_subway.csv')
         average_delays=filter_df_by_current_hour(average_delays)
-        frequency=modify_values(filter_df_by_current_hour(frequency))
     except Exception as e: 
         return {
             "message":"Error getting data",
@@ -157,5 +152,4 @@ def getSubwayDelay():
 
     return {
         'average delays': average_delays,
-        'frequency': frequency
     }, 200
