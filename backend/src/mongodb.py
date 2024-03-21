@@ -6,6 +6,7 @@ import jwt
 import bcrypt
 from src import db
 from datetime import datetime
+import re 
 
 
 def get_hashed_password(plain_password):
@@ -16,15 +17,47 @@ def check_password(plain_password, hashed_password):
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
 
+def is_valid_username(username):
+    # Username can contain letters (both uppercase and lowercase), numbers, underscores, and dots
+    # It should be between 5 and 20 characters long
+    return re.match("^[a-zA-Z0-9_.]{5,20}$", username) is not None
+
+def is_valid_password(password):
+    # Password must be at least 8 characters long
+    return len(password) >= 8
+
+def is_valid_email(email):
+    # Regular expression for basic email validation
+    return re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email) is not None
+
 @app.route("/register", methods={'POST'})
+
 def insert_user():
     request_data = request.get_json()
     if request.method == "POST":
         try:
             name = request_data['name']
-            email = request_data['email']
-            username = request_data['username']
-            password = request_data['password']
+            if (is_valid_email(request_data['email'])):
+                email = request_data['email']
+            else:
+                return {
+                    "message":"Invalid email input",
+                    "error":"Invalid email"
+                }, 400
+            if (is_valid_username(request_data['username'])):
+                username = request_data['username']
+            else:
+                return {
+                    "message":"Invalid username input",
+                    "error":"Invalid username"
+                }, 400
+            if (is_valid_password(request_data['password'])):
+                password = request_data['password']
+            else:
+                return {
+                    "message":"Invalid password input",
+                    "error":"Invalid password"
+                }, 400
             street = request_data['street']
             city = request_data['city']
             province = request_data['province']
@@ -33,9 +66,9 @@ def insert_user():
             return {
                 "error": "Missing field data",
                 "message": str(e)
-            }, 500
-    newUser = {
-        "name": name,
+            }, 400     
+    newUser ={
+        "name": name,       
         "email": email,
         "username": username,
         "password": get_hashed_password(password).decode('utf-8'),
@@ -49,13 +82,13 @@ def insert_user():
     }
     if db.users.find_one({"username": username}):
         return {
-            "error": "Username is already taken"
-        }, 400
-    if db.users.find_one({"email": email}):
+            "error":"Username is already taken"
+        }, 409
+    if db.users.find_one({"email":email}):
         return {
-            "error": "Email is already used"
-        }, 400
-    try:
+            "error":"Email is already used"
+        }, 409
+    try: 
         db.users.insert_one(newUser)
         return Response("User added successfully", status=201)
     except Exception as e:
@@ -76,15 +109,14 @@ def login():
             return {
                 "error": "Missing field data",
                 "message": str(e)
-            }, 500
-
+            }, 400 
     try:
         user = db.users.find_one({"username": username})
     except Exception as e:
         return {
-            "error": "Unable to find user",
+            "error": "Wrong username or password",
             "message": str(e)
-        }, 500
+        }, 400  
 
     if (check_password(password, user['password'])):
         try:
@@ -97,7 +129,7 @@ def login():
             return {
                 "message": "Successfully fetched auth token",
                 "data": user["token"]
-            }
+            }, 200
         except Exception as e:
             return {
                 "error": "Error fetching auth token",
@@ -108,7 +140,7 @@ def login():
         "message": "Error fetching auth token!, invalid email or password",
         "data": None,
         "error": "Unauthorized"
-    }, 404
+    }, 500
 
 
 @app.route("/authTest", methods={'POST'})
@@ -133,7 +165,7 @@ def addTripCounter(current_user):
         return {
             "message": "Updated user trip count",
             "data": newCounter,
-        }
+        }, 200
     except Exception as e:
         return {
             "error": "Unable to update trip count",
@@ -154,4 +186,5 @@ def getUserInfo(current_user):
     return {
         "data": newUser,
         "message": "Retrieved user"
-    }, 201
+    }, 200
+
