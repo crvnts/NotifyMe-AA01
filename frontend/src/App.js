@@ -10,6 +10,7 @@ import {
 import Dashboard from "./components/dashboardv2/Dashboard";
 import Login from "./components/Login/Login";
 import Register from "./components/register/Register";
+import TripPlanner from './components/PlanTrip/TripPlanner';
 
 //const rootElement = document.getElementById("root");
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
           <Route exact path="/" element={<Login />} />
           <Route exact path="/Register" element={<Register />} />
           <Route exact path="/Login" element={<Login />} />
+          <Route exact path="/TripPlanner" element={<TripPlanner />} />
         </Routes>
       </Fragment>
     </Router>

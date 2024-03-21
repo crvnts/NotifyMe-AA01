@@ -21,11 +21,7 @@ const userLastname = 'Doe'
 
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const [userInfoVisible, setUserInfoVisible] = useState(false);
-
-  const showUserInfoHandler = () => {
-    setUserInfoVisible(true);
-  }
+  
   const [tripsCount, setTripsCount] = useState(0);
   
   const addTripHandler = () => {
