@@ -14,3 +14,4 @@ mongo = PyMongo(app)
 db = mongo.db
 
 from src import mongodb, jwtokenUtil
+from src import gmaps
