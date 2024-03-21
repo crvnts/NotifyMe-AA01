@@ -1,8 +1,10 @@
 from src import app
 from flask import render_template, request, redirect, flash, url_for, Response, jsonify
-from datetime import datetime
+from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import requests
+import pandas as pd
+import pytz
 
 Alert = {
     "route": str,
@@ -52,8 +54,6 @@ def getTTCAlerts():
             counter+=1
             alert_id =route['routeType']
             soup = BeautifulSoup(route['description'], 'html.parser')
-
-            # Get the cleaned text
             cleaned_text = soup.get_text()
             description = cleaned_text
             newAlert = {
@@ -75,4 +75,72 @@ def getTTCAlerts():
     return {
         'data':updatedAlerts,
         'message':"Updated TTC Alerts"
+    }, 200
+
+def filter_df_by_current_hour(df):
+    est = pytz.timezone('America/New_York')
+    current_datetime = datetime.now(est)
+    current_hour = current_datetime.hour  # Get current hour
+
+    start_hour = current_hour - 5
+    end_hour = current_hour + 6
+
+    filtered_data = []
+    # Extract data for current day
+    current_day = current_datetime.strftime("%A")
+    
+    df_current_day = df[current_day]
+    if start_hour < 0:
+        # Adjust start hour to account for previous day
+        start_hour += 24
+
+        # Get the name of the previous day
+        previous_day = (current_datetime - timedelta(days=1)).strftime("%A")
+        df_prev_day = df[previous_day]
+        for i in range(start_hour, 24):
+            filtered_data.append([df_prev_day.name,i,df_prev_day[i]])  
+        for i in range(0,end_hour):
+            filtered_data.append([df_current_day.name,i,df_current_day[i]])  
+        return filtered_data
+
+    
+    for i in range(max(0, start_hour), min(24, end_hour + 1)):
+        filtered_data.append([df_current_day.name,i,df_current_day[i]])  
+
+    return filtered_data
+
+@app.route("/getBusDelayData", methods ={'GET'})
+def getBusDelay():
+    try:
+        average_delays=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/average_delays_bus.csv')
+        frequency=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/frequency_data_bus.csv')
+        average_delays=filter_df_by_current_hour(average_delays)
+        frequency=filter_df_by_current_hour(frequency)
+    except Exception as e: 
+        return {
+            "message":"Error getting data",
+            "error": e
+        }, 500
+
+    return {
+        'average delays': average_delays,
+        'frequency': frequency
+    }, 200
+
+@app.route("/getSubwayDelayData", methods ={'GET'})
+def getSubwayDelay():
+    try:
+        average_delays=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/average_delays_subway.csv')
+        frequency=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/frequency_data_subway.csv')
+        average_delays=filter_df_by_current_hour(average_delays)
+        frequency=filter_df_by_current_hour(frequency)
+    except Exception as e: 
+        return {
+            "message":"Error getting data",
+            "error": e
+        }, 500
+
+    return {
+        'average delays': average_delays,
+        'frequency': frequency
     }, 200
