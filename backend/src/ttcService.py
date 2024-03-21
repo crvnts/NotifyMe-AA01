@@ -20,7 +20,7 @@ Alerts = {
 def filter_df_by_current_hour(df):
     est = pytz.timezone('America/New_York')
     current_datetime = datetime.now(est)
-    current_hour = current_datetime.hour # Get current hour
+    current_hour = 18 # Get current hour
 
     start_hour = current_hour - 6
     end_hour = current_hour + 6
@@ -46,6 +46,11 @@ def filter_df_by_current_hour(df):
     
     for i in range(max(0, start_hour), min(24, end_hour + 1)):
         filtered_data.append([df_current_day.name,i,df_current_day[i]])  
+    if end_hour > 23:
+        next_day = (current_datetime + timedelta(days=1)).strftime("%A")
+        df_next_day = df[next_day]
+        for i in range((0),max(1,end_hour%23)):
+            filtered_data.append([df_next_day.name,i,df_next_day[i]])  
 
     return filtered_data
 
