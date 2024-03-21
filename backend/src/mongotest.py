@@ -4,6 +4,7 @@ Connection = mongodb.mongo_connection()
 newUser ={
         "name": "tom",       
         "email": "dummmy@aa.04",
+        "username": "tom",
         "password": "hashedPassword",
         "address": {
             "street":"111 Yonge St.",
