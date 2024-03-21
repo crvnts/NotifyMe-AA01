@@ -20,7 +20,7 @@ Alerts = {
 def filter_df_by_current_hour(df):
     est = pytz.timezone('America/New_York')
     current_datetime = datetime.now(est)
-    current_hour = current_datetime.hour  # Get current hour
+    current_hour = current_datetime.hour # Get current hour
 
     start_hour = current_hour - 6
     end_hour = current_hour + 6
@@ -39,7 +39,7 @@ def filter_df_by_current_hour(df):
         df_prev_day = df[previous_day]
         for i in range(start_hour, 24):
             filtered_data.append([df_prev_day.name,i,df_prev_day[i]])  
-        for i in range(0,end_hour):
+        for i in range(0,end_hour+1):
             filtered_data.append([df_current_day.name,i,df_current_day[i]])  
         return filtered_data
 
@@ -47,6 +47,16 @@ def filter_df_by_current_hour(df):
     for i in range(max(0, start_hour), min(24, end_hour + 1)):
         filtered_data.append([df_current_day.name,i,df_current_day[i]])  
 
+    return filtered_data
+
+def modify_values(filtered_data):
+    # Calculate the total for each column
+    total = sum(item[2] for item in filtered_data)
+    
+    # Modify the values in the filtered data list
+    for item in filtered_data:
+        item[2] /= (total/100)
+    
     return filtered_data
 
 @app.route("/getAlerts", methods ={'GET'})
@@ -115,7 +125,7 @@ def getBusDelay():
         average_delays=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/average_delays_bus.csv')
         frequency=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/frequency_data_bus.csv')
         average_delays=filter_df_by_current_hour(average_delays)
-        frequency=filter_df_by_current_hour(frequency)
+        frequency=modify_values(filter_df_by_current_hour(frequency))
     except Exception as e: 
         return {
             "message":"Error getting data",
@@ -133,7 +143,7 @@ def getSubwayDelay():
         average_delays=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/average_delays_subway.csv')
         frequency=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/frequency_data_subway.csv')
         average_delays=filter_df_by_current_hour(average_delays)
-        frequency=filter_df_by_current_hour(frequency)
+        frequency=modify_values(filter_df_by_current_hour(frequency))
     except Exception as e: 
         return {
             "message":"Error getting data",
