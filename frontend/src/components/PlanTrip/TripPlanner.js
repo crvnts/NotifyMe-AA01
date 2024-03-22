@@ -177,7 +177,7 @@ const TripPlanner = () => {
         <Content>
           <Flex className="flex-container">
             <Card className="search-card">
-              <Title>Yallah habibi where are we going</Title>
+              <Title>Where are you headed?</Title>
               <div>
                 <PlacesAutocomplete
                   value={address}

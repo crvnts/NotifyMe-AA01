@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 import Banner from "./Banner";
 import Weather from "./Weather";
 import "./Weather.css";
-import TrafficDensity from "./TrafficDensity";
-import TripPlanner from "../PlanTrip/TripPlanner";
 import TTCGraph from "./TTCGraph";
 
 const MainContent = () => {
@@ -13,9 +11,7 @@ const MainContent = () => {
 
   return (
     <div style={{ flex: 1 }}>
-      <Flex vertical gap="2.3rem">
-        <Banner></Banner>
-      </Flex>
+      <Banner></Banner>
 
       <Row className="widget-row" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
         <Col className="gutter-row" span={6}>
@@ -42,7 +38,7 @@ const MainContent = () => {
 
         <Col className="gutter-row" span={6}>
           <div className="widget" align="center">
-            <Link to="/Login">
+            <Link to="/">
               <Button type="text" className="widget-button">
                 Uber Eatz Ad
               </Button>

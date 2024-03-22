@@ -23,9 +23,16 @@
     cursor: pointer;
 }
 
-.flex-container {
+.main-flex-container {
+    display: flex;
     width: 95%;
     align-self: center;
+    margin-top: 3%;
+    margin-left: 3%;
+    border-radius: 36px;
+    background: #e6e6e6;
+    box-shadow:  8px 8px 16px #cfcfcf,
+             -8px -8px 16px #fdfdfd;
 }
 
 .widget-row {
