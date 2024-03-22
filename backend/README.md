@@ -1,7 +1,9 @@
-Alt-Python Backend for NotifyMe System 
+Python Backend for NotifyMe System 
 ====== 
 
 MongoDB connection and database schemas
+
+Includes TTC Alerts live updating function, data endpoint for data visualization
 
 To install, pip install -r requirements.txt
 

@@ -1,0 +1,21 @@
+/* components/directions/direction.css */
+.directions-page {
+    padding: 20px;
+  }
+  
+  .mode-selector {
+    margin-bottom: 20px;
+  }
+  
+  .directions-display {
+    margin-top: 20px;
+  }
+  
+  .directions-display ol {
+    padding-left: 20px;
+  }
+  
+  .directions-display li {
+    margin-bottom: 10px;
+  }
+  
