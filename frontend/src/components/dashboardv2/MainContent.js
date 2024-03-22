@@ -6,6 +6,7 @@ import Weather from "./Weather";
 import "./Weather.css";
 import TrafficDensity from "./TrafficDensity";
 import TripPlanner from "../PlanTrip/TripPlanner";
+import TTCGraph from "./TTCGraph";
 
 const MainContent = () => {
   const [planningTrip, setPlanningTrip] = useState(false);
@@ -51,7 +52,7 @@ const MainContent = () => {
 
         <Col className="gutter-row" span={6}>
           <div className="widget" align="center">
-            <TrafficDensity></TrafficDensity>
+            <TTCGraph></TTCGraph>
           </div>
         </Col>
       </Row>
