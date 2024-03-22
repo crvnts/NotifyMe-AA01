@@ -25,8 +25,9 @@
 
 .flex-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     height: 90%;
     width: 95%;
     margin-top: 3%;
@@ -55,3 +56,17 @@
     width: 200px;
     font-family: 'Zen Maru Gothic';
 }
+
+#map {
+    height: 100%;
+  }
+  
+  /* 
+   * Optional: Makes the sample page fill the window. 
+   */
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }

@@ -23,6 +23,7 @@ import {
   Flex,
   Card,
 } from "antd";
+
 import Search from "antd/es/input/Search";
 import "./TripPlanner.css";
 import Title from "antd/es/typography/Title";
@@ -32,6 +33,7 @@ import PlacesAutocomplete, {
   geocodeByPlaceId,
   getLatLng,
 } from "react-places-autocomplete";
+import InitMap from "./GoogleMap";
 
 const { Header, Sider, Content } = Layout;
 const userFirstName = "John";
@@ -39,7 +41,7 @@ const userLastname = "Doe";
 
 const onSearch = (value, _e, info) => console.log(info?.source, value);
 
-const Dashboard = () => {
+const TripPlanner = () => {
   const [collapsed, setCollapsed] = useState(true);
 
   const [tripsCount, setTripsCount] = useState(0);
@@ -57,6 +59,8 @@ const Dashboard = () => {
   const handleSelect = (value) => {
     setAddress(value);
   };
+
+  const posiiton = { lat: 43.656866955079, lng: -79.3764393609781 };
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -194,6 +198,8 @@ const Dashboard = () => {
                         flexDirection: "column",
                       }}
                     >
+                      {/* Obtain search address and plan a route to that address. 
+                      Display user's current position, and add option to change starting point. */}
                       <Search
                         className="location-search-input-box"
                         {...getInputProps({
@@ -222,10 +228,14 @@ const Dashboard = () => {
                 </PlacesAutocomplete>
               </div>
             </Card>
+            {/* Add map here probably */}
+            <div style={{ height: "90%", width: "90%" }}>
+              <InitMap></InitMap>
+            </div>
           </Flex>
         </Content>
       </Layout>
     </Layout>
   );
 };
-export default Dashboard;
+export default TripPlanner;
