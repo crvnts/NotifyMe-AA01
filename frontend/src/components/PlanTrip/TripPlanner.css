@@ -23,10 +23,13 @@
     cursor: pointer;
 }
 
-.main-flex-container {
+.flex-container {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90%;
     width: 95%;
-    align-self: center;
     margin-top: 3%;
     margin-left: 3%;
     border-radius: 36px;
@@ -35,40 +38,35 @@
              -8px -8px 16px #fdfdfd;
 }
 
-.widget-row {
-    height: 50%;
-}
-
-.btn:hover {
-    color: #4f6f52;
-    border-color: #4f6f52;
-}
-
-.side-menu-button {
-  color: "white";
-  font-size: "16px";
-  width: 64;
-  height: 64;
-}
-
-.side-menu-text {
-  color: white;
-  font-family: "Zen Maru Gothic";
-  margin: "16px 0";
-}
-
-.widget {
-    background: '#0092ff';
-    height: 100%;
-    background-color: lightblue;
+.search-card {
     display: flex;
     justify-content: center;
-    align-items: center;
+    margin-top: 10px !important;
+    border-radius: 36px;
+    background: #f7f7f7;
+    box-shadow:  8px 8px 16px #dedede,
+             -8px -8px 16px #ffffff;
 }
 
-.widget-button {
-    font-family: 'Zen Maru Gothic';
-    font-weight: 300;
-    background-color: '#0092ff';
-    padding: '8px 10px';
+.location-search-input-box {
+    border-radius: 36px;
 }
+
+.location-search-input {
+    width: 200px;
+    font-family: 'Zen Maru Gothic';
+}
+
+#map {
+    height: 100%;
+  }
+  
+  /* 
+   * Optional: Makes the sample page fill the window. 
+   */
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }

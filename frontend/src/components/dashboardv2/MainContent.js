@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Row, Col, Button, Divider, Flex } from "antd";
 import { Link } from "react-router-dom";
 import Banner from "./Banner";
@@ -8,19 +8,27 @@ import TTCGraph from "./TTCGraph";
 import StatusTab from "./StatusTab";
 
 const MainContent = () => {
+  const [planningTrip, setPlanningTrip] = useState(false);
+
   return (
     <div style={{ flex: 1 }}>
-      <Flex vertical gap="2.3rem">
-        <Banner></Banner>
-      </Flex>
+      <Banner></Banner>
 
       <Row className="widget-row" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
         <Col className="gutter-row" span={6}>
           <div className="widget" align="center">
-            <Link to="/Login">
-              <Button type="text" className="widget-button">
-                Plan a Trip
-              </Button>
+            <Link to="/TripPlanner">
+              <div>
+                <Button
+                  type="text"
+                  className="widget-button"
+                  onClick={() => {
+                    setPlanningTrip(planningTrip);
+                  }}
+                >
+                  Plan a Trip
+                </Button>
+              </div>
             </Link>
           </div>
         </Col>
@@ -31,7 +39,7 @@ const MainContent = () => {
 
         <Col className="gutter-row" span={6}>
           <div className="widget" align="center">
-            <Link to="/Login">
+            <Link to="/">
               <Button type="text" className="widget-button">
                 Uber Eatz Ad
               </Button>

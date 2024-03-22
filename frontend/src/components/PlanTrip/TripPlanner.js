@@ -21,16 +21,27 @@ import {
   Avatar,
   Typography,
   Flex,
+  Card,
 } from "antd";
-import "./Dashboard.css";
+
 import Search from "antd/es/input/Search";
-import MainContent from "./MainContent";
+import "./TripPlanner.css";
+import Title from "antd/es/typography/Title";
+
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  geocodeByPlaceId,
+  getLatLng,
+} from "react-places-autocomplete";
+import InitMap from "./GoogleMap";
 
 const { Header, Sider, Content } = Layout;
 const userFirstName = "John";
 const userLastname = "Doe";
 
-const Dashboard = () => {
+const onSearch = (value, _e, info) => console.log(info?.source, value);
+
+const TripPlanner = () => {
   const [collapsed, setCollapsed] = useState(true);
 
   const [tripsCount, setTripsCount] = useState(0);
@@ -38,6 +49,18 @@ const Dashboard = () => {
   const addTripHandler = () => {
     setTripsCount((prevState) => prevState + 1); // Increment the trips count
   };
+
+  const [address, setAddress] = useState("");
+
+  const handleChange = (value) => {
+    setAddress(value);
+  };
+
+  const handleSelect = (value) => {
+    setAddress(value);
+  };
+
+  const posiiton = { lat: 43.656866955079, lng: -79.3764393609781 };
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -152,12 +175,67 @@ const Dashboard = () => {
           </Flex>
         </Header>
         <Content>
-          <Flex className="main-flex-container">
-            <MainContent></MainContent>
+          <Flex className="flex-container">
+            <Card className="search-card">
+              <Title>Where are you headed?</Title>
+              <div>
+                <PlacesAutocomplete
+                  value={address}
+                  onChange={handleChange}
+                  onSelect={handleSelect}
+                >
+                  {({
+                    getInputProps,
+                    suggestions,
+                    getSuggestionItemProps,
+                    loading,
+                  }) => (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                      }}
+                    >
+                      {/* Obtain search address and plan a route to that address. 
+                      Display user's current position, and add option to change starting point. */}
+                      <Search
+                        className="location-search-input-box"
+                        {...getInputProps({
+                          placeholder: "Search places...",
+                          className: "location-search-input",
+                        })}
+                      />
+                      <div>
+                        {loading && <div>Loading...</div>}
+                        {suggestions.map((suggestion) => {
+                          const style = suggestion.active
+                            ? { backgroundColor: "#d7d7d9", cursor: "pointer" }
+                            : { backgroundColor: "#ffffff", cursor: "pointer" };
+
+                          return (
+                            <div
+                              {...getSuggestionItemProps(suggestion, { style })}
+                            >
+                              {suggestion.description}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </PlacesAutocomplete>
+              </div>
+            </Card>
+            {/* Add map here probably */}
+            <div style={{ height: "90%", width: "90%" }}>
+              <InitMap></InitMap>
+            </div>
           </Flex>
         </Content>
       </Layout>
     </Layout>
   );
 };
-export default Dashboard;
+export default TripPlanner;
