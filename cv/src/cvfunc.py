@@ -8,6 +8,10 @@ from tf2_yolov4.model import YOLOv4
 import json
 import cv2
 import numpy as np
+from io import BytesIO
+from PIL import Image
+import requests
+import os
 
 def load_image_to_tensor(file):
     # load image
@@ -93,8 +97,13 @@ def calculate_roi_area(roi_coordinates):
     return area
 
 def calculate_roi_coordinates(bounding_boxes_data):
-    if not bounding_boxes_data:
-        return None
+    if len(bounding_boxes_data)>10:
+        roi_coordinates = [
+            (0, 0),  # Bottom-left
+            (0, 0),  # Bottom-right
+            (0, 0)  # Top-middle
+        ]
+        return  roi_coordinates
 
     all_x_coordinates = []
     all_y_coordinates = []
@@ -114,7 +123,11 @@ def calculate_roi_coordinates(bounding_boxes_data):
     max_x = max(all_x_coordinates)
     min_y = min(all_y_coordinates)
     max_y = max(all_y_coordinates)
-
+    
+    
+    if (len(bounding_boxes_data) <= 20): 
+        min_y = max(0,min_y-(0.1*min_y))
+        max_y = min(768,max_y+(0.1*(max_y)))
     # Define ROI points: 2 at min y and 1 at max y
     roi_coordinates = [
         (min_x, min_y),  # Bottom-left
@@ -162,15 +175,42 @@ def read_bounding_boxes_from_txt(file_path):
 
 @app.route("/test",methods={'GET'})
 def testApp():
+    request_data = request.get_json()
+    url = request_data['url']
+    response = requests.get(url)
+
+    # Check if request was successful
+    if response.status_code == 200:
+        # Read the content of the response as bytes
+        image_bytes = BytesIO(response.content)
+    
+        # Open the image using PIL
+        image = Image.open(image_bytes)
+
+        # Display the image
+        image_path = "image.jpg"
+        image.save(image_path)    
+    else:
+        return {
+            "message":"Failed getting image from URL",
+            "error":"External API Failure"
+        }, 503
+    imagefile = 'image.jpg'
     try:
-        my_image = load_image_to_tensor("photos/test1.jpg")
+        my_image = load_image_to_tensor(imagefile)
         #Get trained yolov4 model
-        image = proccess_frame(my_image,"photos/test1.jpg")
+        image = proccess_frame(my_image,imagefile)
         roi =calculate_roi_coordinates(image)
+        os.remove(image_path)
+        if all(coord == (0, 0) for coord in roi):
+            return {
+                'data':0
+            },201
         return {
             "data":calculate_coverage_and_total_area(image,roi)
         },201
     except Exception as e:
         return {
         "message": "failed to run cv",
+        "error": e
     }, 501

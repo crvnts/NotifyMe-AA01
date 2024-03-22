@@ -5,4 +5,5 @@ opencv-python
 dnspython==2.5.0
 python-dotenv==1.0.1
 flask
-Flask-PyMongo
+requests
+pillow

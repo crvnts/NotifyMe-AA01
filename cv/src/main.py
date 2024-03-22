@@ -5,7 +5,10 @@ from tf2_yolov4.model import YOLOv4
 import json
 import cv2
 import numpy as np
-
+import requests
+from PIL import Image
+from io import BytesIO
+import os
 #################################################
 def load_image_to_tensor(file):
     # load image
@@ -31,9 +34,8 @@ def trained_yolov4_model():
         yolo_max_boxes=100,
         yolo_iou_threshold=0.5,
         yolo_score_threshold=0.30,
-        weights="darknet",
     ) 
-    model.load_weights('yolov4.h5')
+    model.load_weights('../yolov4.h5')
     return model
 
 def detected_photo(boxes, scores, classes, detections,image,input_photo):
@@ -131,7 +133,11 @@ def calculate_roi_coordinates(bounding_boxes_data):
     max_x = max(all_x_coordinates)
     min_y = min(all_y_coordinates)
     max_y = max(all_y_coordinates)
-
+    
+    
+    if (len(bounding_boxes_data) <= 20): 
+        min_y = max(0,min_y-(0.1*min_y))
+        max_y = min(768,max_y+(0.1*(max_y)))
     # Define ROI points: 2 at min y and 1 at max y
     roi_coordinates = [
         (min_x, min_y),  # Bottom-left
@@ -180,7 +186,33 @@ def read_bounding_boxes_from_txt(file_path):
 
 if __name__ == "__main__":
     WIDTH, HEIGHT = (1024, 768)
-    file_path = "../photos/test1.jpg_Objects.txt"  # Path to the .txt file containing bounding box data
+    url = "https://511on.ca/map/Cctv/loc21--2"
+
+    # Send a GET request to the URL
+    response = requests.get(url)
+
+    # Check if request was successful
+    if response.status_code == 200:
+        # Read the content of the response as bytes
+        image_bytes = BytesIO(response.content)
+    
+        # Open the image using PIL
+        image = Image.open(image_bytes)
+
+        # Display the image
+        image_path = "image.jpg"
+        image.save(image_path)    
+    else:
+        print("Failed to retrieve the image. Status code:", response.status_code)
+    imagefile = 'image.jpg'
+    ####    Detect Cars on a single photo ####
+    output_image = Car_detection_single_photo(imagefile)
+    # Show resulted photo
+    cv2.imshow('output_image', output_image)
+    # Save photo
+    cv2.imwrite(imagefile+'_object_detected.jpg', output_image*255)
+    os.remove(image_path)
+    """ file_path = "../photos/test4.jpg_Objects.txt"  # Path to the .txt file containing bounding box data
     bounding_boxes_data = read_bounding_boxes_from_txt(file_path)
     if bounding_boxes_data:
         roi_coordinates = calculate_roi_coordinates(bounding_boxes_data)
@@ -191,13 +223,4 @@ if __name__ == "__main__":
     total_area_covered, coverage_percentage = calculate_coverage_and_total_area(bounding_boxes_data, roi_coordinates)
 
     print("Total area covered within ROI:", total_area_covered)
-    print("Coverage percentage:", coverage_percentage)
-    """ imagefile = 'photos/test4.jpg'
-    ####    Detect Cars on a single photo ####
-    output_image = Car_detection_single_photo(imagefile)
-    # Show resulted photo
-    cv2.imshow('output_image', output_image)
-    cv2.waitKey(3000)
-    cv2.destroyAllWindows()
-    # Save photo
-    cv2.imwrite(imagefile+'_object_detected.jpg', output_image*255) """
+    print("Coverage percentage:", coverage_percentage) """
