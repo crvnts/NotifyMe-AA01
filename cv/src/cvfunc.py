@@ -13,6 +13,86 @@ from PIL import Image
 import requests
 import os
 
+
+
+highway401 = [
+    'https://511on.ca/map/Cctv/loc21--2',
+    'https://511on.ca/map/Cctv/loc51--2',
+    'https://511on.ca/map/Cctv/loc52--2',
+    'https://511on.ca/map/Cctv/loc21--2'
+    ]
+
+highway403 = [
+    'https://511on.ca/map/Cctv/loc122--2',
+    'https://511on.ca/map/Cctv/loc75--3',
+    'https://511on.ca/map/Cctv/loc44--2',
+    'https://511on.ca/map/Cctv/loc72--3'
+]
+
+highway404 = [
+    'https://511on.ca/map/Cctv/loc138--2',
+    'https://511on.ca/map/Cctv/loc55--2',
+    'https://511on.ca/map/Cctv/loc141--2',
+    'https://511on.ca/map/Cctv/loc136--2',
+    'https://511on.ca/map/Cctv/loc140--2'
+]
+
+highway405 = [
+    'https://511on.ca/map/Cctv/loc96--3'
+]
+
+
+
+highway410 = [
+    'https://511on.ca/map/Cctv/loc75--2',
+    'https://511on.ca/map/Cctv/loc827--2',
+    'https://511on.ca/map/Cctv/loc824--2',
+    'https://511on.ca/map/Cctv/loc825--2',
+    'https://511on.ca/map/Cctv/loc826--2'
+]
+
+
+highway427=[
+    'https://511on.ca/map/Cctv/loc701--2',
+    'https://511on.ca/map/Cctv/loc702--2',
+    'https://511on.ca/map/Cctv/loc703--2',
+    'https://511on.ca/map/Cctv/loc718--2',
+    'https://511on.ca/map/Cctv/loc725--2',
+    'https://511on.ca/map/Cctv/loc46--3'
+]
+
+highwayQEW = [
+    'https://511on.ca/map/Cctv/loc47--3',
+    'https://511on.ca/map/Cctv/loc62--3',
+    'https://511on.ca/map/Cctv/loc13--3',
+    'https://511on.ca/map/Cctv/loc12--3',
+    'https://511on.ca/map/Cctv/loc88--3'
+]
+
+highwayDVP = [
+    'https://511on.ca/map/Cctv/mrr40fdbg1j--8',
+    'https://511on.ca/map/Cctv/c3o4iglkxvw--8',
+    'https://511on.ca/map/Cctv/loc57--2'
+]
+
+highwayGEW = [
+    'https://511on.ca/map/Cctv/loc541--4',
+    'https://511on.ca/map/Cctv/loc540--4',
+    'https://511on.ca/map/Cctv/rf0j5dillxs--8'
+]
+
+highway_data = {
+    "401": highway401,
+    "403": highway403,
+    "404": highway404,
+    "405": highway405,
+    "410": highway410,
+    "427": highway427,
+    "QEW": highwayQEW,
+    "DVP": highwayDVP,
+    "GEW": highwayGEW
+}
+
 def load_image_to_tensor(file):
     # load image
     image = tf.io.read_file(file)
@@ -33,12 +113,6 @@ def proccess_frame(photo, input_photo):
     result_img = detected_photo(boxes, scores, classes, detections,images[0],input_photo)
     return result_img
 
-def Car_detection_single_photo():
-    my_image = load_image_to_tensor("photo/test4.jpg")
-    #Get trained yolov4 model
-    image = proccess_frame(my_image,"photo/test4.jpg")
-    image= cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    return image
 
 def detected_photo(boxes, scores, classes, detections,image,input_photo):
     boxes = (boxes[0] * [WIDTH, HEIGHT, WIDTH, HEIGHT]).astype(int)
@@ -97,7 +171,8 @@ def calculate_roi_area(roi_coordinates):
     return area
 
 def calculate_roi_coordinates(bounding_boxes_data):
-    if len(bounding_boxes_data)>10:
+
+    if len(bounding_boxes_data)<10:
         roi_coordinates = [
             (0, 0),  # Bottom-left
             (0, 0),  # Bottom-right
@@ -117,7 +192,6 @@ def calculate_roi_coordinates(bounding_boxes_data):
 
         all_x_coordinates.extend([xmin, xmax])
         all_y_coordinates.extend([ymin, ymax])
-
     # Find extreme points
     min_x = min(all_x_coordinates)
     max_x = max(all_x_coordinates)
@@ -173,12 +247,8 @@ def read_bounding_boxes_from_txt(file_path):
         print("Error decoding JSON.")
         return None
 
-@app.route("/test",methods={'GET'})
-def testApp():
-    request_data = request.get_json()
-    url = request_data['url']
+def get_coverage_data(url):
     response = requests.get(url)
-
     # Check if request was successful
     if response.status_code == 200:
         # Read the content of the response as bytes
@@ -190,27 +260,54 @@ def testApp():
         # Display the image
         image_path = "image.jpg"
         image.save(image_path)    
-    else:
-        return {
-            "message":"Failed getting image from URL",
-            "error":"External API Failure"
-        }, 503
     imagefile = 'image.jpg'
-    try:
-        my_image = load_image_to_tensor(imagefile)
-        #Get trained yolov4 model
-        image = proccess_frame(my_image,imagefile)
-        roi =calculate_roi_coordinates(image)
-        os.remove(image_path)
-        if all(coord == (0, 0) for coord in roi):
-            return {
-                'data':0
-            },201
+
+    my_image = load_image_to_tensor(imagefile)
+    #Get trained yolov4 model
+    image = proccess_frame(my_image,imagefile)
+    roi =calculate_roi_coordinates(image)
+    os.remove(image_path)
+    if all(coord == (0, 0) for coord in roi):
         return {
-            "data":calculate_coverage_and_total_area(image,roi)
-        },201
+            'data':(0,0)
+        }
+    return {
+        "data":calculate_coverage_and_total_area(image,roi)
+    }
+    
+@app.route("/getHighwayCongestion",methods={'GET'})
+def getHighwayCongestion():
+    request_data = request.get_json()
+    highway = request_data['highway']
+    data = []
+    try:
+        if highway in highway_data:
+            urls = highway_data[highway]     
+            for url in urls:
+                coverage_percentage = get_coverage_data(url)
+                data.append(coverage_percentage)
     except Exception as e:
         return {
-        "message": "failed to run cv",
-        "error": e
-    }, 501
+                "message": "failed to run cv",
+            }, 501    
+    sum_x = 0
+    sum_y = 0
+    count = 0
+    minus_confidence=0
+    # Calculate sum of x and y coordinates
+    for item in data:
+        x, y = item["data"]
+        if x == 0 and y == 0:
+            minus_confidence += 1
+        sum_x += x
+        sum_y += y
+        count += 1
+
+    # Calculate average x and y coordinates
+    average_x = sum_x / count
+    average_y = sum_y / count
+    confidence = (count-minus_confidence)/count
+    return {
+        "data":(average_x,average_y,confidence),
+        "message":"calculated average road congestion (middle value)"
+    },200

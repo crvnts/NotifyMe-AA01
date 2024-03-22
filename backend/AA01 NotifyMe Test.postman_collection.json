@@ -248,7 +248,7 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/test",
+			"name": "http://127.0.0.1:5000/getHighwayCongestion",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -257,7 +257,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"url\": \"https://511on.ca/map/Cctv/loc21--2?t=1710469780\"\r\n}",
+					"raw": "{\r\n    \"highway\": \"GEW\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -265,7 +265,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/test",
+					"raw": "http://127.0.0.1:5000/getHighwayCongestion",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -275,7 +275,7 @@
 					],
 					"port": "5000",
 					"path": [
-						"test"
+						"getHighwayCongestion"
 					]
 				}
 			},
