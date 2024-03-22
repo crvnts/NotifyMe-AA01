@@ -3,3 +3,5 @@ venv/
 .venv/
 __pycache__/
 node_modules/
+yolov4.h5/
+yolov4.weights/
