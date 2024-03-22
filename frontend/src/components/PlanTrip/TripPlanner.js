@@ -39,9 +39,9 @@ const { Header, Sider, Content } = Layout;
 const userFirstName = "John";
 const userLastname = "Doe";
 
-const onSearch = (value, _e, info) => console.log(info?.source, value);
-
 const TripPlanner = () => {
+  const [searchAdd, setSearchAdd] = useState("");
+
   const [collapsed, setCollapsed] = useState(true);
 
   const [tripsCount, setTripsCount] = useState(0);
@@ -58,6 +58,10 @@ const TripPlanner = () => {
 
   const handleSelect = (value) => {
     setAddress(value);
+  };
+
+  const onSearch = (value) => {
+    setSearchAdd(value);
   };
 
   const posiiton = { lat: 43.656866955079, lng: -79.3764393609781 };
@@ -201,11 +205,13 @@ const TripPlanner = () => {
                       {/* Obtain search address and plan a route to that address. 
                       Display user's current position, and add option to change starting point. */}
                       <Search
+                        allowClear
                         className="location-search-input-box"
                         {...getInputProps({
                           placeholder: "Search places...",
                           className: "location-search-input",
                         })}
+                        onSearch={onSearch}
                       />
                       <div>
                         {loading && <div>Loading...</div>}
