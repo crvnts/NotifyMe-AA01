@@ -34,6 +34,10 @@ import PlacesAutocomplete, {
   getLatLng,
 } from "react-places-autocomplete";
 import InitMap from "./GoogleMap";
+import PlannedDisplay from "./PlannedDisplay";
+import AddressForm from "../directions/AddressForm";
+
+import axios from 'axios';
 
 const { Header, Sider, Content } = Layout;
 const userFirstName = "John";
@@ -45,6 +49,11 @@ const TripPlanner = () => {
   const [collapsed, setCollapsed] = useState(true);
 
   const [tripsCount, setTripsCount] = useState(0);
+
+  const [startAddress, setStartAddress] = useState('');
+  const [endAddress, setEndAddress] = useState('');
+  const [directions, setDirections] = useState(null);
+
 
   const addTripHandler = () => {
     setTripsCount((prevState) => prevState + 1); // Increment the trips count
@@ -62,6 +71,18 @@ const TripPlanner = () => {
 
   const onSearch = (value) => {
     setSearchAdd(value);
+    fetchDirections();
+  };
+
+  const fetchDirections = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/get_directions`, {
+        params: { origin: startAddress, destination: endAddress, mode: 'driving' }
+      });
+      setDirections(response.data);
+    } catch (error) {
+      console.error('Failed to fetch directions', error);
+    }
   };
 
   const posiiton = { lat: 43.656866955079, lng: -79.3764393609781 };
@@ -237,6 +258,10 @@ const TripPlanner = () => {
             {/* Add map here probably */}
             <div style={{ height: "90%", width: "90%" }}>
               <InitMap></InitMap>
+            </div>
+            <div>
+              {/* Add search form, or implement where we get the search into here */}
+              <PlannedDisplay directions = {directions} />
             </div>
           </Flex>
         </Content>

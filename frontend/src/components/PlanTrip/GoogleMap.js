@@ -15,7 +15,7 @@ const InitMap = () => {
   const [open, setOpen] = useState(false);
   return (
     <APIProvider
-      apiKey={"process.env.GOOGLE_MAPS_API_KEY"}
+      apiKey={"process.env.api_key"}
       libraries={["marker"]}
     >
       <div style={{ height: "100%", width: "100%" }}>
