@@ -5,6 +5,7 @@ import Banner from "./Banner";
 import Weather from "./Weather";
 import "./Weather.css";
 import TTCGraph from "./TTCGraph";
+import StatusTab from "./StatusTab";
 
 const MainContent = () => {
   const [planningTrip, setPlanningTrip] = useState(false);
@@ -45,7 +46,6 @@ const MainContent = () => {
             </Link>
           </div>
         </Col>
-
         <Col className="gutter-row" span={6}>
           <div className="widget" align="center">
             <TTCGraph></TTCGraph>
