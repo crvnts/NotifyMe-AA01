@@ -16,4 +16,4 @@ app.config['GO_KEY'] = environ.get('GoAPI')
 mongo = PyMongo(app)
 db = mongo.db
 
-from src import mongodb, ttcService, jwtokenUtil
+from src import mongodb, ttcService, jwtokenUtil, gmaps

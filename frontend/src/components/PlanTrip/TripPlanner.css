@@ -1,0 +1,72 @@
+.collapse-button {
+    display: flex;
+    margin-left: 1.5vw;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2vh;
+    width: 8vw;
+    height: 4.5vh;
+    background: grey;
+}
+
+.collapse-button:hover {
+    background: grey;
+}
+
+.header-icon {
+    background: grey;
+    color:azure;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90%;
+    width: 95%;
+    margin-top: 3%;
+    margin-left: 3%;
+    border-radius: 36px;
+    background: #e6e6e6;
+    box-shadow:  8px 8px 16px #cfcfcf,
+             -8px -8px 16px #fdfdfd;
+}
+
+.search-card {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px !important;
+    border-radius: 36px;
+    background: #f7f7f7;
+    box-shadow:  8px 8px 16px #dedede,
+             -8px -8px 16px #ffffff;
+}
+
+.location-search-input-box {
+    border-radius: 36px;
+}
+
+.location-search-input {
+    width: 200px;
+    font-family: 'Zen Maru Gothic';
+}
+
+#map {
+    height: 100%;
+  }
+  
+  /* 
+   * Optional: Makes the sample page fill the window. 
+   */
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
