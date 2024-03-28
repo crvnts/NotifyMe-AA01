@@ -186,6 +186,30 @@ def addTrips(current_user):
             "error": "Unable to update trip count",
             "message": str(e)
         }, 500
+    
+@app.route("/getTrips", methods ={'GET'})
+@jwtokenUtil.token_required
+def getPastTrips(current_user):
+    gotTrips = []
+    try:
+        trips = current_user['trips']
+        for trip in trips:
+            received = db.trips.find_one({"_id": trip})
+            gotTrips.append({
+                'date': received['date'],
+                'start_address': received['start_address'],
+                'dest_address': received['dest_address'],
+                'distance': received['distance']
+                })
+        return {
+            "message": "All of user's trips",
+            "data": gotTrips,
+        }, 200
+    except Exception as e:
+        return {
+            "error": "Unable to get trips",
+            "message": "help"
+        }, 500
 
 @app.route("/userAddress", methods={'GET'})
 @jwtokenUtil.token_required
@@ -200,10 +224,9 @@ def getUserInfo(current_user):
         "email": current_user['email'],
         "username": current_user['username'],
         "address": current_user['address'],
-        "tripCount": current_user['tripCount']
+        "tripCount": current_user['tripCount'],
     }
     return {
         "data": newUser,
         "message": "Retrieved user"
     }, 200
-
