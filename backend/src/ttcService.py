@@ -64,7 +64,7 @@ def modify_values(filtered_data):
     
     return filtered_data
 
-@app.route("/getAlerts", methods ={'GET'})
+@app.route("/getTTCAlerts", methods ={'GET'})
 def getTTCAlerts():
     alerts_list=[]
     counter = 0
@@ -122,6 +122,48 @@ def getTTCAlerts():
     return {
         'data':updatedAlerts,
         'message':"Updated TTC Alerts"
+    }, 200
+
+@app.route("/getGoAlerts", methods ={'GET'})
+def getGoAlerts():
+    alerts_list = []
+    url = "http://api.openmetrolinx.com/OpenDataAPI/api/V1/ServiceUpdate/ServiceAlert/All?key="+app.config['GO_KEY']
+    try:
+        response = requests.get(url).json()
+    except Exception as e:
+        return {
+            "message": "Error connecting to TTC APIs",
+            "error": "TTC API DOWN"
+        }, 403
+    counter = 0
+    try:
+        for route in response['Messages']["Message"]:    
+            # Iterate through alerts for the current route
+            print(route['Category'])
+            if route['Category'] != 'Amenity': 
+                print('yo')
+                counter+=1
+                alert_id = route['Lines']
+                description = route['BodyEnglish']
+                newAlert = {
+                    'route':alert_id,
+                    'description':description
+                }
+                alerts_list.append(newAlert)
+    except Exception as e:
+        return {
+            "message":"Error parsing information",
+            "error":"Internal error"
+        },500
+    
+    updatedAlerts = {
+        'num_alerts':counter,
+        'last_updated':response['Metadata']['TimeStamp'],
+        'alerts':alerts_list
+    }
+    return {
+        'data':updatedAlerts,
+        'message':"Updated Go Alerts"
     }, 200
 
 @app.route("/getBusDelayData", methods ={'GET'})
