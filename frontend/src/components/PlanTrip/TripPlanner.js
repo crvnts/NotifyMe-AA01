@@ -1,42 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  MessageOutlined,
-  NotificationOutlined,
-} from "@ant-design/icons";
-import {
-  Layout,
-  Menu,
-  Button,
-  theme,
-  ConfigProvider,
-  Col,
-  Divider,
-  Row,
-  Avatar,
-  Typography,
-  Flex,
-  Card,
-} from "antd";
-
-import Search from "antd/es/input/Search";
+import { Layout, Menu, Button, Avatar, Typography, Card } from "antd";
+import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from "@ant-design/icons";
 import "./TripPlanner.css";
-import Title from "antd/es/typography/Title";
-
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  geocodeByPlaceId,
-  getLatLng,
-} from "react-places-autocomplete";
 import InitMap from "./GoogleMap";
 import PlannedDisplay from "./PlannedDisplay";
-import AddressForm from "../directions/AddressForm";
-
+import SearchForm from "./SearchForm";
 import axios from 'axios';
 
 const { Header, Sider, Content } = Layout;
@@ -44,48 +12,36 @@ const userFirstName = "John";
 const userLastname = "Doe";
 
 const TripPlanner = () => {
-  const [searchAdd, setSearchAdd] = useState("");
-
   const [collapsed, setCollapsed] = useState(true);
-
   const [tripsCount, setTripsCount] = useState(0);
-
-  const [startAddress, setStartAddress] = useState('');
-  const [endAddress, setEndAddress] = useState('');
   const [directions, setDirections] = useState(null);
-
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [startAddress, setStartAddress] = useState(""); 
+  const [endAddress, setEndAddress] = useState(""); 
+  
 
   const addTripHandler = () => {
-    setTripsCount((prevState) => prevState + 1); // Increment the trips count
+    setTripsCount(prevState => prevState + 1); // Increment the trips count
   };
 
-  const [address, setAddress] = useState("");
-
-  const handleChange = (value) => {
-    setAddress(value);
-  };
-
-  const handleSelect = (value) => {
-    setAddress(value);
-  };
-
-  const onSearch = (value) => {
-    setSearchAdd(value);
-    fetchDirections();
-  };
-
-  const fetchDirections = async () => {
+  const handleFormSubmit = async ({ startAddress, endAddress, mode }) => {
+    setIsLoading(true);
+    setError('');
     try {
       const response = await axios.get(`http://localhost:5000/api/get_directions`, {
-        params: { origin: startAddress, destination: endAddress, mode: 'driving' }
+        params: { origin: startAddress, destination: endAddress, mode }
       });
+
       setDirections(response.data);
     } catch (error) {
-      console.error('Failed to fetch directions', error);
+        console.error('Failed to fetch directions:', error);
+        setError('Failed to fetch directions. Please try again.');
+        setDirections(null); // Clear directions state on error to avoid displaying outdated information
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const posiiton = { lat: 43.656866955079, lng: -79.3764393609781 };
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -106,167 +62,56 @@ const TripPlanner = () => {
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => {
-              setCollapsed(!collapsed);
-            }}
+            onClick={() => setCollapsed(!collapsed)}
             className="collapse-button"
           />
-
-          {!collapsed ? (
+          {!collapsed && (
             <div>
-              {" "}
-              <userTitle
-                level={5}
-                style={{
-                  color: "white",
-                  fontFamily: "Zen Maru Gothic",
-                  margin: "16px 0",
-                }}
-              >
+              <Typography.Title level={5} style={{ color: "white", margin: "16px 0" }}>
                 {userFirstName} {userLastname}
-              </userTitle>
-              <dispUserTrips
-                type="secondary"
-                style={{
-                  color: "white",
-                  fontFamily: "Zen Maru Gothic",
-                  marginLeft: "20px",
-                }}
-              >
+              </Typography.Title>
+              <Typography.Text type="secondary" style={{ color: "white", marginLeft: "20px" }}>
                 Trips Made: {tripsCount}
-              </dispUserTrips>
-              {/* Button to simulate adding a trip - you might replace this with your actual trip-adding logic */}
-              <Button
-                onClick={addTripHandler}
-                style={{ fontFamily: "Zen Maru Gothic", margin: "16px 24px" }}
-              >
-                Add Trip
-              </Button>
+              </Typography.Text>
+              <Button onClick={addTripHandler} style={{ margin: "16px 24px" }}>Add Trip</Button>
             </div>
-          ) : (
-            false
           )}
         </div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          style={{ fontFamily: "Zen Maru Gothic" }}
-          defaultSelectedKeys={["1"]}
-          items={[
-            {
-              key: "1",
-              icon: <UserOutlined />,
-              label: "My Account",
-            },
-            {
-              key: "2",
-              icon: <VideoCameraOutlined />,
-              label: "My Trips",
-            },
-            {
-              key: "3",
-              icon: <UploadOutlined />,
-              label: "Plan a Trip",
-            },
-            {
-              key: "4",
-              icon: <UploadOutlined />,
-              label: "Feedback",
-            },
-          ]}
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]} items={[
+            { key: "1", icon: <UserOutlined />, label: "My Account" },
+            { key: "2", icon: <UserOutlined />, label: "My Trips" },
+            { key: "3", icon: <UserOutlined />, label: "Plan a Trip" },
+            { key: "4", icon: <UserOutlined />, label: "Feedback" },
+          ]} 
         />
       </Sider>
       <Layout>
         <Header>
-          <Flex align="center" justify="space-between">
-            <Typography.Title
-              style={{
-                color: "whitesmoke",
-                fontFamily: "Zen Maru Gothic",
-              }}
-              level={2}
-            >
-              Welcome back, {userFirstName}
-            </Typography.Title>
-
-            <Flex align="center" gap="3rem">
-              <Search placeholder="Search Dashboard" allowClear></Search>
-
-              <Flex align="center" gap="8px">
-                <MessageOutlined className="header-icon"></MessageOutlined>
-                <NotificationOutlined className="header-icon"></NotificationOutlined>
-              </Flex>
-            </Flex>
-          </Flex>
+          <Typography.Title style={{ color: "whitesmoke" }} level={2}>
+            Welcome back, {userFirstName}
+          </Typography.Title>
         </Header>
         <Content>
-          <Flex className="flex-container">
-            <Card className="search-card">
-              <Title>Where are you headed?</Title>
-              <div>
-                <PlacesAutocomplete
-                  value={address}
-                  onChange={handleChange}
-                  onSelect={handleSelect}
-                >
-                  {({
-                    getInputProps,
-                    suggestions,
-                    getSuggestionItemProps,
-                    loading,
-                  }) => (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexDirection: "column",
-                      }}
-                    >
-                      {/* Obtain search address and plan a route to that address. 
-                      Display user's current position, and add option to change starting point. */}
-                      <Search
-                        allowClear
-                        className="location-search-input-box"
-                        {...getInputProps({
-                          placeholder: "Search places...",
-                          className: "location-search-input",
-                        })}
-                        onSearch={onSearch}
-                      />
-                      <div>
-                        {loading && <div>Loading...</div>}
-                        {suggestions.map((suggestion) => {
-                          const style = suggestion.active
-                            ? { backgroundColor: "#d7d7d9", cursor: "pointer" }
-                            : { backgroundColor: "#ffffff", cursor: "pointer" };
-
-                          return (
-                            <div
-                              {...getSuggestionItemProps(suggestion, { style })}
-                            >
-                              {suggestion.description}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </PlacesAutocomplete>
-              </div>
-            </Card>
-            {/* Add map here probably */}
-            <div style={{ height: "90%", width: "90%" }}>
-              <InitMap></InitMap>
-            </div>
-            <div>
-              {/* Add search form, or implement where we get the search into here */}
-              <PlannedDisplay directions = {directions} />
-            </div>
-          </Flex>
+          <Card className="search-card">
+          <SearchForm
+            onFormSubmit={handleFormSubmit}
+            setStartAddress={setStartAddress}
+            setEndAddress={setEndAddress}
+          />
+          </Card>
+          <div style={{ height: "90%", width: "90%" }}>
+            <InitMap startAddress={startAddress} endAddress={endAddress} />
+          </div>
+          {isLoading ? (
+            <p>Loading directions...</p>
+          ) : (
+            <PlannedDisplay directions={directions} />
+          )}
+          
         </Content>
       </Layout>
     </Layout>
   );
 };
+
 export default TripPlanner;
