@@ -67,6 +67,7 @@ def insert_user():
                 "error": "Missing field data",
                 "message": str(e)
             }, 400     
+    trips = []
     newUser ={
         "name": name,       
         "email": email,
@@ -78,7 +79,8 @@ def insert_user():
             "province": province,
             "postal": postal
         },
-        "tripCount": 0
+        "tripCount": len(trips),
+        "trips": trips
     }
     if db.users.find_one({"username": username}):
         return {
@@ -148,20 +150,33 @@ def login():
 def authTest(current_user):
     return jsonify(current_user['username'])
 
-
-@app.route("/userAddress", methods={'GET'})
+@app.route("/addTrips", methods ={'POST'})
 @jwtokenUtil.token_required
-def userAddress(current_user):
-    return jsonify(current_user['address'])
-
-
-@app.route("/addTripCounter", methods={'POST'})
-@jwtokenUtil.token_required
-def addTripCounter(current_user):
+def addTrips(current_user):
+    request_data = request.get_json()
     newCounter = current_user['tripCount']+1
+    newTrip = {
+        'tripuser_id': current_user['_id'],
+        'date': datetime.now(),
+        'start_address':request_data['start_address'],
+        'dest_address': request_data['dest_address'],
+        'distance': request_data['distance'],
+    }
+    try: 
+        db.trips.insert_one(newTrip)
+    except Exception as e:
+        return {
+            "error": "Something went wrong adding trip information",
+            "message": str(e)
+        }, 500
+    newTrips = []
     try:
+        trips = db.trips.find({"tripuser_id": current_user['_id']})
+        for trip in trips:
+            newTrips.append(trip['_id'])
+
         user = db.users.update_one({"username": current_user['username']}, {
-                                   "$set": {"tripCount": newCounter}})
+            "$set": {"tripCount": newCounter, "trips":newTrips}})
         return {
             "message": "Updated user trip count",
             "data": newCounter,
@@ -171,7 +186,35 @@ def addTripCounter(current_user):
             "error": "Unable to update trip count",
             "message": str(e)
         }, 500
+    
+@app.route("/getTrips", methods ={'GET'})
+@jwtokenUtil.token_required
+def getPastTrips(current_user):
+    gotTrips = []
+    try:
+        trips = current_user['trips']
+        for trip in trips:
+            received = db.trips.find_one({"_id": trip})
+            gotTrips.append({
+                'date': received['date'],
+                'start_address': received['start_address'],
+                'dest_address': received['dest_address'],
+                'distance': received['distance']
+                })
+        return {
+            "message": "All of user's trips",
+            "data": gotTrips,
+        }, 200
+    except Exception as e:
+        return {
+            "error": "Unable to get trips",
+            "message": "help"
+        }, 500
 
+@app.route("/userAddress", methods={'GET'})
+@jwtokenUtil.token_required
+def userAddress(current_user):
+    return jsonify(current_user['address'])
 
 @app.route("/getUser", methods={'GET'})
 @jwtokenUtil.token_required
@@ -181,10 +224,9 @@ def getUserInfo(current_user):
         "email": current_user['email'],
         "username": current_user['username'],
         "address": current_user['address'],
-        "tripCount": current_user['tripCount']
+        "tripCount": current_user['tripCount'],
     }
     return {
         "data": newUser,
         "message": "Retrieved user"
     }, 200
-

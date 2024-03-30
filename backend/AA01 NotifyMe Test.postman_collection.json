@@ -182,12 +182,12 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/getAlerts",
+			"name": "http://127.0.0.1:5000/getTTCAlerts",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5000/getAlerts",
+					"raw": "http://127.0.0.1:5000/getTTCAlerts",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -197,7 +197,29 @@
 					],
 					"port": "5000",
 					"path": [
-						"getAlerts"
+						"getTTCAlerts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/getGoAlerts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/getGoAlerts",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"getGoAlerts"
 					]
 				}
 			},
@@ -276,6 +298,71 @@
 					"port": "5000",
 					"path": [
 						"getHighwayCongestion"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/addTrips",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RkYXRhMSJ9.AGx6fEOweG2kPaA9kwgDzt6-FQO0C9l6gvcnUmDlqNM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"start_address\": {\r\n        \"street\": \"11 Yonge St.\",\r\n        \"city\": \"Toronto\",\r\n        \"province\": \"Ontario\",\r\n        \"postal\": \"111 222\"\r\n    },\r\n    \"dest_address\": {\r\n        \"street\": \"11 Yonge St.\",\r\n        \"city\": \"Toronto\",\r\n        \"province\": \"Ontario\",\r\n        \"postal\": \"111 222\"\r\n    },\r\n    \"distance\": 0.0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/addTrips",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"addTrips"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/getTrips",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RkYXRhMSJ9.AGx6fEOweG2kPaA9kwgDzt6-FQO0C9l6gvcnUmDlqNM",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:5000/getTrips",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"getTrips"
 					]
 				}
 			},
