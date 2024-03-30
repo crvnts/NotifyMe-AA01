@@ -14,7 +14,11 @@ const MainContent = () => {
     <div style={{ flex: 1 }}>
       <Banner></Banner>
 
-      <Row className="widget-row" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      <Row
+        className="widget-row"
+        gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+        style={{ marginBottom: 24 }}
+      >
         <Col className="gutter-row" span={6}>
           <div className="widget" align="center">
             <Link to="/TripPlanner">
@@ -46,7 +50,9 @@ const MainContent = () => {
             </Link>
           </div>
         </Col>
-        <Col className="gutter-row" span={6}>
+      </Row>
+      <Row className="widget-row" gutter={{ xs: 16, sm: 24, md: 32, lg: 40 }}>
+        <Col className="gutter-row" span={12}>
           <div className="widget" align="center">
             <TTCGraph></TTCGraph>
           </div>
