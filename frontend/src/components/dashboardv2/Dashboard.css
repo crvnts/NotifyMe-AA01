@@ -25,6 +25,7 @@
 
 .main-flex-container {
   display: flex;
+  flex-direction: column;
   width: 95%;
   align-self: center;
   margin-top: 3%;
@@ -32,6 +33,8 @@
   border-radius: 36px;
   background: #e6e6e6;
   box-shadow: 8px 8px 16px #cfcfcf, -8px -8px 16px #fdfdfd;
+  min-height: 100vh; /* At least full viewport height */
+  overflow: auto; /* Scroll inside container if content overflows */
 }
 
 .widget-row {
@@ -58,7 +61,7 @@
 
 .widget {
   background: "#0092ff";
-  height: 100%;
+  height: 80%;
   background-color: lightblue;
   display: flex;
   justify-content: center;

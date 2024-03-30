@@ -40,12 +40,12 @@ const Dashboard = () => {
   };
 
   return (
-    <Layout style={{ height: "100vh", overflow: "scroll" }}>
+    <Layout>
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
-        style={{ height: "100vh" }}
+        style={{ minHeight: "100%", overflowY: "auto" }}
       >
         <div className="demo-logo-vertical" />
         <Avatar
