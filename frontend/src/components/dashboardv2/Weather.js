@@ -94,11 +94,16 @@ const Weather = () => {
           <img src={search_icon} alt=""></img>
         </div>
       </div>
-      <div className="weather-image">
-        <img style={{ height: "20vh", width: "20vh" }} src={wicon} alt=""></img>
+      <div className="weather-info">
+        <div className="weather-image">
+          <img src={wicon} alt=""></img>
+        </div>
+        <div className="weather-info2">
+          <div className="weather-desc">Cloudy</div>
+          <div className="weather-temp">12°c</div>
+        </div>
       </div>
-      <div className="weather-desc">Cloudy</div>
-      <div className="weather-temp">12°c</div>
+      
       <div className="weather-location">Toronto</div>
       <div className="data-container">
         <div className="element">

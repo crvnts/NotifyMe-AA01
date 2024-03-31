@@ -37,35 +37,51 @@
   margin-left: 3%;
 }
 
-.weather-image {
+.weather-info {
   display: flex;
   justify-content: center;
-  scale: 0.25;
-  margin-top: -20%;
-  margin-bottom: -20%;
+  align-items: center;
+  height: 40%;
+}
+
+.weather-info2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.weather-image {
+  height: 50%;
+  width: 50%;
+  scale: 0.35;
+  height: auto;
+  width: auto;
+  max-height: 20vh;
+  max-width: 20vh;
+  margin-left: -25%;
+  margin-right: -10%;
 }
 
 .weather-desc {
   display: flex;
   justify-content: center;
   color: white;
-  font-size: 1vw;
-  margin-bottom: 10%;
+  font-size: 1.8vh;
 }
 
 .weather-temp {
-  margin-top: 10%;
   display: flex;
   justify-content: center;
   color: white;
-  font-size: 3vw;
+  font-size: 4vh;
 }
 
 .weather-location {
   display: flex;
   justify-content: center;
   color: white;
-  font-size: 1vw;
+  font-size: 2vh;
   font-weight: bold;
 }
 
@@ -84,7 +100,7 @@
 }
 
 .data {
-  font-size: 1.3vw;
+  font-size: 1.3vw; /* 1.3vw */
   font-weight: bold;
 }
 
