@@ -17,7 +17,7 @@ const MainContent = () => {
       <Row
         className="widget-row"
         gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-        style={{ marginBottom: '5%' }}
+        style={{ marginBottom: "1%" }}
       >
         <Col className="gutter-row" span={6}>
           <div className="widget" align="center">
