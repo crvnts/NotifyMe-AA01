@@ -103,7 +103,7 @@ const Weather = () => {
           <div className="weather-temp">12°c</div>
         </div>
       </div>
-      
+
       <div className="weather-location">Toronto</div>
       <div className="data-container">
         <div className="element">
@@ -127,7 +127,7 @@ const Weather = () => {
           ></img>
           <div className="data">
             <div class="wind-rate">20 m/s</div>
-            <div class="text">Wind Speed</div>
+            <div class="text">Winds</div>
           </div>
         </div>
       </div>
