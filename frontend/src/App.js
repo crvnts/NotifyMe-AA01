@@ -11,7 +11,6 @@ import Dashboard from "./components/dashboardv2/Dashboard";
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
 import TripPlanner from "./components/PlanTrip/TripPlanner";
-import DirectionsApp from "./components/directions/DirectionsApp";
 
 //const rootElement = document.getElementById("root");
 const App = () => {
@@ -23,7 +22,6 @@ const App = () => {
           <Route exact path="/" element={<Login />} />
           <Route exact path="/Register" element={<Register />} />
           <Route exact path="/Login" element={<Login />} />
-          <Route path="/directions" element={<DirectionsApp />} />
           <Route exact path="/TripPlanner" element={<TripPlanner />} />
         </Routes>
       </Fragment>

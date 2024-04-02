@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
+import { Form, Input, Radio, Button } from 'antd';
+
 
 const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndAddress: updateEndAddress }) => {
   const [localStartAddress, setLocalStartAddress] = useState('');
   const [localEndAddress, setLocalEndAddress] = useState('');
-  const [mode, setMode] = useState('driving');
+  const [transportMode, setTransportMode] = useState('');
 
   const handleSelectStartAddress = address => {
     setLocalStartAddress(address);
@@ -14,22 +16,58 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
   const handleSelectEndAddress = address => {
     setLocalEndAddress(address);
     updateEndAddress(address); // Update parent component's state
+    //submitForm(); // Submit form right after user enters end address
   };
+
+  const submitForm = () => {
+    onFormSubmit({ startAddress: localStartAddress, endAddress: localEndAddress, transportMode });
+  }
 
   const handleSubmit = event => {
     event.preventDefault();
     // Call the onFormSubmit prop with the local state values
-    onFormSubmit({ startAddress: localStartAddress, endAddress: localEndAddress, mode });
+    submitForm();
   };
 
+  // Handler for onChange event
+  const handleChange = e => {
+    // Set the mode to the value of the selected radio button
+    setTransportMode(e.target.value);
+    submitForm();
+  };
+
+  const [form] = Form.useForm();
+  const formLayout = useState('horizontal');
+
+  const formItemLayout =
+    formLayout === 'horizontal'
+      ? {
+          labelCol: {
+            span: 4,
+          },
+          wrapperCol: {
+            span: 14,
+          },
+        }
+      : null;
   return (
-    <form onSubmit={handleSubmit}>
+    <Form 
+      {...formItemLayout}
+      layout = {formLayout}
+      form = {form}
+      initialValues={{
+        layout: formLayout
+      }}
+      onFinish={handleSubmit}
+      style={{
+        maxWidth: formLayout === 'inline' ? 'none': 600,
+      }}>
       <div>
-        <label htmlFor="startAddress">Start Address:</label>
+        <label htmlFor="startAddress" style={{fontFamily: 'Zen Maru Gothic'}}>Start Address:</label>
         <PlacesAutocomplete value={localStartAddress} onChange={setLocalStartAddress} onSelect={handleSelectStartAddress}>
           {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
             <div>
-              <input
+              <Input
                 {...getInputProps({
                   placeholder: 'Search Start Address...',
                   className: 'location-search-input',
@@ -38,10 +76,12 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
               <div className="autocomplete-dropdown-container">
                 {loading && <div>Loading...</div>}
                 {suggestions.map(suggestion => {
-                  const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
+                  const style = suggestion.active 
+                  ? {backgroundColor: "#d7d7d9", cursor: "pointer"}
+                  : {backgroundColor: "#ffffff", cursor: "pointer"}; 
                   return (
-                    <div {...getSuggestionItemProps(suggestion, { className })}>
-                      <span>{suggestion.description}</span>
+                    <div {...getSuggestionItemProps(suggestion, { style })}>
+                      {suggestion.description}
                     </div>
                   );
                 })}
@@ -51,11 +91,11 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
         </PlacesAutocomplete>
       </div>
       <div>
-        <label htmlFor="endAddress">End Address:</label>
+        <label htmlFor="endAddress" style={{fontFamily: 'Zen Maru Gothic'}}>End Address:</label>
         <PlacesAutocomplete value={localEndAddress} onChange={setLocalEndAddress} onSelect={handleSelectEndAddress}>
           {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
             <div>
-              <input
+              <Input
                 {...getInputProps({
                   placeholder: 'Search End Address...',
                   className: 'location-search-input',
@@ -64,10 +104,12 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
               <div className="autocomplete-dropdown-container">
                 {loading && <div>Loading...</div>}
                 {suggestions.map(suggestion => {
-                  const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
+                  const style = suggestion.active 
+                  ? {backgroundColor: "#d7d7d9", cursor: "pointer"}
+                  : {backgroundColor: "#ffffff", cursor: "pointer"}; 
                   return (
-                    <div {...getSuggestionItemProps(suggestion, { className })}>
-                      <span>{suggestion.description}</span>
+                    <div {...getSuggestionItemProps(suggestion, { style })}>
+                      {suggestion.description}
                     </div>
                   );
                 })}
@@ -77,16 +119,20 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
         </PlacesAutocomplete>
       </div>
       <div>
-        <label htmlFor="mode">Mode of Transportation:</label>
-        <select id="mode" value={mode} onChange={e => setMode(e.target.value)}>
-          <option value="driving">Driving</option>
-          <option value="walking">Walking</option>
-          <option value="bicycling">Bicycling</option>
-          <option value="transit">Transit</option>
-        </select>
+        <label htmlFor="mode" style={{fontFamily: 'Zen Maru Gothic'}}>Mode of Transportation:</label>
+        <Radio.Group 
+          //id="mode" 
+          value={transportMode} 
+          optionType='button' 
+          buttonStyle='solid' 
+          onChange={handleChange}>
+          <Radio value={"DRIVING"}>Driving</Radio>
+          <Radio value={"WALKING"}>Walking</Radio>
+          <Radio value={"BICYCLING"}>Bicycling</Radio>
+          <Radio value={"TRANSIT"}>Transit</Radio>
+        </Radio.Group>
       </div>
-      <button type="submit">Get Directions</button>
-    </form>
+    </Form>
   );
 };
 

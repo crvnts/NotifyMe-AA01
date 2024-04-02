@@ -11,7 +11,7 @@ import {
 
 const position = { lat: 43.656866955079, lng: -79.3764393609781 };
 
-const InitMap = ({ startAddress, endAddress }) => {
+const InitMap = ({ startAddress, endAddress, travelMode }) => {
   const [open, setOpen] = useState(false);
   return (
     <APIProvider
@@ -25,7 +25,7 @@ const InitMap = ({ startAddress, endAddress }) => {
           mapId={process.env.map_id} // Ensure you're using the correct environment variable syntax
           fullscreenControl={false}
         >
-          <Directions startAddress={startAddress} endAddress={endAddress} />
+          <Directions startAddress={startAddress} endAddress={endAddress} travelMode={travelMode} />
 
           <AdvancedMarker position={position} onClick={() => setOpen(true)}>
             <Pin background={"red"} borderColor={"blue"} glyphColor={"purple"} />
@@ -42,12 +42,12 @@ const InitMap = ({ startAddress, endAddress }) => {
   );
 };
 
-function Directions({ startAddress, endAddress }) {
+function Directions({ startAddress, endAddress, transportMode }) {
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
 
   useEffect(() => {
-    if (!routesLibrary || !map || !startAddress || !endAddress) return;
+    if (!routesLibrary || !map || !startAddress || !endAddress || !transportMode) return;
 
     const directionsService = new routesLibrary.DirectionsService();
     const directionsRenderer = new routesLibrary.DirectionsRenderer({ map });
@@ -55,7 +55,7 @@ function Directions({ startAddress, endAddress }) {
     directionsService.route({
       origin: startAddress,
       destination: endAddress,
-      travelMode: "DRIVING",
+      travelMode: "DRIVING", //transportMode not sure why this isn't working, could be the way im sending transportMode from SearchForm
       provideRouteAlternatives: true,
     }, (response, status) => {
       if (status === 'OK') {
@@ -71,7 +71,7 @@ function Directions({ startAddress, endAddress }) {
         directionsRenderer.setMap(null);
       }
     };
-  }, [startAddress, endAddress, map, routesLibrary]); // React to changes in addresses or map library
+  }, [startAddress, endAddress, transportMode, map, routesLibrary]); // React to changes in addresses or map library
 
   return null; // You might not need to return anything from this component
 }
