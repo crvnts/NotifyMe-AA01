@@ -1,23 +1,25 @@
 import React, { useState } from "react";
-import { Row, Col, Button, Divider, Flex } from "antd";
+import { Row, Col, Button, Divider, Flex, Carousel } from "antd";
 import { Link } from "react-router-dom";
 import Banner from "./Banner";
 import Weather from "./Weather";
 import "./Weather.css";
 import TTCGraph from "./TTCGraph";
 import StatusTab from "./StatusTab";
+import AdCarousel from "./AdCarousel";
 
 const MainContent = () => {
   const [planningTrip, setPlanningTrip] = useState(false);
 
   return (
-    <div style={{ flex: 1 }}>
-      <Banner></Banner>
-
+    <div style={{ flex: 1, paddingTop: "2%" }}>
+      {/* <div style={{ paddingBottom: "2%" }}>
+        <Banner></Banner>
+      </div> */}
       <Row
         className="widget-row"
-        gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-        style={{ marginBottom: "1%" }}
+        gutter={{ xs: 6, sm: 12, md: 18, lg: 24 }}
+        justify="space-evenly"
       >
         <Col className="gutter-row" span={6}>
           <div className="widget" align="center">
@@ -38,25 +40,30 @@ const MainContent = () => {
         </Col>
 
         <Col span={6}>
-        <div className="widget" align="center">
-          <Weather></Weather>
-        </div>
+          <div className="widget" align="center">
+            <Weather></Weather>
+          </div>
         </Col>
 
-        <Col className="gutter-row" span={6}>
-          <div className="widget" align="center">
-            <Link to="/">
-              <Button type="text" className="widget-button">
-                Uber Eatz Ad
-              </Button>
-            </Link>
+        <Col span={6}>
+          <div className="adwidget" align="center">
+            <AdCarousel/>
           </div>
         </Col>
       </Row>
-      <Row className="widget-row" gutter={{ xs: 16, sm: 24, md: 32, lg: 40 }}>
-        <Col className="gutter-row" span={12}>
-          <div className="widget" align="center">
+      <Row
+        className="widget-row"
+        gutter={{ xs: 6, sm: 12, md: 18, lg: 24 }}
+        justify="space-evenly"
+      >
+        <Col className="gutter-row" span={14}>
+          <div className="chartwidget" align="center">
             <TTCGraph></TTCGraph>
+          </div>
+        </Col>
+        <Col className="gutter-row" span={8}>
+          <div className="widget" align="center">
+            <StatusTab></StatusTab>
           </div>
         </Col>
       </Row>

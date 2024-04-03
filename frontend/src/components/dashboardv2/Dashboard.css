@@ -70,6 +70,32 @@
   box-shadow: 15px 15px 30px #9bb7c2, -15px -15px 24px #d1f7ff;
 }
 
+.adwidget {
+  background: "#0092ff";
+  height: 80%;
+  background-color: #e6e6e6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: #e6e6e6;
+  box-shadow: 5px 5px 13px #d4d4d4, -5px -5px 13px #f8f8f8;
+}
+
+.chartwidget {
+  background: "#0092ff";
+  height: 80%;
+  background-color: lightblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: #203350;
+  box-shadow: 5px 5px 13px #d4d4d4, -5px -5px 13px #f8f8f8;
+  padding-top: 5%;
+  padding-bottom: 10%;
+}
+
 .widget-button {
   font-family: "Zen Maru Gothic";
   font-weight: 300;

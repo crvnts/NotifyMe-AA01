@@ -1,6 +1,6 @@
 .chart-container {
-  width: 100%; /* full width */
-  height: 400px; /* for example, can be set in vh units as well */
-  padding: 0;
-  position: relative; /* This can help if using absolute positioning inside */
+  padding-top: 1%;
+  padding-bottom: 1%;
+  width: 97%; /* full width */
+  height: 40vh; /* for example, can be set in vh units as well */
 }

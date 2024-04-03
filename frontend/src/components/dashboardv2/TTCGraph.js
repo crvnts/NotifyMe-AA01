@@ -21,23 +21,65 @@ const TTCGraph = () => {
       {
         label: "Average Delays per Hour",
         data: [],
-        backgroundColor: "rgba(54, 162, 235, 1)",
-        borderColor: "rgba(0, 0, 0, 1)",
-        borderWidth: 1,
       },
     ],
   });
 
   const options = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        ticks: {
+          color: "#fefefe"
+        },
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        ticks: {
+          color: "#fefefe"
+        },
+        grid: {
+          borderDash: [8, 4],
+          color: '#3b4c65'
+        }
+      }
+    },
+    elements: {
+      bar: {
+        borderRadius: 10, // Rounded corners for the bars
+        backgroundColor: "#533cf5", // Soft background color for the bars
+        borderColor: '#bbc9dd', // Border color similar to the background for a subtle edge
+        borderWidth: 0,
+      }
+    },
+    plugins: {
+      legend: {
+        labels: {
+          boxWidth: 12,
+          color: '#fefefe', // Soft text color for legend labels
+        }
+      },
+      tooltip: {
+        // You can add neumorphic styling to the tooltip as well
+        backgroundColor: '#E0E5EC', // Soft color for tooltip background
+        titleColor: '#495057', // Color for tooltip title
+        bodyColor: '#495057', // Color for tooltip body
+        cornerRadius: 20,
+        borderColor: '#E0E5EC',
+        borderWidth: 1,
+      }
+    }
+
   };
 
   useEffect(() => {
     const fetchDelayData = async () => {
       try {
         const response = await axios.get(
-          "http://notifyme-aa01-r4ro.onrender.com/api/getSubwayDelayData"
+          "https://notifyme-aa01-r4ro.onrender.com/api/getSubwayDelayData"
         );
         const delaysPerHour = response.data["average delays"];
         const hours = delaysPerHour.map((item) => `${item[1]}:00`);
@@ -67,7 +109,7 @@ const TTCGraph = () => {
 
   return (
     <div className="chart-container">
-      <Typography style={{ textAlign: "center", marginBottom: "20px" }}>
+      <Typography style={{ textAlign: "center", fontFamily: "Zen Maru Gothic", fontSize: "14pt", color: "#FEFEFE" }}>
         Projected TTC subway delays in Toronto
       </Typography>
       <Bar data={chartData} options={options} />
