@@ -13,6 +13,7 @@ const position = { lat: 43.656866955079, lng: -79.3764393609781 };
 
 const InitMap = ({ startAddress, endAddress, travelMode }) => {
   const [open, setOpen] = useState(false);
+  travelMode = travelMode.toUpperCase(); //forces uppercase for map visualization
   return (
     <APIProvider
       apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} // Ensure you're using the correct environment variable syntax

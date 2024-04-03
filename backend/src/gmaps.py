@@ -33,7 +33,7 @@ def geocode_address():
 def get_directions():
     origin = request.args.get('origin')
     destination = request.args.get('destination')
-    mode = request.args.get('mode', 'driving')
+    mode = request.args.get('mode')
     api_key = os.environ.get('REACT_APP_GOOGLE_MAPS_API_KEY')  # Consider a more secure way to handle the API key
     directions_url = "https://maps.googleapis.com/maps/api/directions/json"
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Layout, Menu, Button, Avatar, Typography, Card } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from "@ant-design/icons";
 import "./TripPlanner.css";
@@ -30,13 +30,13 @@ const TripPlanner = () => {
     setTripsCount(prevState => prevState + 1); // Increment the trips count
   };
 
-  const handleFormSubmit = async ({ startAddress, endAddress, mode }) => {
+  const handleFormSubmit = useCallback(async ({ startAddress, endAddress, mode }) => {
     setTransportMode(mode);
     setIsLoading(true);
     setError('');
     try {
       const response = await axios.get(`http://localhost:5000/api/get_directions`, {
-        params: { origin: startAddress, destination: endAddress, mode } // mode is now used in the API call
+        params: { origin: startAddress, destination: endAddress, mode} // mode is now used in the API call
       });
   
       setDirections(response.data);
@@ -50,7 +50,7 @@ const TripPlanner = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   // useEffect hook to listen for changes in transportMode, startAddress, or endAddress
   useEffect(() => {

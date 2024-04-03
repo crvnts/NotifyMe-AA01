@@ -8,7 +8,7 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
   const [localEndAddress, setLocalEndAddress] = useState('');
   //const [transportMode, setTransportMode] = useState('');
 
-  const [transportMode, setTransportMode] = useState('DRIVING')
+  const [transportMode, setTransportMode] = useState('driving')
 
   const handleSelectStartAddress = address => {
     setLocalStartAddress(address);
@@ -42,7 +42,6 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
   const handleChange = e => {
     const modeCH = e.target.value;
     setTransportMode(modeCH);
-    submitForm({ startAddress: localStartAddress, endAddress: localEndAddress, mode: modeCH }); // Ensure current addresses are included
   };
 
   const [form] = Form.useForm();
@@ -130,15 +129,15 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
       <div>
         <label htmlFor="mode" style={{fontFamily: 'Zen Maru Gothic'}}>Mode of Transportation:</label>
         <Radio.Group 
-          //id="mode" 
+          id="mode" 
           value={transportMode} 
           optionType='button' 
           buttonStyle='solid' 
           onChange={handleChange}>
-          <Radio value={"DRIVING"}>Driving</Radio>
-          <Radio value={"WALKING"}>Walking</Radio>
-          <Radio value={"BICYCLING"}>Bicycling</Radio>
-          <Radio value={"TRANSIT"}>Transit</Radio>
+          <Radio value={"driving"}>Driving</Radio>
+          <Radio value={"walking"}>Walking</Radio>
+          <Radio value={"bicycling"}>Bicycling</Radio>
+          <Radio value={"transit"}>Transit</Radio>
         </Radio.Group>
       </div>
     </Form>
