@@ -26,14 +26,15 @@
 .main-flex-container {
   display: flex;
   flex-direction: column;
+  height: 95%;
   width: 95%;
   align-self: center;
-  margin-top: 3%;
-  margin-left: 3%;
+  margin-top: 1%;
+  margin-left: 2%;
   border-radius: 36px;
   background: #e6e6e6;
   box-shadow: 8px 8px 16px #cfcfcf, -8px -8px 16px #fdfdfd;
-  min-height: 100vh; /* At least full viewport height */
+  min-height: 95vh; /* At least full viewport height */
 }
 
 .widget-row {
