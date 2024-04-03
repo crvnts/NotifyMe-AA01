@@ -20,7 +20,7 @@ Alerts = {
 def filter_df_by_current_hour(df):
     est = pytz.timezone('America/New_York')
     current_datetime = datetime.now(est)
-    current_hour = 18 # Get current hour
+    current_hour =current_datetime.hour # Get current hour
 
     start_hour = current_hour - 6
     end_hour = current_hour + 6
@@ -95,14 +95,39 @@ def getTTCAlerts():
             "message":"Error parsing information",
             "error":"Internal error"
         },500
-    
+    try:
+        for route in response['siteWideCustom']:    
+            # Iterate through alerts for the current route
+            counter+=1
+            alert_id = route['route']
+            soup = BeautifulSoup(route['description'], 'html.parser')
+            cleaned_text = soup.get_text()
+            index = cleaned_text.find("See ")
+            if index != -1:
+                description = cleaned_text[:index]
+            else: 
+                description = cleaned_text
+            newAlert = {
+                'route':alert_id,
+                'description':description
+            }
+            alerts_list.append(newAlert)
+    except Exception as e:
+        return {
+            "message":"Error parsing information",
+            "error":"Internal error"
+        },500
     try:
         for route in response['generalCustom']:
             counter+=1
             alert_id =route['routeType']
             soup = BeautifulSoup(route['description'], 'html.parser')
             cleaned_text = soup.get_text()
-            description = cleaned_text
+            index = cleaned_text.find("See ")
+            if index != -1:
+                description = cleaned_text[:index]
+            else: 
+                description = cleaned_text
             newAlert = {
                 'route':alert_id,
                 'description':description
@@ -139,12 +164,15 @@ def getGoAlerts():
     try:
         for route in response['Messages']["Message"]:    
             # Iterate through alerts for the current route
-            print(route['Category'])
             if route['Category'] != 'Amenity': 
-                print('yo')
                 counter+=1
                 alert_id = route['Lines']
                 description = route['BodyEnglish']
+                words = ["Click ", "Check ", "Note: ", "Ways " ]
+                for word in words:
+                    index = description.find(word)
+                    if index != -1:
+                        description = description[:index]
                 newAlert = {
                     'route':alert_id,
                     'description':description
