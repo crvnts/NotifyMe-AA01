@@ -30,8 +30,7 @@ def is_valid_email(email):
     # Regular expression for basic email validation
     return re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email) is not None
 
-@app.route("/register", methods={'POST'})
-
+@app.route("/api/register", methods={'POST'})
 def insert_user():
     request_data = request.get_json()
     if request.method == "POST":
@@ -100,7 +99,7 @@ def insert_user():
         }, 500
 
 
-@app.route("/login", methods={'POST'})
+@app.route("/api/login", methods={'POST'})
 def login():
     request_data = request.get_json()
     if request.method == "POST":
@@ -145,12 +144,12 @@ def login():
     }, 500
 
 
-@app.route("/authTest", methods={'POST'})
+@app.route("/api/authTest", methods={'POST'})
 @jwtokenUtil.token_required
 def authTest(current_user):
     return jsonify(current_user['username'])
 
-@app.route("/addTrips", methods ={'POST'})
+@app.route("/api/addTrips", methods ={'POST'})
 @jwtokenUtil.token_required
 def addTrips(current_user):
     request_data = request.get_json()
@@ -187,7 +186,7 @@ def addTrips(current_user):
             "message": str(e)
         }, 500
     
-@app.route("/getTrips", methods ={'GET'})
+@app.route("/api/getTrips", methods ={'GET'})
 @jwtokenUtil.token_required
 def getPastTrips(current_user):
     gotTrips = []
@@ -211,12 +210,12 @@ def getPastTrips(current_user):
             "message": "help"
         }, 500
 
-@app.route("/userAddress", methods={'GET'})
+@app.route("/api/userAddress", methods={'GET'})
 @jwtokenUtil.token_required
 def userAddress(current_user):
     return jsonify(current_user['address'])
 
-@app.route("/getUser", methods={'GET'})
+@app.route("/api/getUser", methods={'GET'})
 @jwtokenUtil.token_required
 def getUserInfo(current_user):
     newUser = {
@@ -230,3 +229,37 @@ def getUserInfo(current_user):
         "data": newUser,
         "message": "Retrieved user"
     }, 200
+
+@app.route('/api/updateUserAddress', methods ={'POST'})
+@jwtokenUtil.token_required
+def updateAddress(current_user):
+    request_data = request.get_json()
+    if request.method == "POST":
+        try:
+            street = request_data['street']
+            city = request_data['city']
+            province = request_data['province']
+            postal = request_data['postal']
+        except Exception as e:
+            return {
+                "error": "Missing field data",
+                "message": str(e)
+            }, 400
+    newAddress= {
+        "street": street,
+        "city": city,
+        "province": province,
+        "postal": postal
+    }
+    try:
+        user = db.users.update_one({"username": current_user['username']}, {
+            "$set": {"address": newAddress}})
+        return {
+            "message": "Updated user trip count",
+            "data": newAddress,
+        }, 200
+    except Exception as e:
+        return {
+            "error": "Unable to update trip count",
+            "message": str(e)
+        }, 500

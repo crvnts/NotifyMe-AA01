@@ -64,7 +64,7 @@ def modify_values(filtered_data):
     
     return filtered_data
 
-@app.route("/getTTCAlerts", methods ={'GET'})
+@app.route("/api/getTTCAlerts", methods ={'GET'})
 def getTTCAlerts():
     alerts_list=[]
     counter = 0
@@ -124,7 +124,7 @@ def getTTCAlerts():
         'message':"Updated TTC Alerts"
     }, 200
 
-@app.route("/getGoAlerts", methods ={'GET'})
+@app.route("/api/getGoAlerts", methods ={'GET'})
 def getGoAlerts():
     alerts_list = []
     url = "http://api.openmetrolinx.com/OpenDataAPI/api/V1/ServiceUpdate/ServiceAlert/All?key="+app.config['GO_KEY']
@@ -166,7 +166,7 @@ def getGoAlerts():
         'message':"Updated Go Alerts"
     }, 200
 
-@app.route("/getBusDelayData", methods ={'GET'})
+@app.route("/api/getBusDelayData", methods ={'GET'})
 def getBusDelay():
     try:
         average_delays=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/average_delays_bus.csv')
@@ -181,7 +181,7 @@ def getBusDelay():
         'average delays': average_delays,
     }, 200
 
-@app.route("/getSubwayDelayData", methods ={'GET'})
+@app.route("/api/getSubwayDelayData", methods ={'GET'})
 def getSubwayDelay():
     try:
         average_delays=pd.read_csv('https://raw.githubusercontent.com/rjeong1530/TTC-Data-analysis/main/src/average_delays_subway.csv')
