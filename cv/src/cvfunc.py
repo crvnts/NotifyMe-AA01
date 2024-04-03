@@ -1,6 +1,6 @@
 from src import app, model, WIDTH, HEIGHT
 from flask import render_template, request, redirect, flash, url_for, Response, jsonify
-from bson import ObjectId, json_util
+from bson import ObjectId
 from datetime import datetime
 import tensorflow as tf
 from tf2_yolov4.anchors import YOLOV4_ANCHORS

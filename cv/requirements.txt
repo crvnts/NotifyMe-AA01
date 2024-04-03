@@ -1,3 +1,4 @@
+bson
 tensorflow==2.12.0
 tf2-yolov4
 matplotlib
