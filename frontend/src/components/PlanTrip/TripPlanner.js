@@ -18,7 +18,7 @@ const TripPlanner = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [startAddress, setStartAddress] = useState(""); 
   const [endAddress, setEndAddress] = useState(""); 
-  const [transportMode, setTransportMode] = useState("DRIVING"); // Default mode
+  const [transportMode, setTransportMode] = useState(""); // Default mode
 
 
   //For Directions
@@ -41,6 +41,8 @@ const TripPlanner = () => {
   
       setDirections(response.data);
       setDirectionsKey(Date.now());
+
+      
     } catch (error) {
       console.error('Failed to fetch directions:', error);
       setError('Failed to fetch directions. Please try again.');
