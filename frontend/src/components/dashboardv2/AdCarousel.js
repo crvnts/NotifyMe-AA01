@@ -10,8 +10,8 @@ const AdCarousel = () => {
     <a href="https://www.ubereats.com/" target="_blank" rel="noopener noreferrer">
     <img src="/adImages/ad_ue_icon.png" alt="Uber Eats" />
   </a>,
-    "Ad 3 Content",
-    "Ad 4 Content",
+    "YOUR AD HERE",
+    "YOUR AD HERE",
   ];
   const [currentAd, setCurrentAd] = useState(0);
 
