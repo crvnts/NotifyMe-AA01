@@ -11,7 +11,7 @@ const StatusTab = () => {
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/getAlerts");
+        const response = await axios.get("http://notifyme-aa01-r4ro.onrender.com/api/getAlerts");
         const alertsData = response.data.data.alerts;
         if (alertsData && alertsData.length > 0) {
           // Use the alert with the most recent 'last_updated' time

@@ -34,7 +34,6 @@
   background: #e6e6e6;
   box-shadow: 8px 8px 16px #cfcfcf, -8px -8px 16px #fdfdfd;
   min-height: 100vh; /* At least full viewport height */
-  overflow: auto; /* Scroll inside container if content overflows */
 }
 
 .widget-row {

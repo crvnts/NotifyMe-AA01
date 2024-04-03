@@ -38,7 +38,9 @@ const MainContent = () => {
         </Col>
 
         <Col span={6}>
+        <div className="widget" align="center">
           <Weather></Weather>
+        </div>
         </Col>
 
         <Col className="gutter-row" span={6}>

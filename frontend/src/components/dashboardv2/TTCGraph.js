@@ -37,7 +37,7 @@ const TTCGraph = () => {
     const fetchDelayData = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:5000/getSubwayDelayData"
+          "http://notifyme-aa01-r4ro.onrender.com/api/getSubwayDelayData"
         );
         const delaysPerHour = response.data["average delays"];
         const hours = delaysPerHour.map((item) => `${item[1]}:00`);
