@@ -50,7 +50,9 @@ const StatusTab = () => {
   }, []);
 
   return (
+    
     <Col className="gutter-row" span={24}>
+      <div className="status-container">
       <Card title="Regional Transit Status" bordered={false}>
         <p>
           <strong>TTC:</strong> {latestTTCAert.description}
@@ -60,7 +62,9 @@ const StatusTab = () => {
         </p>
         {/* You can add more lines like the one above for additional routes or information */}
       </Card>
+      </div>
     </Col>
+    
   );
 };
 

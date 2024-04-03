@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Alert, Layout, Typography } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import Cookies from "js-cookie";
+
 const { Title } = Typography;
 
 const Login = () => {
@@ -17,16 +19,20 @@ const Login = () => {
     };
 
     try {
-      const response = await fetch("https://notifyme-aa01-r4ro.onrender.com/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginDetails),
-      });
+      const response = await fetch(
+        "https://notifyme-aa01-r4ro.onrender.com/api/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(loginDetails),
+        }
+      );
 
       if (response.ok) {
-        const data = await response.json();
-        setLoginStatus("Success");
-        console.log("login success", data);
+        const { data } = await response.json();
+        Cookies.set("authToken", data, { expires: 1 });
+        setLoginStatus("Successfully fetched auth token");
+        console.log("login success");
         navigate("/dashboard"); // Redirect to dashboard or another route on success
       } else {
         setLoginStatus("Login failed. Please check your credentials.");

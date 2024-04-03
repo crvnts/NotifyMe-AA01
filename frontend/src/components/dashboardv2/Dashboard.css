@@ -33,12 +33,11 @@
   margin-left: 2%;
   border-radius: 36px;
   background: #e6e6e6;
-  box-shadow: 8px 8px 16px #cfcfcf, -8px -8px 16px #fdfdfd;
-  min-height: 95vh; /* At least full viewport height */
+  box-shadow: 8px 8px 16px #cfcfcf;
+  max-height: 95vh; /* At least full viewport height */
 }
 
 .widget-row {
-  height: 50%;
 }
 
 .btn:hover {
