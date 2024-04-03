@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout, Menu, Button, Avatar, Typography, Card } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from "@ant-design/icons";
 import "./TripPlanner.css";
@@ -14,11 +14,16 @@ const userLastname = "Doe";
 const TripPlanner = () => {
   const [collapsed, setCollapsed] = useState(true);
   const [tripsCount, setTripsCount] = useState(0);
-  const [directions, setDirections] = useState(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [startAddress, setStartAddress] = useState(""); 
   const [endAddress, setEndAddress] = useState(""); 
+  const [transportMode, setTransportMode] = useState("DRIVING"); // Default mode
+
+
+  //For Directions
+  const [directions, setDirections] = useState(null);
+  const [directionsKey, setDirectionsKey] = useState(Date.now());
   
 
   const addTripHandler = () => {
@@ -26,22 +31,31 @@ const TripPlanner = () => {
   };
 
   const handleFormSubmit = async ({ startAddress, endAddress, mode }) => {
+    setTransportMode(mode);
     setIsLoading(true);
     setError('');
     try {
       const response = await axios.get(`http://localhost:5000/api/get_directions`, {
-        params: { origin: startAddress, destination: endAddress, mode }
+        params: { origin: startAddress, destination: endAddress, mode } // mode is now used in the API call
       });
-
+  
       setDirections(response.data);
+      setDirectionsKey(Date.now());
     } catch (error) {
-        console.error('Failed to fetch directions:', error);
-        setError('Failed to fetch directions. Please try again.');
-        setDirections(null); // Clear directions state on error to avoid displaying outdated information
+      console.error('Failed to fetch directions:', error);
+      setError('Failed to fetch directions. Please try again.');
+      setDirections(null);
     } finally {
       setIsLoading(false);
     }
   };
+
+  // useEffect hook to listen for changes in transportMode, startAddress, or endAddress
+  useEffect(() => {
+    if (startAddress && endAddress && transportMode) {
+      handleFormSubmit({ startAddress, endAddress, mode: transportMode });
+    }
+  }, [transportMode, startAddress, endAddress]);
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -100,12 +114,12 @@ const TripPlanner = () => {
           />
           </Card>
           <div style={{ height: "90%", width: "90%" }}>
-            <InitMap startAddress={startAddress} endAddress={endAddress} />
+            <InitMap startAddress={startAddress} endAddress={endAddress} travelMode={transportMode} />
           </div>
           {isLoading ? (
             <p>Loading directions...</p>
           ) : (
-            <PlannedDisplay directions={directions} />
+            <PlannedDisplay key={directionsKey} directions={directions} />
           )}
           
         </Content>

@@ -15,14 +15,14 @@ const InitMap = ({ startAddress, endAddress, travelMode }) => {
   const [open, setOpen] = useState(false);
   return (
     <APIProvider
-      apiKey={process.env.api_key} // Ensure you're using the correct environment variable syntax
+      apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} // Ensure you're using the correct environment variable syntax
       libraries={["marker", "routes"]}
     >
       <div style={{ height: "100%", width: "100%" }}>
         <Map
           defaultZoom={12}
           defaultCenter={position}
-          mapId={process.env.map_id} // Ensure you're using the correct environment variable syntax
+          mapId={process.env.REACT_APP_NEXT_PUBLIC_MAP_ID} // Ensure you're using the correct environment variable syntax
           fullscreenControl={false}
         >
           <Directions startAddress={startAddress} endAddress={endAddress} travelMode={travelMode} />
@@ -42,12 +42,12 @@ const InitMap = ({ startAddress, endAddress, travelMode }) => {
   );
 };
 
-function Directions({ startAddress, endAddress, transportMode }) {
+function Directions({ startAddress, endAddress, travelMode }) {
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
 
   useEffect(() => {
-    if (!routesLibrary || !map || !startAddress || !endAddress || !transportMode) return;
+    if (!routesLibrary || !map || !startAddress || !endAddress || !travelMode) return;
 
     const directionsService = new routesLibrary.DirectionsService();
     const directionsRenderer = new routesLibrary.DirectionsRenderer({ map });
@@ -55,8 +55,7 @@ function Directions({ startAddress, endAddress, transportMode }) {
     directionsService.route({
       origin: startAddress,
       destination: endAddress,
-      travelMode: "DRIVING", //transportMode not sure why this isn't working, could be the way im sending transportMode from SearchForm
-      provideRouteAlternatives: true,
+      travelMode: travelMode, // Use the provided travelMode
     }, (response, status) => {
       if (status === 'OK') {
         directionsRenderer.setDirections(response);
@@ -65,15 +64,8 @@ function Directions({ startAddress, endAddress, transportMode }) {
       }
     });
 
-    // Cleanup function
-    return () => {
-      if (directionsRenderer) {
-        directionsRenderer.setMap(null);
-      }
-    };
-  }, [startAddress, endAddress, transportMode, map, routesLibrary]); // React to changes in addresses or map library
-
-  return null; // You might not need to return anything from this component
+    return () => directionsRenderer.setMap(null); // Cleanup
+  }, [startAddress, endAddress, travelMode, map, routesLibrary]); // React to changes in travelMode
 }
 
 export default InitMap;

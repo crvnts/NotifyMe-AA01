@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import { Form, Input, Radio, Button } from 'antd';
 
@@ -6,7 +6,9 @@ import { Form, Input, Radio, Button } from 'antd';
 const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndAddress: updateEndAddress }) => {
   const [localStartAddress, setLocalStartAddress] = useState('');
   const [localEndAddress, setLocalEndAddress] = useState('');
-  const [transportMode, setTransportMode] = useState('');
+  //const [transportMode, setTransportMode] = useState('');
+
+  const [transportMode, setTransportMode] = useState('DRIVING')
 
   const handleSelectStartAddress = address => {
     setLocalStartAddress(address);
@@ -20,8 +22,15 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
   };
 
   const submitForm = () => {
-    onFormSubmit({ startAddress: localStartAddress, endAddress: localEndAddress, transportMode });
+    onFormSubmit({ startAddress: localStartAddress, endAddress: localEndAddress, mode: transportMode });
   }
+
+  // useEffect to submit the form when transportMode changes
+  useEffect(() => {
+    if (localStartAddress && localEndAddress && transportMode) {
+      submitForm();
+    }
+  }, [transportMode, localStartAddress, localEndAddress]);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -31,13 +40,13 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
 
   // Handler for onChange event
   const handleChange = e => {
-    // Set the mode to the value of the selected radio button
-    setTransportMode(e.target.value);
-    submitForm();
+    const modeCH = e.target.value;
+    setTransportMode(modeCH);
+    submitForm({ startAddress: localStartAddress, endAddress: localEndAddress, mode: modeCH }); // Ensure current addresses are included
   };
 
   const [form] = Form.useForm();
-  const formLayout = useState('horizontal');
+  const formLayout = 'horizontal'
 
   const formItemLayout =
     formLayout === 'horizontal'
