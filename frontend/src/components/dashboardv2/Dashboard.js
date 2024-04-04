@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, json, useNavigate, useNavigate } from "react-router-dom";
+import { Link, json, useNavigate } from "react-router-dom";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -26,7 +26,6 @@ const Dashboard = () => {
     tripCount: 0,
   });
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
