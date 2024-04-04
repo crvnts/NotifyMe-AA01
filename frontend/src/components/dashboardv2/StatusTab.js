@@ -53,7 +53,7 @@ const StatusTab = () => {
     
     <Col className="gutter-row" span={24}>
       <div className="status-container">
-      <Card title="Regional Transit Status" bordered={false}>
+      <Card title="Local Transit Status" bordered={false}>
         <p>
           <strong>TTC:</strong> {latestTTCAert.description}
         </p>
