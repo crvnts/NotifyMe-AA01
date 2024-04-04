@@ -5,12 +5,14 @@ import Cookies from "js-cookie";
 
 const SearchForm = ({
   onFormSubmit,
+  onAddTrip,
   setStartAddress: updateStartAddress,
   setEndAddress: updateEndAddress,
 }) => {
   const [localStartAddress, setLocalStartAddress] = useState("");
   const [localEndAddress, setLocalEndAddress] = useState("");
   const [transportMode, setTransportMode] = useState("driving");
+  const [totalDistance, setTotalDistance] = useState("");
 
   const handleSelectStartAddress = (address) => {
     setLocalStartAddress(address);
@@ -23,21 +25,27 @@ const SearchForm = ({
     //submitForm(); // Submit form right after user enters end address
   };
 
+  //Has the total distance set here.
   const submitForm = async () => {
-    onFormSubmit({
+    const data = await onFormSubmit({
       startAddress: localStartAddress,
       endAddress: localEndAddress,
       mode: transportMode,
     });
+
+    if (data && data["Total Distance"]) {
+      setTotalDistance(data["Total Distance"]);
+    }
   };
 
+  //Ddont think we need this anymore. but we need the cookies get
   const addTrip = async () => {
     const authToken = Cookies.get("authToken");
 
     const tripData = {
       startAddress: localStartAddress,
       endAddress: localEndAddress,
-      //distance: distance,
+      distance: totalDistance,
     };
 
     try {
@@ -209,8 +217,8 @@ const SearchForm = ({
       <Button type="primary" onClick={submitForm}>
         Get Directions
       </Button>
-      <Button type="primary" onClick={addTrip} style={{ marginLeft: "1%" }}>
-        Begin Trip
+      <Button type="primary" onClick={onAddTrip} style={{ marginLeft: "1%" }}>
+        Save Trip
       </Button>
     </Form>
   );

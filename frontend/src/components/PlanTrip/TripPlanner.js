@@ -71,6 +71,8 @@ const TripPlanner = () => {
   const [directions, setDirections] = useState(null);
   const [directionsKey, setDirectionsKey] = useState(Date.now());
 
+  const [totalDistance, setTotalDistance] = useState("");
+
   const handleFormSubmit = useCallback(
     async ({ startAddress, endAddress, mode }) => {
       setTransportMode(mode);
@@ -86,16 +88,30 @@ const TripPlanner = () => {
 
         setDirections(response.data);
         setDirectionsKey(Date.now());
+
+        setTotalDistance(response.data["Total Distance"]);
       } catch (error) {
         console.error("Failed to fetch directions:", error);
         setError("Failed to fetch directions. Please try again.");
         setDirections(null);
+        setTotalDistance("");
       } finally {
         setIsLoading(false);
       }
     },
     []
   );
+
+  //THis is the code to add trip
+  const handleAddTrip = useCallback(async () => {
+    const tripData = {
+      startAddress,
+      endAddress,
+      distance: totalDistance, // Include total distance in the trip data
+    };
+
+    console.log("Saving trip data:", tripData);
+  }, [startAddress, endAddress, totalDistance]);
 
   // useEffect hook to listen for changes in transportMode, startAddress, or endAddress
   useEffect(() => {
@@ -183,6 +199,7 @@ const TripPlanner = () => {
           <Card className="search-card">
             <SearchForm
               onFormSubmit={handleFormSubmit}
+              onAddTrip={handleAddTrip}
               setStartAddress={setStartAddress}
               setEndAddress={setEndAddress}
             />
