@@ -1,14 +1,14 @@
 {
 	"info": {
-		"_postman_id": "8733869a-0ea4-45ab-a2d2-6b15ebc63f66",
-		"name": "AA01 NotifyMe Test",
+		"_postman_id": "6b2cde9e-02e0-4e79-88ac-d521022692e6",
+		"name": "AA01 NotifyMe Render",
 		"description": "NotifyMe's Automated Test Suite to Validate endpoints are returning correct data.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23679053"
 	},
 	"item": [
 		{
-			"name": "http://127.0.0.1:5000/register",
+			"name": "api/register",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -22,15 +22,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/register",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/register",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"register"
@@ -40,7 +38,7 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/login",
+			"name": "api/login",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -54,15 +52,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/login",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/login",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"login"
@@ -72,7 +68,7 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/authTest",
+			"name": "api/authTest",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -83,15 +79,13 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/authTest",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/authTest",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"authTest"
@@ -101,36 +95,7 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/addTripCounter",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlc3RyeWFuMSJ9.Eq7osdhI-027uBPzyysUJAwmJbyXCfCJ9xDyl3JvVto",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://127.0.0.1:5000/api/addTripCounter",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"addTripCounter"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "http://127.0.0.1:5000/userAddress",
+			"name": "api/userAddress",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -141,15 +106,13 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/userAddress",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/userAddress",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"userAddress"
@@ -159,7 +122,7 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/getUser",
+			"name": "api/getUser",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -170,15 +133,13 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/getUser",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/getUser",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"getUser"
@@ -188,20 +149,18 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/getTTCAlerts",
+			"name": "api/getTTCAlerts",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/getTTCAlerts",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/getTTCAlerts",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"getTTCAlerts"
@@ -211,20 +170,18 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/getGoAlerts",
+			"name": "api/getGoAlerts",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/getGoAlerts",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/getGoAlerts",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"getGoAlerts"
@@ -234,20 +191,18 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/getBusDelayData",
+			"name": "api/getBusDelayData",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/getBusDelayData",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/getBusDelayData",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"getBusDelayData"
@@ -257,20 +212,18 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/getSubwayDelayData",
+			"name": "api/getSubwayDelayData",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/getSubwayDelayData",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/getSubwayDelayData",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"getSubwayDelayData"
@@ -280,42 +233,7 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/getHighwayCongestion",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"highway\": \"GEW\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://127.0.0.1:5000/api/getHighwayCongestion",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"getHighwayCongestion"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "http://127.0.0.1:5000/addTrips",
+			"name": "api/addTrips",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -335,15 +253,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/addTrips",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/addTrips",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"addTrips"
@@ -353,7 +269,7 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/getTrips",
+			"name": "api/getTrips",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -364,15 +280,13 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/getTrips",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/getTrips",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"getTrips"
@@ -382,7 +296,7 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:5000/api/updateUserAddress",
+			"name": "api/updateUserAddress",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -402,15 +316,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/api/updateUserAddress",
-					"protocol": "http",
+					"raw": "https://notifyme-aa01-r4ro.onrender.com/api/updateUserAddress",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"notifyme-aa01-r4ro",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"api",
 						"updateUserAddress"
