@@ -6,7 +6,6 @@ import { Form, Input, Radio, Button } from 'antd';
 const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndAddress: updateEndAddress }) => {
   const [localStartAddress, setLocalStartAddress] = useState('');
   const [localEndAddress, setLocalEndAddress] = useState('');
-  //const [transportMode, setTransportMode] = useState('');
 
   const [transportMode, setTransportMode] = useState('driving')
 
