@@ -1,42 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { Link, json } from "react-router-dom";
+import { Link, json, useNavigate } from "react-router-dom";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
-  MessageOutlined,
-  NotificationOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
-import {
-  Layout,
-  Menu,
-  Button,
-  theme,
-  ConfigProvider,
-  Col,
-  Divider,
-  Row,
-  Avatar,
-  Typography,
-  Flex,
-} from "antd";
+import { Layout, Menu, Button, Avatar, Typography, Flex } from "antd";
 import Cookies from "js-cookie";
 import "./Dashboard.css";
-import Search from "antd/es/input/Search";
 import MainContent from "./MainContent";
 
 const { Header, Sider, Content } = Layout;
 
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const [tripsCount, setTripsCount] = useState(0);
+  const [setTripsCount] = useState(0);
   const [userData, setUserData] = useState({
     name: "",
     username: "",
     tripCount: 0,
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -47,7 +35,7 @@ const Dashboard = () => {
           {
             method: "GET",
             headers: {
-              Authorization: authToken // Assuming the token is a Bearer token
+              Authorization: authToken, // Assuming the token is a Bearer token
             },
           }
         );
@@ -67,6 +55,12 @@ const Dashboard = () => {
 
     fetchUserData();
   }, []);
+
+  const logoutHandler = () => {
+    Cookies.remove("authToken"); // Remove the authToken cookie
+    setUserData({ name: "", username: "", tripCount: 0 }); // Reset user data state
+    navigate("/login"); // Redirect to the login page
+  };
 
   return (
     <Layout>
@@ -170,11 +164,15 @@ const Dashboard = () => {
             </Typography.Title>
 
             <Flex align="center" gap="3rem">
-              <Search placeholder="Search Dashboard" allowClear></Search>
-
               <Flex align="center" gap="8px">
-                <MessageOutlined className="header-icon"></MessageOutlined>
-                <NotificationOutlined className="header-icon"></NotificationOutlined>
+                <Button
+                  onClick={logoutHandler}
+                  type="primary"
+                  icon={<LogoutOutlined />}
+                  className="logout-button"
+                >
+                  Log out
+                </Button>
               </Flex>
             </Flex>
           </Flex>
