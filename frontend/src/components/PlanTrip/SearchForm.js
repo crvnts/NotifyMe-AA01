@@ -11,6 +11,7 @@ const SearchForm = ({
   const [localStartAddress, setLocalStartAddress] = useState("");
   const [localEndAddress, setLocalEndAddress] = useState("");
   const [transportMode, setTransportMode] = useState("driving");
+  const [totalDistance, setTotalDistance] = useState("");
 
   const handleSelectStartAddress = (address) => {
     setLocalStartAddress(address);
@@ -23,21 +24,26 @@ const SearchForm = ({
     //submitForm(); // Submit form right after user enters end address
   };
 
+  //Has the total distance set here.
   const submitForm = async () => {
-    onFormSubmit({
+    const response = await onFormSubmit({
       startAddress: localStartAddress,
       endAddress: localEndAddress,
       mode: transportMode,
     });
+    if (response && response.totalDistance) {
+      setTotalDistance(response.totalDistance); // Store the total distance from the response
+    }
   };
 
+  //Ddont think we need this anymore. but we need the cookies get
   const addTrip = async () => {
     const authToken = Cookies.get("authToken");
 
     const tripData = {
       startAddress: localStartAddress,
       endAddress: localEndAddress,
-      //distance: distance,
+      distance: totalDistance,
     };
 
     try {

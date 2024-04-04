@@ -90,6 +90,7 @@ const TripPlanner = () => {
         console.error("Failed to fetch directions:", error);
         setError("Failed to fetch directions. Please try again.");
         setDirections(null);
+        setTotalDistance("");
       } finally {
         setIsLoading(false);
       }
