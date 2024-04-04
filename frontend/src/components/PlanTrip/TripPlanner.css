@@ -41,6 +41,9 @@
 .search-card {
     display: flex;
     justify-content: center;
+    width: 50%;
+    height: auto;
+    margin-left: 1rem;
     margin-top: 10px !important;
     border-radius: 36px;
     background: #f7f7f7;

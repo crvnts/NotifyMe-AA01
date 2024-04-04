@@ -11,7 +11,7 @@ def geocode_address():
     print("get_directions endpoint was called")
 
     address = request.args.get('address')
-    api_key = os.environ.get('api_key')  # Consider a more secure way to handle the API key
+    api_key = os.environ.get('REACT_APP_GOOGLE_MAPS_API_KEY')  # Consider a more secure way to handle the API key
     geocode_url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {"address": address, "key": api_key}
     response = requests.get(geocode_url, params=params)
@@ -33,8 +33,8 @@ def geocode_address():
 def get_directions():
     origin = request.args.get('origin')
     destination = request.args.get('destination')
-    mode = request.args.get('mode', 'driving')
-    api_key = os.environ.get('api_key')  # Consider a more secure way to handle the API key
+    mode = request.args.get('mode')
+    api_key = os.environ.get('REACT_APP_GOOGLE_MAPS_API_KEY')  # Consider a more secure way to handle the API key
     directions_url = "https://maps.googleapis.com/maps/api/directions/json"
 
     print(f"Origin: {origin}, Destination: {destination}, Mode: {mode}")  # Debug print
