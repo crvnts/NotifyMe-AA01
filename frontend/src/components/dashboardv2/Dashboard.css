@@ -22,10 +22,6 @@
   filter: brightness(1.2) !important; /* Use !important to override Ant Design styles if necessary */
 }
 
-.collapse-button:hover {
-  background: grey;
-}
-
 .header-icon {
   background: grey;
   color: azure;
@@ -48,6 +44,7 @@
   background: #e6e6e6;
   box-shadow: 8px 8px 16px #cfcfcf;
   max-height: 95vh; /* At least full viewport height */
+  overflow: scroll;
 }
 
 .btn:hover {

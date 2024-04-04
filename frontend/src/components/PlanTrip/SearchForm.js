@@ -68,15 +68,15 @@ const SearchForm = ({
   // useEffect to submit the form when transportMode changes
   useEffect(() => {
     if (localStartAddress && localEndAddress && transportMode) {
-      submitForm();
+      //submitForm();
     }
   }, [transportMode, localStartAddress, localEndAddress]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Call the onFormSubmit prop with the local state values
-    submitForm();
-  };
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   // Call the onFormSubmit prop with the local state values
+  //   submitForm();
+  // };
 
   // Handler for onChange event
   const handleChange = (e) => {
@@ -106,7 +106,7 @@ const SearchForm = ({
       initialValues={{
         layout: formLayout,
       }}
-      onFinish={handleSubmit}
+      //onFinish={handleSubmit}
       style={{
         maxWidth: formLayout === "inline" ? "none" : 600,
       }}
@@ -210,7 +210,7 @@ const SearchForm = ({
         Get Directions
       </Button>
       <Button type="primary" onClick={addTrip} style={{ marginLeft: "1%" }}>
-        Begin Trip
+        Save Trip
       </Button>
     </Form>
   );

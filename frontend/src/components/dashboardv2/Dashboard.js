@@ -95,7 +95,7 @@ const Dashboard = () => {
         trigger={null}
         collapsible
         collapsed={collapsed}
-        style={{ minHeight: "100%", overflowY: "auto" }}
+        style={{ minHeight: "100vh"}}
       >
         <div className="demo-logo-vertical" />
         <Avatar

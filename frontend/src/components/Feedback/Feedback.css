@@ -1,0 +1,26 @@
+.feedback-container {
+  display: flex;
+  justify-content: center;
+  height: 95%;
+  width: 95%;
+  align-self: center;
+  margin-top: 1%;
+  margin-left: 2%;
+  border-radius: 36px;
+  background: #e6e6e6;
+  box-shadow: 8px 8px 16px #cfcfcf;
+  max-height: 95vh; /* At least full viewport height */
+  overflow: scroll;
+}
+
+.feedback-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    overflow: scroll;
+    width: 80%;
+    height: fit-content;
+    font-size: 1.5rem;
+}

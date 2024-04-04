@@ -12,6 +12,7 @@ import Login from "./components/login/Login";
 import Register from "./components/register/Register";
 import TripPlanner from "./components/PlanTrip/TripPlanner";
 import MyAccount from "./components/account/MyAccount";
+import Feedback from "./components/Feedback/Feedback"
 
 //const rootElement = document.getElementById("root");
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
           <Route exact path="/Login" element={<Login />} />
           <Route exact path="/TripPlanner" element={<TripPlanner />} />
           <Route exact path="/MyAccount" element={<MyAccount/>} />
+          <Route exact path="/Feedback" element={<Feedback/>} />
         </Routes>
       </Fragment>
     </Router>

@@ -107,7 +107,7 @@ const TripPlanner = () => {
 
   return (
     <Layout style={{ height: "100vh" }}>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+      <Sider trigger={null} collapsible collapsed={collapsed} style={{minHeight:"100vh"}}>
         <div className="demo-logo-vertical" />
         <Avatar
           size={{
@@ -179,7 +179,7 @@ const TripPlanner = () => {
             Welcome back, {userData.name}
           </Typography.Title>
         </Header>
-        <Content>
+        <Content className="trip-container">
           <Card className="search-card">
             <SearchForm
               onFormSubmit={handleFormSubmit}
@@ -187,7 +187,7 @@ const TripPlanner = () => {
               setEndAddress={setEndAddress}
             />
           </Card>
-          <div style={{ height: "90%", width: "90%" }}>
+          <div style={{ height: "90%", width: "90%", flexShrink: "0" }}>
             <InitMap
               startAddress={startAddress}
               endAddress={endAddress}
@@ -197,8 +197,11 @@ const TripPlanner = () => {
           {isLoading ? (
             <p>Loading directions...</p>
           ) : (
-            <PlannedDisplay key={directionsKey} directions={directions} />
+            <PlannedDisplay key={directionsKey} directions={directions}/>
           )}
+          <div>
+            CV widget
+          </div>
         </Content>
       </Layout>
     </Layout>
