@@ -175,7 +175,7 @@ const MyAccount = () => {
           </Flex>
         </Header>
         <Content>
-          <Flex className="main-flex-container">
+          <Flex className="account-container">
             <Account></Account>
           </Flex>
         </Content>

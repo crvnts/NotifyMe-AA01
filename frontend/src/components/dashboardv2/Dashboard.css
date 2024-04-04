@@ -102,3 +102,18 @@
   background-color: "#0092ff";
   padding: "8px 10px";
 }
+
+.account-container {
+  display: flex;
+  justify-content: center;
+  height: 95%;
+  width: 95%;
+  align-self: center;
+  margin-top: 1%;
+  margin-left: 2%;
+  border-radius: 36px;
+  background: #e6e6e6;
+  box-shadow: 8px 8px 16px #cfcfcf;
+  max-height: 95vh; /* At least full viewport height */
+  overflow: scroll;
+}
