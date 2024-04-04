@@ -4,7 +4,7 @@ import React from "react";
 const Banner = () => {
   return (
     <Card>
-      <Flex vertical align="flex-start">
+      <Flex vertical align="flex">
         <Typography.Title level={2} strong>
           Let's get you to your destination.
         </Typography.Title>

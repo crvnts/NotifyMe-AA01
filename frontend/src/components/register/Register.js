@@ -146,7 +146,7 @@ const Register = () => {
               <Input
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 type="password"
-                placeholder="Password"
+                placeholder="Password (8 character minimum)"
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, json } from "react-router-dom";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -23,22 +23,51 @@ import {
   Typography,
   Flex,
 } from "antd";
+import Cookies from "js-cookie";
 import "./Dashboard.css";
 import Search from "antd/es/input/Search";
 import MainContent from "./MainContent";
 
 const { Header, Sider, Content } = Layout;
-const userFirstName = "John";
-const userLastname = "Doe";
 
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(true);
-
   const [tripsCount, setTripsCount] = useState(0);
+  const [userData, setUserData] = useState({
+    name: "",
+    username: "",
+    tripCount: 0,
+  });
 
-  const addTripHandler = () => {
-    setTripsCount((prevState) => prevState + 1); // Increment the trips count
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const authToken = Cookies.get("authToken");
+      try {
+        const response = await fetch(
+          "https://notifyme-aa01-r4ro.onrender.com/api/getUser",
+          {
+            method: "GET",
+            headers: {
+              Authorization: authToken // Assuming the token is a Bearer token
+            },
+          }
+        );
+
+        if (response.ok) {
+          const jsonResponse = await response.json();
+          setUserData(jsonResponse.data); // Store the user data in state
+          setTripsCount(jsonResponse.data.tripCount); // Update the trip count state
+        } else {
+          // Handle errors or unauthorized access here
+        }
+      } catch (error) {
+        console.error("Fetching user data failed:", error);
+        // Handle error here
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   let navigate = useNavigate();
   const navigateTo = ({key}) => {
@@ -62,8 +91,13 @@ const Dashboard = () => {
   };
 
   return (
-    <Layout style={{ height: "100vh" }}>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+    <Layout>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        style={{ minHeight: "100%", overflowY: "auto" }}
+      >
         <div className="demo-logo-vertical" />
         <Avatar
           size={{
@@ -97,7 +131,7 @@ const Dashboard = () => {
                   margin: "16px 0",
                 }}
               >
-                {userFirstName} {userLastname}
+                {userData.username}
               </userTitle>
               <dispUserTrips
                 type="secondary"
@@ -107,15 +141,9 @@ const Dashboard = () => {
                   marginLeft: "20px",
                 }}
               >
-                Trips Made: {tripsCount}
+                Trips Made: {userData.tripCount}
               </dispUserTrips>
               {/* Button to simulate adding a trip - you might replace this with your actual trip-adding logic */}
-              <Button
-                onClick={addTripHandler}
-                style={{ fontFamily: "Zen Maru Gothic", margin: "16px 24px" }}
-              >
-                Add Trip
-              </Button>
             </div>
           ) : (
             false
@@ -161,7 +189,7 @@ const Dashboard = () => {
               }}
               level={2}
             >
-              Welcome back, {userFirstName}
+              Welcome back, {userData.name}
             </Typography.Title>
 
             <Flex align="center" gap="3rem">
