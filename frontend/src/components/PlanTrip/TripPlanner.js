@@ -35,7 +35,7 @@ const TripPlanner = () => {
     setIsLoading(true);
     setError('');
     try {
-      const response = await axios.get(`http://localhost:5000/api/get_directions`, {
+      const response = await axios.get(`https://notifyme-aa01-r4ro.onrender.com/api/get_directions`, {
         params: { origin: startAddress, destination: endAddress, mode} // mode is now used in the API call
       });
   

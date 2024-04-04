@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Card, Space, Typography } from "antd";
+import { Avatar, Card, Space, Typography, Timeline } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
-import "./Account.css"
-import skyline from "../Assets/torontoskyline.jpg"
+import "./Account.css";
+import skyline from "../Assets/torontoskyline.jpg";
 
 const { Text, Title } = Typography;
 
@@ -15,8 +15,8 @@ const Account = () => {
   });
 
   const [userTrips, setUserTrips] = useState({
-    tripList: []
-  })
+    tripList: [],
+  });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -59,28 +59,24 @@ const Account = () => {
         );
         if (response.ok) {
           const jsonResponse = await response.json();
-          setUserTrips(jsonResponse.data)
+          setUserTrips({ tripList: jsonResponse.data });
         } else {
-          throw new Error("Failed to retrieve trip data")
+          throw new Error("Failed to retrieve trip data");
         }
       } catch (error) {
-        console.error("Error retrieving user trips")
+        console.error("Error retrieving user trips:", error);
       }
-    }
+    };
     const fetchData = async () => {
       await fetchUserData();
       await fetchUserTrips();
-    }
+    };
     fetchData();
   }, []);
 
   return (
     <Card
-      cover={
-        <img
-          alt = ""
-          src= {skyline}/>
-      }
+      cover={<img alt="" src={skyline} />}
       className="account-card"
       title="Your Account Info"
       bordered={true}
@@ -103,18 +99,20 @@ const Account = () => {
       {/* Debugging section to display raw JSON */}
       <div style={{ marginTop: "1rem", whiteSpace: "pre-wrap" }}>
         <Space direction="vertical">
-          <Text className="text">
-            Name: {userData.name}
-          </Text>
-          <Text className="text">
-            Username: {userData.username}
-          </Text>
-          <Text className="text">
-            Trips Count: {userData.tripCount}
-          </Text>
-          <Text className="text">
-            Trip List: {userData.tripList}
-          </Text>
+          <Text className="data-text">Name: {userData.name}</Text>
+          <Text className="data-text">Username: {userData.username}</Text>
+          <Text className="data-text">Trips Count: {userData.tripCount}</Text>
+          <Text className="data-text">Trip List:</Text>
+          <Timeline>
+          {userTrips.tripList.map((trip, index) => (
+            <Timeline.Item key={index}>
+              <p className="trip-text">Date: {trip.date}</p>
+              <p className="trip-text">Distance: {trip.distance} km</p>
+              <p className="trip-text">Start Address: {`${trip.start_address.street}, ${trip.start_address.city}`}</p>
+              <p className="trip-text">Destination Address: {`${trip.dest_address.street}, ${trip.dest_address.city}`}</p>
+            </Timeline.Item>
+          ))}
+        </Timeline>
         </Space>
       </div>
     </Card>

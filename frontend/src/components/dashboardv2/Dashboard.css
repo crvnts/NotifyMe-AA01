@@ -37,9 +37,6 @@
   max-height: 95vh; /* At least full viewport height */
 }
 
-.widget-row {
-}
-
 .btn:hover {
   color: #4f6f52;
   border-color: #4f6f52;

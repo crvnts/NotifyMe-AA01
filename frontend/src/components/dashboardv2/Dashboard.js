@@ -8,7 +8,8 @@ import {
   CarOutlined,
   MessageOutlined,
   NotificationOutlined,
-  ScheduleOutlined
+  ScheduleOutlined,
+  RightSquareOutlined,
 } from "@ant-design/icons";
 import {
   Layout,
@@ -84,6 +85,9 @@ const Dashboard = () => {
       case "4":
         navigate('/Feedback');
         break;
+      case "5":
+        navigate('/dashboard');
+        break;
       default:
         console.log('Unknown key: ', key);
         break;
@@ -96,7 +100,7 @@ const Dashboard = () => {
         trigger={null}
         collapsible
         collapsed={collapsed}
-        style={{ minHeight: "100%", overflowY: "auto" }}
+        style={{ minHeight: "100%", overflowY: "auto"}}
       >
         <div className="demo-logo-vertical" />
         <Avatar
@@ -176,6 +180,11 @@ const Dashboard = () => {
               icon: <UploadOutlined />,
               label: "Feedback",
             },
+            {
+              key: "5",
+              icon: <RightSquareOutlined />,
+              label: "Dashboard",
+            }
           ]}
         />
       </Sider>
