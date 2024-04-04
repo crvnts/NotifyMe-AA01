@@ -12,7 +12,7 @@ const MainContent = () => {
   const [planningTrip, setPlanningTrip] = useState(false);
 
   return (
-    <div style={{ flex: 1, paddingTop: "2%" }}>
+    <div style={{ flex: 1, paddingTop: "2%", paddingBottom: "1%" }}>
       {/* <div style={{ paddingBottom: "2%" }}>
         <Banner></Banner>
       </div> */}
@@ -22,11 +22,13 @@ const MainContent = () => {
         justify="space-evenly"
       >
         <Col className="gutter-row" span={6}>
-          <div className="widget" align="center">
+          <div className="tripwidget" align="center">
+            <div style={{fontFamily: "Zen Maru Gothic", fontWeight: "300", fontSize: "24px", paddingBottom: "10pt"}}>Going Somewhere?</div>
             <Link to="/TripPlanner">
               <div>
                 <Button
                   type="text"
+                  align="center"
                   className="widget-button"
                   onClick={() => {
                     setPlanningTrip(planningTrip);
@@ -62,7 +64,7 @@ const MainContent = () => {
           </div>
         </Col>
         <Col className="gutter-row" span={8}>
-          <div className="widget" align="center">
+          <div className="statuswidget" align="center">
             <StatusTab></StatusTab>
           </div>
         </Col>

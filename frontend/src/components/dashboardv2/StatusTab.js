@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, Col } from 'antd';
+import "./StatusTab.css"
 
 const StatusTab = () => {
   const [latestTTCAert, setLatestTTCAert] = useState({
@@ -50,18 +51,16 @@ const StatusTab = () => {
   }, []);
 
   return (
-    
     <Col className="gutter-row" span={24}>
       <div className="status-container">
-      <Card title="Local Transit Status" bordered={false}>
+      <div className="status-title">Local Transit Status</div>
         <p>
-          <strong>TTC:</strong> {latestTTCAert.description}
+          <strong style={{fontSize: "17px", color: "black"}}>TTC:</strong> {latestTTCAert.description}
         </p>
         <p>
-          <strong>GO:</strong> {latestGOAlert.description}
+          <strong style={{fontSize: "17px", color: "black"}}>GO:</strong> {latestGOAlert.description}
         </p>
-        {/* You can add more lines like the one above for additional routes or information */}
-      </Card>
+        {/* Additional routes or information */}
       </div>
     </Col>
     

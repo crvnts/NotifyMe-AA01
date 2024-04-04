@@ -7,11 +7,15 @@ const AdCarousel = () => {
     <a href="https://www.google.com" target="_blank" rel="noopener noreferrer">
       <img src="/adImages/ad_google_icon.png" alt="Google" />
     </a>,
-    <a href="https://www.ubereats.com/" target="_blank" rel="noopener noreferrer">
-    <img src="/adImages/ad_ue_icon.png" alt="Uber Eats" />
-  </a>,
-    "YOUR AD HERE",
-    "YOUR AD HERE",
+    <a
+      href="https://www.ubereats.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img src="/adImages/ad_ue_icon.png" alt="Uber Eats" />
+    </a>,
+    <div style={{fontFamily: "Zen Maru Gothic", fontSize: "24px", fontWeight: "bolder"}}>YOUR AD HERE</div>,
+    <div style={{fontFamily: "Zen Maru Gothic", fontSize: "24px", fontWeight: "bolder"}}>YOUR AD HERE</div>,
   ];
   const [currentAd, setCurrentAd] = useState(0);
 
