@@ -1,0 +1,33 @@
+.status-container {
+    width: 100%;
+    height: 80%;
+    padding: 20px; /* Add padding */
+    background: #e6e6e6; /* Background color similar to other widgets */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 7px 7px 26px #98beca, -7px -7px 26px #c2f2ff; /* Neumorphic shadow */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .status-title {
+    font-family: Zen Maru Gothic;
+    font-size: 24px; /* Adjust title size */
+    font-weight: bolder; /* Bold title */
+    margin-bottom: 0px; /* Space below the title */
+    color: #000000; /* Title color */
+    text-align: center; /* Center title text */
+  }
+  
+  /* Adjust paragraph styles for TTC and GO status */
+  .status-container p {
+    font-family: "Zen Maru Gothic", sans-serif;
+    font-size: 15px; /* Adjust text size */
+    color: #555555; /* Text color */
+    max-height: 80%;
+    width: 100%; /* Ensure text spans the full width of the container */
+    text-align: left; /* Center align text */
+    margin: 3px 0; /* Margin for spacing */
+  }
+  

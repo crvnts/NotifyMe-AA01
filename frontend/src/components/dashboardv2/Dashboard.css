@@ -1,47 +1,61 @@
 .collapse-button {
-    display: flex;
-    margin-left: 1.5vw;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 2vh;
-    width: 8vw;
-    height: 4.5vh;
-    background: grey;
+  display: flex;
+  margin-left: 1.5vw;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2vh;
+  width: 8vw;
+  height: 4.5vh;
+  background: grey;
+}
+
+.logout-button {
+  border: none;
+  background-color: transparent;
+  font-family: "Zen Maru Gothic";
+  font-size: 18px;
+  transition: filter 0.3s ease; /* Add transition effect */
+}
+
+.logout-button:hover {
+  filter: brightness(1.2) !important; /* Use !important to override Ant Design styles if necessary */
 }
 
 .collapse-button:hover {
-    background: grey;
+  background: grey;
 }
 
 .header-icon {
-    background: grey;
-    color:azure;
-    padding: 8px;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
+  background: grey;
+  color: azure;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
+
 .main-flex-container {
-    display: flex;
-    width: 95%;
-    align-self: center;
-    margin-top: 3%;
-    margin-left: 3%;
-    border-radius: 36px;
-    background: #e6e6e6;
-    box-shadow:  8px 8px 16px #cfcfcf,
-             -8px -8px 16px #fdfdfd;
+  display: flex;
+  flex-direction: column;
+  height: 95%;
+  width: 95%;
+  align-self: center;
+  margin-top: 1%;
+  margin-left: 2%;
+  border-radius: 36px;
+  background: #e6e6e6;
+  box-shadow: 8px 8px 16px #cfcfcf;
+  max-height: 95vh; /* At least full viewport height */
 }
 
 .widget-row {
-    height: 50%;
 }
 
 .btn:hover {
-    color: #4f6f52;
-    border-color: #4f6f52;
+  color: #4f6f52;
+  border-color: #4f6f52;
 }
 
 .side-menu-button {
@@ -58,17 +72,76 @@
 }
 
 .widget {
-    background: '#0092ff';
-    height: 100%;
-    background-color: lightblue;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background: "#0092ff";
+  height: 80%;
+  background-color: #add8e6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 10px;
+  background: #b6d7e4;
+  box-shadow: 7px 7px 26px #98beca, -7px -7px 26px #c2f2ff;
+}
+
+.tripwidget {
+  background: "#0092ff";
+  height: 80%;
+  background-color: #add8e6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 10px;
+  background: #b6d7e4;
+  box-shadow: 7px 7px 26px #98beca, -7px -7px 26px #c2f2ff;
+}
+
+.adwidget {
+  background: "#0092ff";
+  height: 80%;
+  background-color: #e6e6e6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: #e6e6e6;
+  box-shadow: 5px 5px 13px #d4d4d4, -5px -5px 13px #f8f8f8;
+}
+
+.chartwidget {
+  background: "#0092ff";
+  height: 80%;
+  background-color: lightblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: #203350;
+  box-shadow: 5px 5px 13px #d4d4d4, -5px -5px 13px #f8f8f8;
+  padding-top: 5%;
+  padding-bottom: 10%;
+}
+
+.statuswidget {
+  background: "#0092ff";
+  height: 80%;
+  background-color: #add8e6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: #b6d7e4;
+  box-shadow: 7px 7px 26px #98beca, -7px -7px 26px #c2f2ff;
 }
 
 .widget-button {
-    font-family: 'Zen Maru Gothic';
-    font-weight: 300;
-    background-color: '#0092ff';
-    padding: '8px 10px';
+  font-family: "Zen Maru Gothic";
+  font-size: 24px;
+  font-weight: 300;
+  background-color: "#0092ff";
+  padding: "8px 10px";
+  height: 95%;
+  width: 95%;
+  box-shadow:  6px 6px 11px #9ac0cd, -6px -6px 11px #c0f0ff;
 }
