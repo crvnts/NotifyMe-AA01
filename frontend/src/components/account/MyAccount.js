@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -8,7 +9,8 @@ import {
   CarOutlined,
   MessageOutlined,
   NotificationOutlined,
-  ScheduleOutlined
+  ScheduleOutlined,
+  RightSquareOutlined,
 } from "@ant-design/icons";
 import {
   Layout,
@@ -28,38 +30,54 @@ import Search from "antd/es/input/Search";
 import Account from "./Account";
 
 const { Header, Sider, Content } = Layout;
-const userFirstName = "John";
-const userLastname = "Doe";
 
 const MyAccount = () => {
   const [collapsed, setCollapsed] = useState(true);
-
   const [tripsCount, setTripsCount] = useState(0);
+  const [userData, setUserData] = useState({
+    name: "",
+    username: "",
+    tripCount: 0,
+  });
 
-  const addTripHandler = () => {
-    setTripsCount((prevState) => prevState + 1); // Increment the trips count
+  const fetchUserDataFromCookies = () => {
+    const userDataString = Cookies.get("userData");
+
+    if (userDataString) {
+      try {
+        const userData = JSON.parse(userDataString);
+        setUserData(userData);
+      } catch (error) {
+        console.error("Error parsing userData from cookies:", error);
+        // Handle parsing error (e.g., corrupted cookie data)
+      }
+    }
   };
 
   let navigate = useNavigate();
-  const navigateTo = ({key}) => {
-    switch(key) {
+  const navigateTo = ({ key }) => {
+    switch (key) {
       case "1":
-        navigate('/MyAccount');
+        navigate("/MyAccount");
         break;
       case "2":
-        navigate('/MyTrips');
+        navigate("/TripPlanner");
         break;
       case "3":
-        navigate('/TripPlanner');
+        navigate("/Feedback");
         break;
       case "4":
-        navigate('/Feedback');
+        navigate("/dashboard");
         break;
       default:
-        console.log('Unknown key: ', key);
+        console.log("Unknown key: ", key);
         break;
     }
   };
+
+  useEffect(() => {
+    fetchUserDataFromCookies();
+  }, []);
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -97,7 +115,7 @@ const MyAccount = () => {
                   margin: "16px 0",
                 }}
               >
-                {userFirstName} {userLastname}
+                {userData.username}
               </userTitle>
               <dispUserTrips
                 type="secondary"
@@ -107,15 +125,9 @@ const MyAccount = () => {
                   marginLeft: "20px",
                 }}
               >
-                Trips Made: {tripsCount}
+                Trips Made: {userData.tripCount}
               </dispUserTrips>
               {/* Button to simulate adding a trip - you might replace this with your actual trip-adding logic */}
-              <Button
-                onClick={addTripHandler}
-                style={{ fontFamily: "Zen Maru Gothic", margin: "16px 24px" }}
-              >
-                Add Trip
-              </Button>
             </div>
           ) : (
             false
@@ -125,7 +137,7 @@ const MyAccount = () => {
           theme="dark"
           mode="inline"
           style={{ fontFamily: "Zen Maru Gothic" }}
-          //defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["1"]}
           onClick={navigateTo}
           items={[
             {
@@ -135,18 +147,18 @@ const MyAccount = () => {
             },
             {
               key: "2",
-              icon: <CarOutlined />,
-              label: "My Trips",
-            },
-            {
-              key: "3",
               icon: <ScheduleOutlined />,
               label: "Plan a Trip",
             },
             {
-              key: "4",
+              key: "3",
               icon: <UploadOutlined />,
               label: "Feedback",
+            },
+            {
+              key: "4",
+              icon: <RightSquareOutlined />,
+              label: "Dashboard",
             },
           ]}
         />
@@ -161,7 +173,7 @@ const MyAccount = () => {
               }}
               level={2}
             >
-              Welcome back, {userFirstName}
+              Welcome back, {userData.name}
             </Typography.Title>
 
             <Flex align="center" gap="3rem">

@@ -49,7 +49,7 @@ const Dashboard = () => {
           {
             method: "GET",
             headers: {
-              Authorization: authToken // Assuming the token is a Bearer token
+              Authorization: authToken, // Assuming the token is a Bearer token
             },
           }
         );
@@ -58,6 +58,11 @@ const Dashboard = () => {
           const jsonResponse = await response.json();
           setUserData(jsonResponse.data); // Store the user data in state
           setTripsCount(jsonResponse.data.tripCount); // Update the trip count state
+
+          // Serialize userData to a string and store in a cookie
+          Cookies.set("userData", JSON.stringify(jsonResponse.data), {
+            expires: 7,
+          }); // Expires in 7 days
         } else {
           // Handle errors or unauthorized access here
         }
@@ -71,25 +76,22 @@ const Dashboard = () => {
   }, []);
 
   let navigate = useNavigate();
-  const navigateTo = ({key}) => {
-    switch(key) {
+  const navigateTo = ({ key }) => {
+    switch (key) {
       case "1":
-        navigate('/MyAccount');
+        navigate("/MyAccount");
         break;
       case "2":
-        navigate('/MyTrips');
+        navigate("/TripPlanner");
         break;
       case "3":
-        navigate('/TripPlanner');
+        navigate("/Feedback");
         break;
       case "4":
-        navigate('/Feedback');
-        break;
-      case "5":
-        navigate('/dashboard');
+        navigate("/dashboard");
         break;
       default:
-        console.log('Unknown key: ', key);
+        console.log("Unknown key: ", key);
         break;
     }
   };
@@ -100,7 +102,7 @@ const Dashboard = () => {
         trigger={null}
         collapsible
         collapsed={collapsed}
-        style={{ minHeight: "100%", overflowY: "auto"}}
+        style={{ minHeight: "100%", overflowY: "auto" }}
       >
         <div className="demo-logo-vertical" />
         <Avatar
@@ -157,7 +159,7 @@ const Dashboard = () => {
           theme="dark"
           mode="inline"
           style={{ fontFamily: "Zen Maru Gothic" }}
-          //defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["4"]}
           onClick={navigateTo}
           items={[
             {
@@ -167,24 +169,19 @@ const Dashboard = () => {
             },
             {
               key: "2",
-              icon: <CarOutlined />,
-              label: "My Trips",
-            },
-            {
-              key: "3",
               icon: <ScheduleOutlined />,
               label: "Plan a Trip",
             },
             {
-              key: "4",
+              key: "3",
               icon: <UploadOutlined />,
               label: "Feedback",
             },
             {
-              key: "5",
+              key: "4",
               icon: <RightSquareOutlined />,
               label: "Dashboard",
-            }
+            },
           ]}
         />
       </Sider>

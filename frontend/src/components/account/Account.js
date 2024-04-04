@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import "./Account.css";
 import skyline from "../Assets/torontoskyline.jpg";
 
-const { Text, Title } = Typography;
+const { Text, } = Typography;
 
 const Account = () => {
   const [userData, setUserData] = useState({
@@ -18,33 +18,21 @@ const Account = () => {
     tripList: [],
   });
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const authToken = Cookies.get("authToken");
+  const fetchUserDataFromCookies = () => {
+    const userDataString = Cookies.get("userData");
+
+    if (userDataString) {
       try {
-        const response = await fetch(
-          "https://notifyme-aa01-r4ro.onrender.com/api/getUser",
-          {
-            method: "GET",
-            headers: {
-              Authorization: authToken, // Assuming the token is a Bearer token
-            },
-          }
-        );
-
-        if (response.ok) {
-          const jsonResponse = await response.json();
-          setUserData(jsonResponse.data); // Store the user data in state
-          //setTripsCount(jsonResponse.data.tripCount); // Update the trip count state
-        } else {
-          // Handle errors or unauthorized access here
-        }
+        const userData = JSON.parse(userDataString);
+        setUserData(userData);
       } catch (error) {
-        console.error("Fetching user data failed:", error);
-        // Handle error here
+        console.error("Error parsing userData from cookies:", error);
+        // Handle parsing error (e.g., corrupted cookie data)
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     const fetchUserTrips = async () => {
       const authToken = Cookies.get("authToken");
       try {
@@ -68,7 +56,7 @@ const Account = () => {
       }
     };
     const fetchData = async () => {
-      await fetchUserData();
+      await fetchUserDataFromCookies();
       await fetchUserTrips();
     };
     fetchData();

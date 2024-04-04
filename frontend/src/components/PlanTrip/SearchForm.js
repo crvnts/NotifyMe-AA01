@@ -1,29 +1,69 @@
-import React, { useState, useEffect } from 'react';
-import PlacesAutocomplete from 'react-places-autocomplete';
-import { Form, Input, Radio, Button } from 'antd';
+import React, { useState, useEffect } from "react";
+import PlacesAutocomplete from "react-places-autocomplete";
+import { Form, Input, Radio, Button } from "antd";
+import Cookies from "js-cookie";
 
+const SearchForm = ({
+  onFormSubmit,
+  setStartAddress: updateStartAddress,
+  setEndAddress: updateEndAddress,
+}) => {
+  const [localStartAddress, setLocalStartAddress] = useState("");
+  const [localEndAddress, setLocalEndAddress] = useState("");
+  const [transportMode, setTransportMode] = useState("driving");
 
-const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndAddress: updateEndAddress }) => {
-  const [localStartAddress, setLocalStartAddress] = useState('');
-  const [localEndAddress, setLocalEndAddress] = useState('');
-  //const [transportMode, setTransportMode] = useState('');
-
-  const [transportMode, setTransportMode] = useState('driving')
-
-  const handleSelectStartAddress = address => {
+  const handleSelectStartAddress = (address) => {
     setLocalStartAddress(address);
     updateStartAddress(address); // Update parent component's state
   };
 
-  const handleSelectEndAddress = address => {
+  const handleSelectEndAddress = (address) => {
     setLocalEndAddress(address);
     updateEndAddress(address); // Update parent component's state
     //submitForm(); // Submit form right after user enters end address
   };
 
-  const submitForm = () => {
-    onFormSubmit({ startAddress: localStartAddress, endAddress: localEndAddress, mode: transportMode });
-  }
+  const submitForm = async () => {
+    onFormSubmit({
+      startAddress: localStartAddress,
+      endAddress: localEndAddress,
+      mode: transportMode,
+    });
+  };
+
+  const addTrip = async () => {
+    const authToken = Cookies.get("authToken");
+
+    const tripData = {
+      startAddress: localStartAddress,
+      endAddress: localEndAddress,
+      //distance: distance,
+    };
+
+    try {
+      const response = await fetch(
+        "https://notifyme-aa01-r4ro.onrender.com/api/addTrips",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // Including the authToken in the Authorization header
+            Authorization: authToken,
+          },
+          body: JSON.stringify(tripData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to add trip");
+      }
+
+      const responseData = await response.json();
+      console.log("Trip added successfully:", responseData);
+    } catch (error) {
+      console.error("Error making POST request to add trip:", error);
+    }
+  };
 
   // useEffect to submit the form when transportMode changes
   useEffect(() => {
@@ -32,23 +72,23 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
     }
   }, [transportMode, localStartAddress, localEndAddress]);
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     // Call the onFormSubmit prop with the local state values
     submitForm();
   };
 
   // Handler for onChange event
-  const handleChange = e => {
+  const handleChange = (e) => {
     const modeCH = e.target.value;
     setTransportMode(modeCH);
   };
 
   const [form] = Form.useForm();
-  const formLayout = 'horizontal'
+  const formLayout = "horizontal";
 
   const formItemLayout =
-    formLayout === 'horizontal'
+    formLayout === "horizontal"
       ? {
           labelCol: {
             span: 4,
@@ -59,34 +99,46 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
         }
       : null;
   return (
-    <Form 
+    <Form
       {...formItemLayout}
-      layout = {formLayout}
-      form = {form}
+      layout={formLayout}
+      form={form}
       initialValues={{
-        layout: formLayout
+        layout: formLayout,
       }}
       onFinish={handleSubmit}
       style={{
-        maxWidth: formLayout === 'inline' ? 'none': 600,
-      }}>
+        maxWidth: formLayout === "inline" ? "none" : 600,
+      }}
+    >
       <div>
-        <label htmlFor="startAddress" style={{fontFamily: 'Zen Maru Gothic'}}>Start Address:</label>
-        <PlacesAutocomplete value={localStartAddress} onChange={setLocalStartAddress} onSelect={handleSelectStartAddress}>
-          {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+        <label htmlFor="startAddress" style={{ fontFamily: "Zen Maru Gothic" }}>
+          Start Address:
+        </label>
+        <PlacesAutocomplete
+          value={localStartAddress}
+          onChange={setLocalStartAddress}
+          onSelect={handleSelectStartAddress}
+        >
+          {({
+            getInputProps,
+            suggestions,
+            getSuggestionItemProps,
+            loading,
+          }) => (
             <div>
               <Input
                 {...getInputProps({
-                  placeholder: 'Search Start Address...',
-                  className: 'location-search-input',
+                  placeholder: "Search Start Address...",
+                  className: "location-search-input",
                 })}
               />
               <div className="autocomplete-dropdown-container">
                 {loading && <div>Loading...</div>}
-                {suggestions.map(suggestion => {
-                  const style = suggestion.active 
-                  ? {backgroundColor: "#d7d7d9", cursor: "pointer"}
-                  : {backgroundColor: "#ffffff", cursor: "pointer"}; 
+                {suggestions.map((suggestion) => {
+                  const style = suggestion.active
+                    ? { backgroundColor: "#d7d7d9", cursor: "pointer" }
+                    : { backgroundColor: "#ffffff", cursor: "pointer" };
                   return (
                     <div {...getSuggestionItemProps(suggestion, { style })}>
                       {suggestion.description}
@@ -99,22 +151,33 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
         </PlacesAutocomplete>
       </div>
       <div>
-        <label htmlFor="endAddress" style={{fontFamily: 'Zen Maru Gothic'}}>End Address:</label>
-        <PlacesAutocomplete value={localEndAddress} onChange={setLocalEndAddress} onSelect={handleSelectEndAddress}>
-          {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+        <label htmlFor="endAddress" style={{ fontFamily: "Zen Maru Gothic" }}>
+          End Address:
+        </label>
+        <PlacesAutocomplete
+          value={localEndAddress}
+          onChange={setLocalEndAddress}
+          onSelect={handleSelectEndAddress}
+        >
+          {({
+            getInputProps,
+            suggestions,
+            getSuggestionItemProps,
+            loading,
+          }) => (
             <div>
               <Input
                 {...getInputProps({
-                  placeholder: 'Search End Address...',
-                  className: 'location-search-input',
+                  placeholder: "Search End Address...",
+                  className: "location-search-input",
                 })}
               />
               <div className="autocomplete-dropdown-container">
                 {loading && <div>Loading...</div>}
-                {suggestions.map(suggestion => {
-                  const style = suggestion.active 
-                  ? {backgroundColor: "#d7d7d9", cursor: "pointer"}
-                  : {backgroundColor: "#ffffff", cursor: "pointer"}; 
+                {suggestions.map((suggestion) => {
+                  const style = suggestion.active
+                    ? { backgroundColor: "#d7d7d9", cursor: "pointer" }
+                    : { backgroundColor: "#ffffff", cursor: "pointer" };
                   return (
                     <div {...getSuggestionItemProps(suggestion, { style })}>
                       {suggestion.description}
@@ -126,20 +189,29 @@ const SearchForm = ({ onFormSubmit, setStartAddress: updateStartAddress, setEndA
           )}
         </PlacesAutocomplete>
       </div>
-      <div>
-        <label htmlFor="mode" style={{fontFamily: 'Zen Maru Gothic'}}>Mode of Transportation:</label>
-        <Radio.Group 
-          id="mode" 
-          value={transportMode} 
-          optionType='button' 
-          buttonStyle='solid' 
-          onChange={handleChange}>
+      <div style={{ marginTop: "1%", marginBottom: "1%" }}>
+        <label htmlFor="mode" style={{ fontFamily: "Zen Maru Gothic" }}>
+          Mode of Transportation:
+        </label>
+        <Radio.Group
+          id="mode"
+          value={transportMode}
+          optionType="button"
+          buttonStyle="solid"
+          onChange={handleChange}
+        >
           <Radio value={"driving"}>Driving</Radio>
           <Radio value={"walking"}>Walking</Radio>
           <Radio value={"bicycling"}>Bicycling</Radio>
           <Radio value={"transit"}>Transit</Radio>
         </Radio.Group>
       </div>
+      <Button type="primary" onClick={submitForm}>
+        Get Directions
+      </Button>
+      <Button type="primary" onClick={addTrip} style={{ marginLeft: "1%" }}>
+        Begin Trip
+      </Button>
     </Form>
   );
 };
