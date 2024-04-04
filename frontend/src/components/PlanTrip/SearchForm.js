@@ -5,7 +5,6 @@ import Cookies from "js-cookie";
 
 const SearchForm = ({
   onFormSubmit,
-  onAddTrip,
   setStartAddress: updateStartAddress,
   setEndAddress: updateEndAddress,
 }) => {
@@ -27,14 +26,13 @@ const SearchForm = ({
 
   //Has the total distance set here.
   const submitForm = async () => {
-    const data = await onFormSubmit({
+    const response = await onFormSubmit({
       startAddress: localStartAddress,
       endAddress: localEndAddress,
       mode: transportMode,
     });
-
-    if (data && data["Total Distance"]) {
-      setTotalDistance(data["Total Distance"]);
+    if (response && response.totalDistance) {
+      setTotalDistance(response.totalDistance); // Store the total distance from the response
     }
   };
 
@@ -217,7 +215,7 @@ const SearchForm = ({
       <Button type="primary" onClick={submitForm}>
         Get Directions
       </Button>
-      <Button type="primary" onClick={onAddTrip} style={{ marginLeft: "1%" }}>
+      <Button type="primary" onClick={addTrip} style={{ marginLeft: "1%" }}>
         Save Trip
       </Button>
     </Form>
