@@ -86,6 +86,9 @@ const TripPlanner = () => {
 
         setDirections(response.data);
         setDirectionsKey(Date.now());
+
+        const data = response.data;
+        return { totalDistance: data["Total Distance"] };
       } catch (error) {
         console.error("Failed to fetch directions:", error);
         setError("Failed to fetch directions. Please try again.");
@@ -107,7 +110,12 @@ const TripPlanner = () => {
 
   return (
     <Layout style={{ height: "100vh" }}>
-      <Sider trigger={null} collapsible collapsed={collapsed} style={{minHeight:"100vh"}}>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        style={{ minHeight: "100vh" }}
+      >
         <div className="demo-logo-vertical" />
         <Avatar
           size={{
@@ -197,11 +205,9 @@ const TripPlanner = () => {
           {isLoading ? (
             <p>Loading directions...</p>
           ) : (
-            <PlannedDisplay key={directionsKey} directions={directions}/>
+            <PlannedDisplay key={directionsKey} directions={directions} />
           )}
-          <div>
-            CV widget
-          </div>
+          <div>CV widget</div>
         </Content>
       </Layout>
     </Layout>
