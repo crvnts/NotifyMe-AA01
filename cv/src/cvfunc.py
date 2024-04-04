@@ -14,7 +14,6 @@ import requests
 import os
 
 
-
 highway401 = [
     'https://511on.ca/map/Cctv/loc21--2',
     'https://511on.ca/map/Cctv/loc51--2',
@@ -46,7 +45,6 @@ highway405 = [
 highway410 = [
     'https://511on.ca/map/Cctv/loc75--2',
     'https://511on.ca/map/Cctv/loc827--2',
-    'https://511on.ca/map/Cctv/loc824--2',
     'https://511on.ca/map/Cctv/loc825--2',
     'https://511on.ca/map/Cctv/loc826--2'
 ]
@@ -78,7 +76,8 @@ highwayDVP = [
 highwayGEW = [
     'https://511on.ca/map/Cctv/loc541--4',
     'https://511on.ca/map/Cctv/loc540--4',
-    'https://511on.ca/map/Cctv/rf0j5dillxs--8'
+    'https://511on.ca/map/Cctv/rf0j5dillxs--8',
+    'https://511on.ca/map/Cctv/ac5ob4w4spc--8'
 ]
 
 highway_data = {
