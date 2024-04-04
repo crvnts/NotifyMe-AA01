@@ -158,7 +158,6 @@ def detected_photo(boxes, scores, classes, detections,image,input_photo):
                 }
                 objects[f'Object{" "+str(obj_counter)}, bounding box'] = bounding_box
                 obj_counter  += 1
-    # Save to name of file
     return objects
 
 def calculate_roi_area(roi_coordinates):
@@ -172,13 +171,13 @@ def calculate_roi_area(roi_coordinates):
 
 def calculate_roi_coordinates(bounding_boxes_data):
 
-    if len(bounding_boxes_data)<10:
+    if len(bounding_boxes_data)<5:
         roi_coordinates = [
             (0, 0),  # Bottom-left
             (0, 0),  # Bottom-right
             (0, 0)  # Top-middle
         ]
-        return  roi_coordinates
+        return  roi_coordinates, len(bounding_boxes_data)
 
     all_x_coordinates = []
     all_y_coordinates = []
@@ -209,7 +208,7 @@ def calculate_roi_coordinates(bounding_boxes_data):
         ((min_x + max_x) / 2, max_y)  # Top-middle
     ]
 
-    return roi_coordinates
+    return roi_coordinates, len(bounding_boxes_data)
 
 def calculate_intersection_area(box, roi):
     # Calculate the intersection area between a bounding box and the ROI
@@ -233,7 +232,7 @@ def calculate_coverage_and_total_area(bounding_boxes_data, roi_coordinates):
     roi_area = calculate_roi_area(roi_coordinates)
     coverage_percentage = (total_area_covered / roi_area) * 100 if roi_area > 0 else 0
 
-    return total_area_covered, coverage_percentage
+    return roi_area, coverage_percentage
 
 def read_bounding_boxes_from_txt(file_path):
     try:
@@ -265,14 +264,16 @@ def get_coverage_data(url):
     my_image = load_image_to_tensor(imagefile)
     #Get trained yolov4 model
     image = proccess_frame(my_image,imagefile)
-    roi =calculate_roi_coordinates(image)
+    roi, numberCars =calculate_roi_coordinates(image)
     os.remove(image_path)
     if all(coord == (0, 0) for coord in roi):
         return {
-            'data':(0,0)
+            'data':(0,0),
+            'cars':numberCars
         }
     return {
-        "data":calculate_coverage_and_total_area(image,roi)
+        "data": calculate_coverage_and_total_area(image,roi),
+        "cars": numberCars
     }
     
 @app.route("/getHighwayCongestion",methods={'GET'})
@@ -280,6 +281,12 @@ def getHighwayCongestion():
     request_data = request.get_json()
     highway = request_data['highway']
     data = []
+    if not highway in highway_data:
+        return {
+            'data': "Cameras not available",
+            'highway':highway,
+            'message':'Invalid highway in database'
+        },400
     try:
         if highway in highway_data:
             urls = highway_data[highway]     
@@ -289,7 +296,7 @@ def getHighwayCongestion():
     except Exception as e:
         return {
                 "message": "failed to run cv",
-            }, 501    
+            }, 501
     sum_x = 0
     sum_y = 0
     count = 0
@@ -297,17 +304,42 @@ def getHighwayCongestion():
     # Calculate sum of x and y coordinates
     for item in data:
         x, y = item["data"]
-        if x == 0 and y == 0:
-            minus_confidence += 1
-        sum_x += x
-        sum_y += y
-        count += 1
+        cars = item["cars"]
+        if cars > 20:
+            sum_x += x
+            sum_y += y
+            count +=1
+        if cars > 9 and cars <= 20:
+            sum_x += x
+            sum_y += y*0.75
+            count +=1
+        if cars > 4 and cars <= 5:
+            sum_x += x
+            sum_y += y*0.5
+            count +=1
+        if cars == 0:
+            minus_confidence+=1
+            count+=1
 
     # Calculate average x and y coordinates
-    average_x = sum_x / count
-    average_y = sum_y / count
-    confidence = (count-minus_confidence)/count
+    if count-minus_confidence > 0:
+        average_x = sum_x / (count-minus_confidence)
+        average_y = sum_y / (count-minus_confidence)
+    else:
+        average_x = WIDTH*HEIGHT*0.25
+        average_y = 0
+    confidence = min(average_x/(WIDTH*HEIGHT*0.25),1)
+    if count == 0:
+        return {
+            "data":(average_y,confidence),
+            "message":"(average road congestion, confidence(decimal))"
+        },200
+    
+    if minus_confidence/count+minus_confidence > 0.4 and minus_confidence > 0:
+        return {
+            "message":"Road conditions too rough for CV"
+        }, 200
     return {
-        "data":(average_x,average_y,confidence),
-        "message":"calculated average road congestion (middle value)"
+        "data":(average_y,confidence),
+        "message":"(average road congestion, confidence(decimal))"
     },200
