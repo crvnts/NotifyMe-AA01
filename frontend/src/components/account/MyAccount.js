@@ -23,15 +23,15 @@ import {
   Typography,
   Flex,
 } from "antd";
-import "./Dashboard.css";
+import "../dashboardv2/Dashboard.css";
 import Search from "antd/es/input/Search";
-import MainContent from "./MainContent";
+import Account from "./Account";
 
 const { Header, Sider, Content } = Layout;
 const userFirstName = "John";
 const userLastname = "Doe";
 
-const Dashboard = () => {
+const MyAccount = () => {
   const [collapsed, setCollapsed] = useState(true);
 
   const [tripsCount, setTripsCount] = useState(0);
@@ -176,11 +176,11 @@ const Dashboard = () => {
         </Header>
         <Content>
           <Flex className="main-flex-container">
-            <MainContent></MainContent>
+            <Account></Account>
           </Flex>
         </Content>
       </Layout>
     </Layout>
   );
 };
-export default Dashboard;
+export default MyAccount;
