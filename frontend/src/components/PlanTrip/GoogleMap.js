@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   APIProvider,
   Map,
@@ -11,28 +11,25 @@ import {
 
 const position = { lat: 43.656866955079, lng: -79.3764393609781 };
 
-const InitMap = () => {
+const InitMap = ({ startAddress, endAddress, travelMode }) => {
   const [open, setOpen] = useState(false);
+  travelMode = travelMode.toUpperCase(); //forces uppercase for map visualization
   return (
     <APIProvider
-      apiKey={"process.env.GOOGLE_MAPS_API_KEY"}
-      libraries={["marker"]}
+      apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} // Ensure you're using the correct environment variable syntax
+      libraries={["marker", "routes"]}
     >
       <div style={{ height: "100%", width: "100%" }}>
         <Map
           defaultZoom={12}
           defaultCenter={position}
-          mapId={"process.env.NEXT_PUBLIC_MAP_ID"}
+          mapId={process.env.REACT_APP_NEXT_PUBLIC_MAP_ID} // Ensure you're using the correct environment variable syntax
           fullscreenControl={false}
         >
-          <Directions></Directions>
+          <Directions startAddress={startAddress} endAddress={endAddress} travelMode={travelMode} />
 
           <AdvancedMarker position={position} onClick={() => setOpen(true)}>
-            <Pin
-              background={"red"}
-              borderColor={"blue"}
-              glyphColor={"purple"}
-            />
+            <Pin background={"red"} borderColor={"blue"} glyphColor={"purple"} />
           </AdvancedMarker>
 
           {open && (
@@ -46,71 +43,30 @@ const InitMap = () => {
   );
 };
 
-function Directions() {
+function Directions({ startAddress, endAddress, travelMode }) {
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
-  const [directionsService, setDirectionsService] = useState();
-  const [directionsRenderer, setDirectionsRenderer] = useState();
-  const [routes, setRoutes] = useState([]);
-  const [routeIndex, setRouteIndex] = useState(0);
-  const selected = routes[routeIndex];
-  const leg = selected?.legs[0];
 
-  // Initialize directions service and renderer
   useEffect(() => {
-    if (!routesLibrary || !map) return;
-    setDirectionsService(new routesLibrary.DirectionsService());
-    setDirectionsRenderer(new routesLibrary.DirectionsRenderer({ map }));
-  }, [routesLibrary, map]);
+    if (!routesLibrary || !map || !startAddress || !endAddress || !travelMode) return;
 
-  // Use directions service
-  useEffect(() => {
-    if (!directionsService || !directionsRenderer) return;
+    const directionsService = new routesLibrary.DirectionsService();
+    const directionsRenderer = new routesLibrary.DirectionsRenderer({ map });
 
-    directionsService
-      .route({
-        origin: position,
-        destination: "500 College St, Toronto ON",
-        travelMode: "DRIVING",
-        provideRouteAlternatives: true,
-      })
-      .then((response) => {
+    directionsService.route({
+      origin: startAddress,
+      destination: endAddress,
+      travelMode: travelMode, // Use the provided travelMode
+    }, (response, status) => {
+      if (status === 'OK') {
         directionsRenderer.setDirections(response);
-        setRoutes(response.routes);
-      });
+      } else {
+        console.error(`Failed to fetch directions: ${status}`);
+      }
+    });
 
-    return () => directionsRenderer.setMap(null);
-  }, [directionsService, directionsRenderer]);
-
-  // Update direction route
-  useEffect(() => {
-    if (!directionsRenderer) return;
-    directionsRenderer.setRouteIndex(routeIndex);
-  }, [routeIndex, directionsRenderer]);
-
-  if (!leg) return null;
-
-  return (
-    <div className="directions">
-      <h2>{selected.summary}</h2>
-      <p>
-        {leg.start_address.split(",")[0]} to {leg.end_address.split(",")[0]}
-      </p>
-      <p>Distance: {leg.distance?.text}</p>
-      <p>Distance: {leg.duration?.text}</p>
-
-      <h2>Other routes</h2>
-      <ul>
-        {routes.map((route, index) => (
-          <li key={route.summary}>
-            <button onClick={() => setRouteIndex(index)}>
-              {route.summary}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+    return () => directionsRenderer.setMap(null); // Cleanup
+  }, [startAddress, endAddress, travelMode, map, routesLibrary]); // React to changes in travelMode
 }
 
 export default InitMap;

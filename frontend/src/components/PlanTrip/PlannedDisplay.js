@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DirectionsDisplay = ({ directions }) => {
+const PlannedDisplay = ({ directions }) => {
   if (!directions || !directions.Steps || !directions["Start Address"] || !directions["End Address"] || !directions["Total Distance"] || !directions["Total Duration"]) {
     return <p>No directions available.</p>; // Display a message if directions are incomplete or not provided
   }
@@ -21,4 +21,4 @@ const DirectionsDisplay = ({ directions }) => {
   );
 };
 
-export default DirectionsDisplay;
+export default PlannedDisplay;
