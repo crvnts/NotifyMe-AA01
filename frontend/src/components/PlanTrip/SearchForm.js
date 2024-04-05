@@ -12,19 +12,20 @@ const SearchForm = ({
 }) => {
   const [localStartAddress, setLocalStartAddress] = useState("");
   const [localEndAddress, setLocalEndAddress] = useState("");
-  const [transportMode, setTransportMode] = useState("driving");
+  const [transportMode, setTransportMode] = useState("");
   const [submitFlag, setSubmitFlag] = useState(false);
 
   const handleGetDirectionsClick = () => {
     setSubmitFlag(true); // Set the flag to trigger submission
+    submitForm();
   };
 
-  const handleSelectStartAddress = (address) => {
+  const handleSelectStartAddress = async (address) => {
     setLocalStartAddress(address);
     updateStartAddress(address); // Update parent component's state
   };
 
-  const handleSelectEndAddress = (address) => {
+  const handleSelectEndAddress = async (address) => {
     setLocalEndAddress(address);
     updateEndAddress(address); // Update parent component's state
     //submitForm(); // Submit form right after user enters end address
@@ -43,15 +44,15 @@ const SearchForm = ({
     }
   }, [submitFlag, localStartAddress, localEndAddress, transportMode, onFormSubmit]);
 
-  // const submitForm = async () => {
-  //   if (localStartAddress && localEndAddress && transportMode) {
-  //     onFormSubmit({
-  //       start_address: localStartAddress,
-  //       end_address: localEndAddress,
-  //       mode: transportMode,
-  //     });
-  //   }
-  // };
+  const submitForm = () => {
+    if (localStartAddress && localEndAddress && transportMode) {
+      onFormSubmit({
+        start_address: localStartAddress,
+        end_address: localEndAddress,
+        mode: transportMode,
+      });
+    }
+  };
 
   //Ddont think we need this anymore. but we need the cookies get
   const addTrip = async () => {

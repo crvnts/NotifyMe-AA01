@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Flex, Layout, Menu, Button, Avatar, Typography, Card } from "antd";
+import { Flex, Layout, Menu, Button, Avatar, Typography, Card, Spin } from "antd";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -32,6 +32,7 @@ const TripPlanner = () => {
     username: "",
     tripCount: 0,
   });
+  const [cvLoading, setCVLoading] = useState(false);
 
   const fetchUserDataFromCookies = () => {
     const userDataString = Cookies.get("userData");
@@ -230,12 +231,18 @@ const TripPlanner = () => {
             />
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>
+            <Card title="Directions" bordered>
             {isLoading ? (
-              <p>Loading directions...</p>
+              <Spin/>
             ) : (
               <PlannedDisplay key={directionsKey} directions={directions} />
             )}
-            <div>CV widget</div>
+            </Card>
+            <div>
+              <Card title="Traffic Information" loading={cvLoading}>
+                CV
+              </Card>
+            </div>
           </div>
         </Content>
       </Layout>
