@@ -75,6 +75,7 @@ const TripPlanner = () => {
   const [totalDistance, setTotalDistance] = useState("");
 
   const [matchedHighways, setMatchedHighways] = useState([]);
+  const [highwayCongestionData, setHighwayCongestionData] = useState({});
 
   const handleFormSubmit = useCallback(
     async ({ startAddress, endAddress, mode }) => {
@@ -147,6 +148,44 @@ const TripPlanner = () => {
 
     fetchUserData();
   }, [transportMode, startAddress, endAddress, handleFormSubmit]);
+
+  useEffect(() => {
+    const fetchCongestionData = async () => {
+      const congestionData = {};
+
+      for (const highway of matchedHighways) {
+        try {
+          const response = await fetch(
+            "http://humpback-smart-gently.ngrok-free.app/getHighwayCongestion",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ highway }),
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            congestionData[highway] = data;
+          } else {
+            throw new Error("Network response was not ok.");
+          }
+        } catch (error) {
+          console.error(
+            `Failed to fetch congestion data for highway ${highway}:`,
+            error
+          );
+          congestionData[highway] = { error: "Failed to fetch data" };
+        }
+      }
+
+      setHighwayCongestionData(congestionData);
+    };
+
+    if (matchedHighways.length > 0) {
+      fetchCongestionData();
+    }
+  }, [matchedHighways]);
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -249,10 +288,32 @@ const TripPlanner = () => {
             ) : (
               <PlannedDisplay key={directionsKey} directions={directions} />
             )}
-            <div>CV widget</div>
-            {matchedHighways.map((highway) => (
-              <div key={highway}>{highway}</div>
-            ))}
+            
+            {Object.entries(highwayCongestionData).map(([highway, data]) => {
+
+              const congestionPercentage = data.data && data.data[0] ? data.data[0].toFixed(2) : "0";
+              const confidence = data.data && data.data[1] ? (data.data[1] * 100).toFixed(2) : data.message;
+
+              return (
+                <div key={highway} style={{ marginBottom: "15px" }}>
+                  <p>
+                    <b>Highway: {highway}</b>
+                  </p>
+                  <p>Average Congestion: {congestionPercentage}%</p>
+                  <p>Confidence: {confidence}</p>
+                  <p>
+                    General Delay:{" "}
+                    {data && data.data && data.data[0] !== undefined
+                      ? data.data[0] > 45
+                        ? "Significant delays (~15min)"
+                        : data.data[0] >= 30
+                        ? "Expect some delays (~5 min)"
+                        : "No Delays"
+                      : "Not available"}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </Content>
       </Layout>
