@@ -202,12 +202,14 @@ const TripPlanner = () => {
               travelMode={transportMode}
             />
           </div>
+          <div style={{display:"flex", justifyContent:"center"}}>
           {isLoading ? (
             <p>Loading directions...</p>
           ) : (
             <PlannedDisplay key={directionsKey} directions={directions} />
           )}
           <div>CV widget</div>
+          </div>
         </Content>
       </Layout>
     </Layout>

@@ -61,7 +61,7 @@ const SearchForm = ({
       );
 
       if (!response.ok) {
-        throw new Error("Failed to add trip");
+        throw new Error('Failed to add trip, status code: ${response.status}');
       }
 
       const responseData = await response.json();
