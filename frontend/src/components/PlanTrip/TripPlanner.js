@@ -82,6 +82,9 @@ const TripPlanner = () => {
 
   const [totalDistance, setTotalDistance] = useState("");
 
+  const [matchedHighways, setMatchedHighways] = useState([]);
+  const [highwayCongestionData, setHighwayCongestionData] = useState({});
+
   const handleFormSubmit = useCallback(
     async ({ startAddress, endAddress, mode }) => {
       setTransportMode(mode);
@@ -101,6 +104,9 @@ const TripPlanner = () => {
         const distance = parseFloat(response.data["Total Distance"]);
         setTotalDistance(distance.toFixed(1));
         setTotalDistance(distance);
+
+        setMatchedHighways(response.data["Matched Highways"]);
+
       } catch (error) {
         console.error("Failed to fetch directions:", error);
         setError("Failed to fetch directions. Please try again.");
@@ -119,7 +125,77 @@ const TripPlanner = () => {
       handleFormSubmit({ startAddress, endAddress, mode: transportMode });
     }
 
+    const fetchUserData = async () => {
+      const authToken = Cookies.get("authToken");
+      try {
+        const response = await fetch(
+          "https://notifyme-aa01-r4ro.onrender.com/api/getUser",
+          {
+            method: "GET",
+            headers: {
+              Authorization: authToken, // Assuming the token is a Bearer token
+            },
+          }
+        );
+
+        if (response.ok) {
+          const jsonResponse = await response.json();
+          setUserData(jsonResponse.data); // Store the user data in state
+          setTripsCount(jsonResponse.data.tripCount); // Update the trip count state
+
+          // Serialize userData to a string and store in a cookie
+          Cookies.set("userData", JSON.stringify(jsonResponse.data), {
+            expires: 7,
+          }); // Expires in 7 days
+        } else {
+          // Handle errors or unauthorized access here
+        }
+      } catch (error) {
+        console.error("Fetching user data failed:", error);
+        // Handle error here
+      }
+    };
+
+    fetchUserData();
   }, [transportMode, startAddress, endAddress, handleFormSubmit]);
+
+  useEffect(() => {
+    const fetchCongestionData = async () => {
+      const congestionData = {};
+
+      for (const highway of matchedHighways) {
+        try {
+          const response = await fetch(
+            "http://humpback-smart-gently.ngrok-free.app/getHighwayCongestion",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ highway }),
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            congestionData[highway] = data;
+          } else {
+            throw new Error("Network response was not ok.");
+          }
+        } catch (error) {
+          console.error(
+            `Failed to fetch congestion data for highway ${highway}:`,
+            error
+          );
+          congestionData[highway] = { error: "Failed to fetch data" };
+        }
+      }
+
+      setHighwayCongestionData(congestionData);
+    };
+
+    if (matchedHighways.length > 0) {
+      fetchCongestionData();
+    }
+  }, [matchedHighways]);
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -240,7 +316,31 @@ const TripPlanner = () => {
             </Card>
             <div>
               <Card title="Traffic Information" loading={cvLoading}>
-                CV
+                {Object.entries(highwayCongestionData).map(([highway, data]) => {
+
+              const congestionPercentage = data.data && data.data[0] ? data.data[0].toFixed(2) : "0";
+              const confidence = data.data && data.data[1] ? (data.data[1] * 100).toFixed(2) : data.message;
+
+              return (
+                <div key={highway} style={{ marginBottom: "15px" }}>
+                  <p>
+                    <b>Highway: {highway}</b>
+                  </p>
+                  <p>Average Congestion: {congestionPercentage}%</p>
+                  <p>Confidence: {confidence}</p>
+                  <p>
+                    General Delay:{" "}
+                    {data && data.data && data.data[0] !== undefined
+                      ? data.data[0] > 45
+                        ? "Significant delays (~15min)"
+                        : data.data[0] >= 30
+                        ? "Expect some delays (~5 min)"
+                        : "No Delays"
+                      : "Not available"}
+                  </p>
+                </div>
+              );
+            })}
               </Card>
             </div>
           </div>
