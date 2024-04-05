@@ -84,22 +84,14 @@ def getTTCAlerts():
             # Iterate through alerts for the current route
             counter+=1
             alert_id = route['route']
-            soup = BeautifulSoup(route['customHeaderText'], 'html.parser')
-            cleaned_text = soup.get_text()
-            index = cleaned_text.find("See ")
-            if index != -1:
-                description = cleaned_text[:index]
-            else: 
-                description = cleaned_text
+            description = route['title']
+
             newAlert = {
                 'route':alert_id,
                 'description':description
             }
-            newAlert = {
-                'route':alert_id,
-                'description':description
-            }
-            alerts_list.append(newAlert)
+            if not description == "WEBSITE":
+                alerts_list.append(newAlert)
     except Exception as e:
         return {
             "message":"Error parsing information",
