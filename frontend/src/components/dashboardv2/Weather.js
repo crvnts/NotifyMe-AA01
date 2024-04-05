@@ -7,6 +7,7 @@ import rain_icon from "../Assets/rain.png";
 import snow_icon from "../Assets/snow.png";
 import wind_icon from "../Assets/wind.png";
 import hunidity_icon from "../Assets/humidity.png";
+import "./Weather.css";
 
 const Weather = () => {
   // The regular expression \w\S* matches every word in the string, allowing the
@@ -17,7 +18,7 @@ const Weather = () => {
       (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
     );
 
-  let api_key = "f2f88788f29296c8a7cee8708dfa213d";
+  let api_key = process.env.REACT_APP_WEATHER_API_KEY;
 
   const [wicon, setWicon] = useState(cloud_icon);
 

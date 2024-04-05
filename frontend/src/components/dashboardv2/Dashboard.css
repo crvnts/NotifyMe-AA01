@@ -22,10 +22,6 @@
   filter: brightness(1.2) !important; /* Use !important to override Ant Design styles if necessary */
 }
 
-.collapse-button:hover {
-  background: grey;
-}
-
 .header-icon {
   background: grey;
   color: azure;
@@ -48,9 +44,7 @@
   background: #e6e6e6;
   box-shadow: 8px 8px 16px #cfcfcf;
   max-height: 95vh; /* At least full viewport height */
-}
-
-.widget-row {
+  overflow: scroll;
 }
 
 .btn:hover {
@@ -144,4 +138,19 @@
   height: 95%;
   width: 95%;
   box-shadow:  6px 6px 11px #9ac0cd, -6px -6px 11px #c0f0ff;
+}
+
+.account-container {
+  display: flex;
+  justify-content: center;
+  height: 95%;
+  width: 95%;
+  align-self: center;
+  margin-top: 1%;
+  margin-left: 2%;
+  border-radius: 36px;
+  background: #e6e6e6;
+  box-shadow: 8px 8px 16px #cfcfcf;
+  max-height: 95vh; /* At least full viewport height */
+  overflow: scroll;
 }

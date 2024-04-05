@@ -1,71 +1,57 @@
-import React, { useState, useEffect } from "react";
-import { Link, json, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UploadOutlined,
   UserOutlined,
   CarOutlined,
-  LogoutOutlined,
+  MessageOutlined,
+  NotificationOutlined,
   ScheduleOutlined,
   RightSquareOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Button, Avatar, Typography, Flex, Card } from "antd";
-import Cookies from "js-cookie";
+import {
+  Layout,
+  Menu,
+  Button,
+  theme,
+  ConfigProvider,
+  Col,
+  Divider,
+  Row,
+  Avatar,
+  Typography,
+  Flex,
+} from "antd";
 import "../dashboardv2/Dashboard.css";
-import "./Feedback.css";
+import Search from "antd/es/input/Search";
+import Account from "./Account";
 
 const { Header, Sider, Content } = Layout;
 
-const Dashboard = () => {
+const MyAccount = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const [setTripsCount] = useState(0);
+  const [tripsCount, setTripsCount] = useState(0);
   const [userData, setUserData] = useState({
     name: "",
     username: "",
     tripCount: 0,
   });
 
+  const fetchUserDataFromCookies = () => {
+    const userDataString = Cookies.get("userData");
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const authToken = Cookies.get("authToken");
+    if (userDataString) {
       try {
-        const response = await fetch(
-          "https://notifyme-aa01-r4ro.onrender.com/api/getUser",
-          {
-            method: "GET",
-            headers: {
-              Authorization: authToken, // Assuming the token is a Bearer token
-            },
-          }
-        );
-
-        if (response.ok) {
-          const jsonResponse = await response.json();
-          setUserData(jsonResponse.data); // Store the user data in state
-          setTripsCount(jsonResponse.data.tripCount); // Update the trip count state
-
-          // Serialize userData to a string and store in a cookie
-          Cookies.set("userData", JSON.stringify(jsonResponse.data), {
-            expires: 7,
-          }); // Expires in 7 days
-        } else {
-          // Handle errors or unauthorized access here
-        }
+        const userData = JSON.parse(userDataString);
+        setUserData(userData);
       } catch (error) {
-        console.error("Fetching user data failed:", error);
-        // Handle error here
+        console.error("Error parsing userData from cookies:", error);
+        // Handle parsing error (e.g., corrupted cookie data)
       }
-    };
-
-    fetchUserData();
-  }, []);
-
-  const logoutHandler = () => {
-    Cookies.remove("authToken"); // Remove the authToken cookie
-    setUserData({ name: "", username: "", tripCount: 0 }); // Reset user data state
-    navigate("/login"); // Redirect to the login page
+    }
   };
 
   let navigate = useNavigate();
@@ -89,14 +75,13 @@ const Dashboard = () => {
     }
   };
 
+  useEffect(() => {
+    fetchUserDataFromCookies();
+  }, []);
+
   return (
-    <Layout>
-      <Sider
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        style={{ minHeight: "100vh", overflowY: "auto" }}
-      >
+    <Layout style={{ height: "100vh" }}>
+      <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
         <Avatar
           size={{
@@ -152,7 +137,7 @@ const Dashboard = () => {
           theme="dark"
           mode="inline"
           style={{ fontFamily: "Zen Maru Gothic" }}
-          defaultSelectedKeys={["3"]}
+          defaultSelectedKeys={["1"]}
           onClick={navigateTo}
           items={[
             {
@@ -192,30 +177,22 @@ const Dashboard = () => {
             </Typography.Title>
 
             <Flex align="center" gap="3rem">
+              <Search placeholder="Search Dashboard" allowClear></Search>
+
               <Flex align="center" gap="8px">
-                <Button
-                  onClick={logoutHandler}
-                  type="primary"
-                  icon={<LogoutOutlined />}
-                  className="logout-button"
-                >
-                  Log out
-                </Button>
+                <MessageOutlined className="header-icon"></MessageOutlined>
+                <NotificationOutlined className="header-icon"></NotificationOutlined>
               </Flex>
             </Flex>
           </Flex>
         </Header>
         <Content>
-          <Flex className="feedback-container">
-            <Card className="feedback-card" title="Feedback">
-              <div>
-                this is some text
-              </div>
-            </Card>
+          <Flex className="account-container">
+            <Account></Account>
           </Flex>
         </Content>
       </Layout>
     </Layout>
   );
 };
-export default Dashboard;
+export default MyAccount;

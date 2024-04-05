@@ -5,8 +5,10 @@ import {
   MenuUnfoldOutlined,
   UploadOutlined,
   UserOutlined,
-  VideoCameraOutlined,
+  CarOutlined,
   LogoutOutlined,
+  ScheduleOutlined,
+  RightSquareOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Button, Avatar, Typography, Flex } from "antd";
 import Cookies from "js-cookie";
@@ -24,7 +26,6 @@ const Dashboard = () => {
     tripCount: 0,
   });
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -44,6 +45,11 @@ const Dashboard = () => {
           const jsonResponse = await response.json();
           setUserData(jsonResponse.data); // Store the user data in state
           setTripsCount(jsonResponse.data.tripCount); // Update the trip count state
+
+          // Serialize userData to a string and store in a cookie
+          Cookies.set("userData", JSON.stringify(jsonResponse.data), {
+            expires: 7,
+          }); // Expires in 7 days
         } else {
           // Handle errors or unauthorized access here
         }
@@ -62,13 +68,34 @@ const Dashboard = () => {
     navigate("/login"); // Redirect to the login page
   };
 
+  let navigate = useNavigate();
+  const navigateTo = ({ key }) => {
+    switch (key) {
+      case "1":
+        navigate("/MyAccount");
+        break;
+      case "2":
+        navigate("/TripPlanner");
+        break;
+      case "3":
+        navigate("/Feedback");
+        break;
+      case "4":
+        navigate("/dashboard");
+        break;
+      default:
+        console.log("Unknown key: ", key);
+        break;
+    }
+  };
+
   return (
     <Layout>
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
-        style={{ minHeight: "100%", overflowY: "auto" }}
+        style={{ minHeight: "100vh"}}
       >
         <div className="demo-logo-vertical" />
         <Avatar
@@ -84,7 +111,7 @@ const Dashboard = () => {
         />
         <div>
           <Button
-            type="text"
+            type="default"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => {
               setCollapsed(!collapsed);
@@ -125,7 +152,8 @@ const Dashboard = () => {
           theme="dark"
           mode="inline"
           style={{ fontFamily: "Zen Maru Gothic" }}
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["4"]}
+          onClick={navigateTo}
           items={[
             {
               key: "1",
@@ -134,18 +162,18 @@ const Dashboard = () => {
             },
             {
               key: "2",
-              icon: <VideoCameraOutlined />,
-              label: "My Trips",
+              icon: <ScheduleOutlined />,
+              label: "Plan a Trip",
             },
             {
               key: "3",
               icon: <UploadOutlined />,
-              label: "Plan a Trip",
+              label: "Feedback",
             },
             {
               key: "4",
-              icon: <UploadOutlined />,
-              label: "Feedback",
+              icon: <RightSquareOutlined />,
+              label: "Dashboard",
             },
           ]}
         />

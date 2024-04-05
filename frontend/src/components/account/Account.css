@@ -1,0 +1,21 @@
+.account-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    overflow: scroll;
+    width: 80%;
+    height: fit-content;
+    font-size: 1.5rem;
+}
+
+.data-text {
+    font-family: 'Zen Maru Gothic';
+    font-size: 1.5rem;
+}
+
+.trip-text {
+    font-family: 'Zen Maru Gothic';
+    font-size: 1rem;
+}

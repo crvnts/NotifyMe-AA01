@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Button, Alert, Layout, Typography } from "antd";
+import { Form, Input, Button, Alert, Layout, Typography, Spin } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
 
@@ -10,9 +10,11 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setIsLoading(true);
     const loginDetails = {
       username: username,
       password: password,
@@ -40,6 +42,8 @@ const Login = () => {
     } catch (error) {
       console.error("Login error:", error);
       setLoginStatus("Login failed. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -92,64 +96,66 @@ const Login = () => {
           >
             Login
           </Title>
-          <Form
-            name="normal_login"
-            className="login-form"
-            initialValues={{ remember: true }}
-            onFinish={handleLogin}
-          >
-            <Form.Item
-              name="username"
-              rules={[
-                { required: true, message: "Please input your Username!" },
-              ]}
+          <Spin spinning={isLoading}>
+            <Form
+              name="normal_login"
+              className="login-form"
+              initialValues={{ remember: true }}
+              onFinish={handleLogin}
             >
-              <Input
-                prefix={<UserOutlined className="site-form-item-icon" />}
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              rules={[
-                { required: true, message: "Please input your Password!" },
-              ]}
-            >
-              <Input
-                prefix={<LockOutlined className="site-form-item-icon" />}
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="login-form-button"
-                style={{ width: "100%" }}
+              <Form.Item
+                name="username"
+                rules={[
+                  { required: true, message: "Please input your Username!" },
+                ]}
               >
-                Log in
-              </Button>
-              <Button
-                type="link"
-                onClick={() => navigate("/register")} // Use navigate to redirect to the Register page
-                style={{ width: "100%" }}
+                <Input
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[
+                  { required: true, message: "Please input your Password!" },
+                ]}
               >
-                Create New Account
-              </Button>
-            </Form.Item>
-            {loginStatus && (
-              <Alert
-                message={loginStatus}
-                type={loginStatus === "Success" ? "success" : "error"}
-                showIcon
-              />
-            )}
-          </Form>
+                <Input
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                  style={{ width: "100%" }}
+                >
+                  Log in
+                </Button>
+                <Button
+                  type="link"
+                  onClick={() => navigate("/register")} // Use navigate to redirect to the Register page
+                  style={{ width: "100%" }}
+                >
+                  Create New Account
+                </Button>
+              </Form.Item>
+              {loginStatus && (
+                <Alert
+                  message={loginStatus}
+                  type={loginStatus === "Success" ? "success" : "error"}
+                  showIcon
+                />
+              )}
+            </Form>
+          </Spin>
         </div>
       </div>
     </Layout>
