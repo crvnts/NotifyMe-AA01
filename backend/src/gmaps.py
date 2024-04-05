@@ -62,7 +62,7 @@ def get_directions():
             directions_summary = {
                 "Mode of Transportation": mode.capitalize(),
                 "Start Address": leg["start_address"],
-                "End Address": leg["dest_address"],
+                "End Address": leg["end_address"],
                 "Total Distance": leg["distance"]["text"], 
                 "Total Duration": leg["duration"]["text"],
                 "Steps": [step["html_instructions"] for step in leg["steps"]]
