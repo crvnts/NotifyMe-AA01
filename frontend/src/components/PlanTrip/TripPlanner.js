@@ -105,7 +105,7 @@ const TripPlanner = () => {
         setTotalDistance(distance.toFixed(1));
         setTotalDistance(distance);
 
-        setMatchedHighways(response.data["Matched Highways"]);
+        setMatchedHighways(response.data["Matched Highways"] || []);
 
       } catch (error) {
         console.error("Failed to fetch directions:", error);
@@ -314,35 +314,37 @@ const TripPlanner = () => {
               <PlannedDisplay key={directionsKey} directions={directions} />
             )}
             </Card>
-            <div>
-              <Card title="Traffic Information" loading={cvLoading}>
-                {Object.entries(highwayCongestionData).map(([highway, data]) => {
+            {matchedHighways.length > 0 && (
+              <div>
+                <Card title="Traffic Information" loading={cvLoading}>
+                  {Object.entries(highwayCongestionData).map(([highway, data]) => {
 
-              const congestionPercentage = data.data && data.data[0] ? data.data[0].toFixed(2) : "0";
-              const confidence = data.data && data.data[1] ? (data.data[1] * 100).toFixed(2) : data.message;
+                    const congestionPercentage = data.data && data.data[0] ? data.data[0].toFixed(2) : "0";
+                    const confidence = data.data && data.data[1] ? (data.data[1] * 100).toFixed(2) : data.message;
 
-              return (
-                <div key={highway} style={{ marginBottom: "15px" }}>
-                  <p>
-                    <b>Highway: {highway}</b>
-                  </p>
-                  <p>Average Congestion: {congestionPercentage}%</p>
-                  <p>Confidence: {confidence}</p>
-                  <p>
-                    General Delay:{" "}
-                    {data && data.data && data.data[0] !== undefined
-                      ? data.data[0] > 45
-                        ? "Significant delays (~15min)"
-                        : data.data[0] >= 30
-                        ? "Expect some delays (~5 min)"
-                        : "No Delays"
-                      : "Not available"}
-                  </p>
-                </div>
-              );
-            })}
-              </Card>
-            </div>
+                    return (
+                      <div key={highway} style={{ marginBottom: "15px" }}>
+                        <p>
+                          <b>Highway: {highway}</b>
+                        </p>
+                        <p>Average Congestion: {congestionPercentage}%</p>
+                        <p>Confidence: {confidence}</p>
+                        <p>
+                          General Delay:{" "}
+                          {data && data.data && data.data[0] !== undefined
+                            ? data.data[0] > 45
+                              ? "Significant delays (~15min)"
+                              : data.data[0] >= 30
+                              ? "Expect some delays (~5 min)"
+                              : "No Delays"
+                            : "Not available"}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </Card>
+              </div>
+            )}
           </div>
         </Content>
       </Layout>
