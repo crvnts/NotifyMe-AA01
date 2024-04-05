@@ -32,6 +32,7 @@ const TripPlanner = () => {
     tripCount: 0,
   });
 
+  //May not need : )
   const fetchUserDataFromCookies = () => {
     const userDataString = Cookies.get("userData");
 
@@ -71,6 +72,8 @@ const TripPlanner = () => {
   const [directions, setDirections] = useState(null);
   const [directionsKey, setDirectionsKey] = useState(Date.now());
 
+  const [totalDistance, setTotalDistance] = useState("");
+
   const handleFormSubmit = useCallback(
     async ({ startAddress, endAddress, mode }) => {
       setTransportMode(mode);
@@ -87,8 +90,10 @@ const TripPlanner = () => {
         setDirections(response.data);
         setDirectionsKey(Date.now());
 
-        const data = response.data;
-        return { totalDistance: data["Total Distance"] };
+      const distance = parseFloat(response.data["Total Distance"]);
+      setTotalDistance(distance.toFixed(1)); 
+      setTotalDistance(distance); 
+
       } catch (error) {
         console.error("Failed to fetch directions:", error);
         setError("Failed to fetch directions. Please try again.");
@@ -102,11 +107,44 @@ const TripPlanner = () => {
 
   // useEffect hook to listen for changes in transportMode, startAddress, or endAddress
   useEffect(() => {
-    fetchUserDataFromCookies();
     if (startAddress && endAddress && transportMode) {
       handleFormSubmit({ startAddress, endAddress, mode: transportMode });
     }
-  }, [transportMode, startAddress, endAddress]);
+
+    const fetchUserData = async () => {
+      const authToken = Cookies.get("authToken");
+      try {
+        const response = await fetch(
+          "https://notifyme-aa01-r4ro.onrender.com/api/getUser",
+          {
+            method: "GET",
+            headers: {
+              Authorization: authToken, // Assuming the token is a Bearer token
+            },
+          }
+        );
+
+        if (response.ok) {
+          const jsonResponse = await response.json();
+          setUserData(jsonResponse.data); // Store the user data in state
+          setTripsCount(jsonResponse.data.tripCount); // Update the trip count state
+
+          // Serialize userData to a string and store in a cookie
+          Cookies.set("userData", JSON.stringify(jsonResponse.data), {
+            expires: 7,
+          }); // Expires in 7 days
+        } else {
+          // Handle errors or unauthorized access here
+        }
+      } catch (error) {
+        console.error("Fetching user data failed:", error);
+        // Handle error here
+      }
+    };
+
+    fetchUserData();
+
+  }, [transportMode, startAddress, endAddress, handleFormSubmit]);
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -193,6 +231,7 @@ const TripPlanner = () => {
               onFormSubmit={handleFormSubmit}
               setStartAddress={setStartAddress}
               setEndAddress={setEndAddress}
+              totalDistance = {totalDistance}
             />
           </Card>
           <div style={{ height: "90%", width: "90%", flexShrink: "0" }}>
