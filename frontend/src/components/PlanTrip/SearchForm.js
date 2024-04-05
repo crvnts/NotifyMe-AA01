@@ -13,6 +13,11 @@ const SearchForm = ({
   const [localStartAddress, setLocalStartAddress] = useState("");
   const [localEndAddress, setLocalEndAddress] = useState("");
   const [transportMode, setTransportMode] = useState("driving");
+  const [submitFlag, setSubmitFlag] = useState(false);
+
+  const handleGetDirectionsClick = () => {
+    setSubmitFlag(true); // Set the flag to trigger submission
+  };
 
   const handleSelectStartAddress = (address) => {
     setLocalStartAddress(address);
@@ -25,16 +30,36 @@ const SearchForm = ({
     //submitForm(); // Submit form right after user enters end address
   };
 
- const submitForm = () => {
-  onFormSubmit({ start_address: localStartAddress, end_address: localEndAddress, mode: transportMode });
-}
+  // useEffect to watch the variables and only then call onFormSubmit
+  useEffect(() => {
+    // Make sure all required states have values before submitting
+    if (submitFlag && localStartAddress && localEndAddress && transportMode) {
+      onFormSubmit({
+        start_address: localStartAddress,
+        end_address: localEndAddress,
+        mode: transportMode,
+      });
+      setSubmitFlag(false); // Reset the flag after submission
+    }
+  }, [submitFlag, localStartAddress, localEndAddress, transportMode, onFormSubmit]);
+
+  // const submitForm = async () => {
+  //   if (localStartAddress && localEndAddress && transportMode) {
+  //     onFormSubmit({
+  //       start_address: localStartAddress,
+  //       end_address: localEndAddress,
+  //       mode: transportMode,
+  //     });
+  //   }
+  // };
 
   //Ddont think we need this anymore. but we need the cookies get
   const addTrip = async () => {
     const authToken = Cookies.get("authToken");
 
-    const formattedDistance = typeof totalDistance === 'number' ? totalDistance.toFixed(1) : '0.0';
-    
+    const formattedDistance =
+      typeof totalDistance === "number" ? totalDistance.toFixed(1) : "0.0";
+
     const tripData = {
       start_address: localStartAddress,
       dest_address: localEndAddress,
@@ -53,7 +78,7 @@ const SearchForm = ({
       );
 
       if (!response.ok) {
-        throw new Error('Failed to add trip, status code: ${response.status}');
+        throw new Error("Failed to add trip, status code: ${response.status}");
       }
 
       //const responseData = await response.json();
@@ -64,19 +89,6 @@ const SearchForm = ({
       console.error("Error making POST request to add trip:", error);
     }
   };
-
-  // useEffect to submit the form when transportMode changes
-  useEffect(() => {
-    if (localStartAddress && localEndAddress && transportMode) {
-      //submitForm();
-    }
-  }, [transportMode, localStartAddress, localEndAddress]);
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   // Call the onFormSubmit prop with the local state values
-  //   submitForm();
-  // };
 
   // Handler for onChange event
   const handleChange = (e) => {
@@ -199,7 +211,7 @@ const SearchForm = ({
           optionType="button"
           buttonStyle="solid"
           onChange={handleChange}
-          style={{paddingLeft: "5px"}}
+          style={{ paddingLeft: "5px" }}
         >
           <Radio value={"driving"}>Driving</Radio>
           <Radio value={"walking"}>Walking</Radio>
@@ -207,7 +219,7 @@ const SearchForm = ({
           <Radio value={"transit"}>Transit</Radio>
         </Radio.Group>
       </div>
-      <Button type="primary" onClick={submitForm}>
+      <Button type="primary" onClick={handleGetDirectionsClick}>
         Get Directions
       </Button>
       <Button type="primary" onClick={addTrip} style={{ marginLeft: "1%" }}>

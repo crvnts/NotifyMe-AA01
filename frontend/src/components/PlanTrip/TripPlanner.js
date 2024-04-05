@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Layout, Menu, Button, Avatar, Typography, Card } from "antd";
+import { Flex, Layout, Menu, Button, Avatar, Typography, Card } from "antd";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -7,6 +7,7 @@ import {
   ScheduleOutlined,
   UploadOutlined,
   RightSquareOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import "./TripPlanner.css";
 import InitMap from "./GoogleMap";
@@ -32,7 +33,6 @@ const TripPlanner = () => {
     tripCount: 0,
   });
 
-  //May not need : )
   const fetchUserDataFromCookies = () => {
     const userDataString = Cookies.get("userData");
 
@@ -40,11 +40,18 @@ const TripPlanner = () => {
       try {
         const userData = JSON.parse(userDataString);
         setUserData(userData);
+        setTripsCount(userData.tripCount);
       } catch (error) {
         console.error("Error parsing userData from cookies:", error);
         // Handle parsing error (e.g., corrupted cookie data)
       }
     }
+  };
+
+  const logoutHandler = () => {
+    Cookies.remove("authToken"); // Remove the authToken cookie
+    setUserData({ name: "", username: "", tripCount: 0 }); // Reset user data state
+    navigate("/login"); // Redirect to the login page
   };
 
   let navigate = useNavigate();
@@ -106,42 +113,11 @@ const TripPlanner = () => {
 
   // useEffect hook to listen for changes in transportMode, startAddress, or endAddress
   useEffect(() => {
+    fetchUserDataFromCookies();
     if (startAddress && endAddress && transportMode) {
       handleFormSubmit({ startAddress, endAddress, mode: transportMode });
     }
 
-    const fetchUserData = async () => {
-      const authToken = Cookies.get("authToken");
-      try {
-        const response = await fetch(
-          "https://notifyme-aa01-r4ro.onrender.com/api/getUser",
-          {
-            method: "GET",
-            headers: {
-              Authorization: authToken, // Assuming the token is a Bearer token
-            },
-          }
-        );
-
-        if (response.ok) {
-          const jsonResponse = await response.json();
-          setUserData(jsonResponse.data); // Store the user data in state
-          setTripsCount(jsonResponse.data.tripCount); // Update the trip count state
-
-          // Serialize userData to a string and store in a cookie
-          Cookies.set("userData", JSON.stringify(jsonResponse.data), {
-            expires: 7,
-          }); // Expires in 7 days
-        } else {
-          // Handle errors or unauthorized access here
-        }
-      } catch (error) {
-        console.error("Fetching user data failed:", error);
-        // Handle error here
-      }
-    };
-
-    fetchUserData();
   }, [transportMode, startAddress, endAddress, handleFormSubmit]);
 
   return (
@@ -219,9 +195,23 @@ const TripPlanner = () => {
       </Sider>
       <Layout>
         <Header>
-          <Typography.Title style={{ color: "whitesmoke" }} level={2}>
-            Welcome back, {userData.name}
-          </Typography.Title>
+          <Flex align="center" justify="space-between">
+            <Typography.Title style={{ color: "whitesmoke" }} level={2}>
+              Welcome back, {userData.name}
+            </Typography.Title>
+            <Flex align="center" gap="3rem">
+              <Flex align="center" gap="8px">
+                <Button
+                  onClick={logoutHandler}
+                  type="primary"
+                  icon={<LogoutOutlined />}
+                  className="logout-button"
+                >
+                  Log out
+                </Button>
+              </Flex>
+            </Flex>
+          </Flex>
         </Header>
         <Content className="trip-container">
           <Card className="search-card">

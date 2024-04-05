@@ -8,12 +8,44 @@ import {
   useMapsLibrary,
   useMap,
 } from "@vis.gl/react-google-maps";
+import { Spin } from "antd";
 
 const position = { lat: 43.656866955079, lng: -79.3764393609781 };
 
 const InitMap = ({ startAddress, endAddress, travelMode }) => {
   const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState(null);
+  const [loading, setLoading] = useState(false);
   travelMode = travelMode.toUpperCase(); //forces uppercase for map visualization
+
+  // Fetch user's current location
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      setLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setPosition({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          setLoading(false); // Set loading false once position obtained
+        },
+        (error) => {
+          console.error("Error fetching geolocation: ", error);
+          setLoading(false);
+          // Handle error or set a fallback position
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+      // Set a fallback position if needed
+    }
+  }, []);
+
+  if (loading || !position) { // Check for !position to ensure we have a position before rendering the map
+    return <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }} />;
+  }
+
   return (
     <APIProvider
       apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} // Ensure you're using the correct environment variable syntax
@@ -34,7 +66,7 @@ const InitMap = ({ startAddress, endAddress, travelMode }) => {
 
           {open && (
             <InfoWindow position={position} onCloseClick={() => setOpen(false)}>
-              <p>Let's go</p>
+              <p>You are here</p>
             </InfoWindow>
           )}
         </Map>

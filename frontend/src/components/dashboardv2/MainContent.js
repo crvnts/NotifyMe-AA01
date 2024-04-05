@@ -23,7 +23,15 @@ const MainContent = () => {
       >
         <Col className="gutter-row" span={6}>
           <div className="tripwidget" align="center">
-            <div style={{fontFamily: "Zen Maru Gothic", fontWeight: "300", fontSize: "24px", paddingBottom: "10pt"}}>Going Somewhere?</div>
+            <div
+              style={{
+              fontFamily: "Zen Maru Gothic",
+              fontWeight: "300",
+              fontSize: "1.5rem",
+              }}
+            >
+              Going Somewhere?
+            </div>
             <Link to="/TripPlanner">
               <div>
                 <Button
@@ -49,7 +57,7 @@ const MainContent = () => {
 
         <Col span={6}>
           <div className="adwidget" align="center">
-            <AdCarousel/>
+            <AdCarousel />
           </div>
         </Col>
       </Row>

@@ -19,7 +19,7 @@ const { Header, Sider, Content } = Layout;
 
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const [setTripsCount] = useState(0);
+  const [tripsCount, setTripsCount] = useState(0);
   const [userData, setUserData] = useState({
     name: "",
     username: "",
@@ -28,38 +28,53 @@ const Dashboard = () => {
 
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const authToken = Cookies.get("authToken");
-      try {
-        const response = await fetch(
-          "https://notifyme-aa01-r4ro.onrender.com/api/getUser",
-          {
-            method: "GET",
-            headers: {
-              Authorization: authToken, // Assuming the token is a Bearer token
-            },
-          }
-        );
-
-        if (response.ok) {
-          const jsonResponse = await response.json();
-          setUserData(jsonResponse.data); // Store the user data in state
-          setTripsCount(jsonResponse.data.tripCount); // Update the trip count state
-
-          // Serialize userData to a string and store in a cookie
-          Cookies.set("userData", JSON.stringify(jsonResponse.data), {
-            expires: 7,
-          }); // Expires in 7 days
-        } else {
-          // Handle errors or unauthorized access here
+    const fetchUserDataFromCookies = () => {
+      const userDataString = Cookies.get("userData");
+  
+      if (userDataString) {
+        try {
+          const userData = JSON.parse(userDataString);
+          setUserData(userData);
+          setTripsCount(userData.tripCount)
+        } catch (error) {
+          console.error("Error parsing userData from cookies:", error);
+          // Handle parsing error (e.g., corrupted cookie data)
         }
-      } catch (error) {
-        console.error("Fetching user data failed:", error);
-        // Handle error here
       }
     };
+    // const fetchUserData = async () => {
+    //   const authToken = Cookies.get("authToken");
+    //   try {
+    //     const response = await fetch(
+    //       "https://notifyme-aa01-r4ro.onrender.com/api/getUser",
+    //       {
+    //         method: "GET",
+    //         headers: {
+    //           Authorization: authToken, // Assuming the token is a Bearer token
+    //         },
+    //       }
+    //     );
 
-    fetchUserData();
+    //     if (response.ok) {
+    //       const jsonResponse = await response.json();
+    //       setUserData(jsonResponse.data); // Store the user data in state
+    //       setTripsCount(jsonResponse.data.tripCount); // Update the trip count state
+
+    //       // Serialize userData to a string and store in a cookie
+    //       Cookies.set("userData", JSON.stringify(jsonResponse.data), {
+    //         expires: 7,
+    //       }); // Expires in 7 days
+    //     } else {
+    //       // Handle errors or unauthorized access here
+    //     }
+    //   } catch (error) {
+    //     console.error("Fetching user data failed:", error);
+    //     // Handle error here
+    //   }
+    // };
+
+    // fetchUserData();
+    fetchUserDataFromCookies();
   }, []);
 
   const logoutHandler = () => {
