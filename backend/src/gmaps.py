@@ -67,6 +67,9 @@ def get_directions():
                 "Total Duration": leg["duration"]["text"],
                 "Steps": [step["html_instructions"] for step in leg["steps"]]
             }
+            
+            directions_summary["Matched Highways"] = list(matched_highways)
+            
             return jsonify(directions_summary)
         else:
             print(f"API returned status {data['status']}: {data}")

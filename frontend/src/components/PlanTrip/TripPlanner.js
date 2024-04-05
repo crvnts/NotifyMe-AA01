@@ -74,6 +74,8 @@ const TripPlanner = () => {
 
   const [totalDistance, setTotalDistance] = useState("");
 
+  const [matchedHighways, setMatchedHighways] = useState([]);
+
   const handleFormSubmit = useCallback(
     async ({ startAddress, endAddress, mode }) => {
       setTransportMode(mode);
@@ -90,10 +92,11 @@ const TripPlanner = () => {
         setDirections(response.data);
         setDirectionsKey(Date.now());
 
-      const distance = parseFloat(response.data["Total Distance"]);
-      setTotalDistance(distance.toFixed(1)); 
-      setTotalDistance(distance); 
+        const distance = parseFloat(response.data["Total Distance"]);
+        setTotalDistance(distance.toFixed(1));
+        setTotalDistance(distance);
 
+        setMatchedHighways(response.data["Matched Highways"]);
       } catch (error) {
         console.error("Failed to fetch directions:", error);
         setError("Failed to fetch directions. Please try again.");
@@ -143,7 +146,6 @@ const TripPlanner = () => {
     };
 
     fetchUserData();
-
   }, [transportMode, startAddress, endAddress, handleFormSubmit]);
 
   return (
@@ -231,7 +233,7 @@ const TripPlanner = () => {
               onFormSubmit={handleFormSubmit}
               setStartAddress={setStartAddress}
               setEndAddress={setEndAddress}
-              totalDistance = {totalDistance}
+              totalDistance={totalDistance}
             />
           </Card>
           <div style={{ height: "90%", width: "90%", flexShrink: "0" }}>
@@ -241,13 +243,16 @@ const TripPlanner = () => {
               travelMode={transportMode}
             />
           </div>
-          <div style={{display:"flex", justifyContent:"center"}}>
-          {isLoading ? (
-            <p>Loading directions...</p>
-          ) : (
-            <PlannedDisplay key={directionsKey} directions={directions} />
-          )}
-          <div>CV widget</div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            {isLoading ? (
+              <p>Loading directions...</p>
+            ) : (
+              <PlannedDisplay key={directionsKey} directions={directions} />
+            )}
+            <div>CV widget</div>
+            {matchedHighways.map((highway) => (
+              <div key={highway}>{highway}</div>
+            ))}
           </div>
         </Content>
       </Layout>
