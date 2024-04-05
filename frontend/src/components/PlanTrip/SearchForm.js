@@ -2,16 +2,17 @@ import React, { useState, useEffect } from "react";
 import PlacesAutocomplete from "react-places-autocomplete";
 import { Form, Input, Radio, Button } from "antd";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 const SearchForm = ({
   onFormSubmit,
   setStartAddress: updateStartAddress,
   setEndAddress: updateEndAddress,
+  totalDistance,
 }) => {
   const [localStartAddress, setLocalStartAddress] = useState("");
   const [localEndAddress, setLocalEndAddress] = useState("");
   const [transportMode, setTransportMode] = useState("driving");
-  const [totalDistance, setTotalDistance] = useState("");
 
   const handleSelectStartAddress = (address) => {
     setLocalStartAddress(address);
@@ -24,47 +25,35 @@ const SearchForm = ({
     //submitForm(); // Submit form right after user enters end address
   };
 
-  //Has the total distance set here.
-  const submitForm = async () => {
-    const response = await onFormSubmit({
-      startAddress: localStartAddress,
-      endAddress: localEndAddress,
-      mode: transportMode,
-    });
-    if (response && response.totalDistance) {
-      setTotalDistance(response.totalDistance); // Store the total distance from the response
-    }
-  };
+ const submitForm = () => {
+  onFormSubmit({ start_address: localStartAddress, end_address: localEndAddress, mode: transportMode });
+}
 
   //Ddont think we need this anymore. but we need the cookies get
   const addTrip = async () => {
     const authToken = Cookies.get("authToken");
 
+    const formattedDistance = typeof totalDistance === 'number' ? totalDistance.toFixed(1) : '0.0';
+    
     const tripData = {
-      startAddress: localStartAddress,
-      endAddress: localEndAddress,
-      distance: totalDistance,
+      start_address: localStartAddress,
+      dest_address: localEndAddress,
+      distance: formattedDistance,
     };
 
     try {
-      const response = await fetch(
+      const response = await axios.post(
         "https://notifyme-aa01-r4ro.onrender.com/api/addTrips",
+        tripData, // With axios, you can pass the JavaScript object directly
         {
-          method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            // Including the authToken in the Authorization header
             Authorization: authToken,
           },
-          body: JSON.stringify(tripData),
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to add trip");
-      }
-
-      const responseData = await response.json();
+      // axios automatically parses the JSON response, so no need for response.json()
+      const responseData = response.data;
       console.log("Trip added successfully:", responseData);
     } catch (error) {
       console.error("Error making POST request to add trip:", error);
