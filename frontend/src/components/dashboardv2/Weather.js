@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Spin } from "antd";
 import search_icon from "../Assets/search.png";
 import clear_icon from "../Assets/clear.png";
 import cloud_icon from "../Assets/cloud.png";
@@ -9,11 +8,21 @@ import snow_icon from "../Assets/snow.png";
 import wind_icon from "../Assets/wind.png";
 import humidity_icon from "../Assets/humidity.png";
 import "./Weather.css";
+import { Spin } from "antd";
 
 const Weather = () => {
-  const [loading, setLoading] = useState(true);
-  const [weatherData, setWeatherData] = useState({});
-  const [wicon, setWicon] = useState(cloud_icon);
+  const [loading, setLoading] = useState(false);
+  const [cityInput, setCityInput] = useState("");
+  const [weatherData, setWeatherData] = useState({
+    humidity: "",
+    wind: "",
+    temp: "",
+    location: "",
+    description: "",
+    icon: cloud_icon,
+  });
+
+  let api_key = process.env.REACT_APP_WEATHER_API_KEY;
 
   const toTitleCase = (str) =>
     str.replace(
@@ -21,8 +30,20 @@ const Weather = () => {
       (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
     );
 
-  const getWeatherIcon = (icon) => {
-    switch (icon) {
+  // Helper function to set weather data
+  const updateWeatherData = (data) => {
+    setWeatherData({
+      humidity: `${data.main.humidity}%`,
+      wind: `${Math.floor(data.wind.speed)} m/s`,
+      temp: `${Math.floor(data.main.temp)} °C`,
+      location: data.name,
+      description: toTitleCase(data.weather[0].description),
+      icon: getWeatherIcon(data.weather[0].icon),
+    });
+  };
+
+  const getWeatherIcon = (iconCode) => {
+    switch (iconCode) {
       case "01d":
         return clear_icon;
       case "01n":
@@ -56,86 +77,96 @@ const Weather = () => {
     }
   };
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const { latitude, longitude } = position.coords;
-      const api_key = process.env.REACT_APP_WEATHER_API_KEY;
-      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${api_key}`;
+  const fetchWeather = async (query) => {
+    setLoading(true);
+    const url = `https://api.openweathermap.org/data/2.5/weather?${query}&units=Metric&appid=${api_key}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      updateWeatherData(data);
+    } catch (error) {
+      console.error("Error fetching weather data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-        setWeatherData({
-          humidity: data.main.humidity + "%",
-          wind: Math.floor(data.wind.speed) + " m/s",
-          temp: Math.floor(data.main.temp) + " °C",
-          location: data.name,
-          description: toTitleCase(data.weather[0].description),
-        });
-        setWicon(getWeatherIcon(data.weather[0].icon));
-      } catch (error) {
-        console.error("Error fetching weather data:", error);
-      } finally {
+  const handleSearch = () => {
+    if (cityInput) {
+      fetchWeather(`q=${cityInput}`);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setCityInput(e.target.value);
+  };
+
+  // Fetch weather data by user's current location
+  useEffect(() => {
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        fetchWeather(`lat=${latitude}&lon=${longitude}`);
+      },
+      (error) => {
+        console.error("Error getting user's location", error);
         setLoading(false);
       }
-    });
+    );
   }, []);
 
   return (
     <Spin spinning={loading} tip="Loading...">
       <div className="container">
-        {!loading && (
-          <>
-            <div className="top-bar">
-              <input type="text" className="cityInput" placeholder="Search"></input>
-              <div
-                className="search-icon"
-                onClick={() => {
-                  // Implement search functionality here
-                }}
-              >
-                <img src={search_icon} alt=""></img>
-              </div>
+        <div className="top-bar">
+          <input
+            type="text"
+            className="cityInput"
+            placeholder="Search"
+            value={cityInput}
+            onChange={handleInputChange}
+          />
+          <div className="search-icon" onClick={handleSearch}>
+            <img src={search_icon} alt="Search" />
+          </div>
+        </div>
+        <div className="weather-info">
+          <div className="weather-image">
+            <img src={weatherData.icon} alt="Weather icon" />
+          </div>
+          <div className="weather-info2">
+            <div className="weather-desc">{weatherData.description}</div>
+            <div className="weather-temp">{weatherData.temp}</div>
+          </div>
+        </div>
+        <div className="weather-location">{weatherData.location}</div>
+        <div className="data-container">
+          <div className="element">
+            <img
+              style={{ height: "4vh", width: "4vh" }}
+              src={humidity_icon}
+              alt=""
+              className="icon"
+            />
+            <div className="data">
+              <div className="humidity-percent">{weatherData.humidity}</div>
+              <div className="text">Humidity</div>
             </div>
-            <div className="weather-info">
-              <div className="weather-image">
-                <img src={wicon} alt=""></img>
-              </div>
-              <div className="weather-info2">
-                <div className="weather-desc">{weatherData.description}</div>
-                <div className="weather-temp">{weatherData.temp}</div>
-              </div>
+          </div>
+          <div className="element">
+            <img
+              style={{ height: "4vh", width: "4vh" }}
+              src={wind_icon}
+              alt=""
+              className="icon"
+            />
+            <div className="data">
+              <div className="wind-rate">{weatherData.wind}</div>
+              <div className="text">Winds</div>
             </div>
-
-            <div className="weather-location">{weatherData.location}</div>
-            <div className="data-container">
-              <div className="element">
-                <img
-                  style={{ height: "4vh", width: "4vh" }}
-                  src={humidity_icon}
-                  alt=""
-                  className="icon"
-                ></img>
-                <div className="data">
-                  <div className="humidity-percent">{weatherData.humidity}</div>
-                  <div className="text">Humidity</div>
-                </div>
-              </div>
-              <div className="element">
-                <img
-                  style={{ height: "4vh", width: "4vh" }}
-                  src={wind_icon}
-                  alt=""
-                  className="icon"
-                ></img>
-                <div className="data">
-                  <div className="wind-rate">{weatherData.wind}</div>
-                  <div className="text">Wind</div>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </Spin>
   );
