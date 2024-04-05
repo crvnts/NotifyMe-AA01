@@ -56,7 +56,7 @@ const SearchForm = ({
   // ]);
 
   const submitForm = () => {
-    if (localStartAddress && localEndAddress && transportMode) {
+    if (localStartAddress != "" && localEndAddress != "" && transportMode) {
       onFormSubmit({
         start_address: localStartAddress,
         end_address: localEndAddress,

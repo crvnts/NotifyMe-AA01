@@ -4,7 +4,7 @@
     padding: 20px; /* Add padding */
     background: #e6e6e6; /* Background color similar to other widgets */
     border-radius: 10px; /* Rounded corners */
-    box-shadow: 7px 7px 26px #98beca, -7px -7px 26px #c2f2ff; /* Neumorphic shadow */
+    box-shadow: 23px 23px 22px #d8d8d8, -23px -23px 22px #f4f4f4; /* Neumorphic shadow */
     display: flex;
     flex-direction: column;
     justify-content: center;
