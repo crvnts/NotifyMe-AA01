@@ -26,52 +26,16 @@ trip_schema = {
                 "description": "must be a date and is required"
             },
             "start_address": {
-                "bsonType": "object",
-                "required": ["street", "city", "province", "postal"],
-                "properties": {
-                    "street": {
-                        "bsonType": "string",
-                        "description": "must be a string and is required"
-                    },
-                    "city": {
-                        "bsonType": "string",
-                        "description": "must be a string and is required"
-                    },
-                    "province": {
-                        "bsonType": "string",
-                        "description": "must be a string and is required"
-                    },
-                    "postal": {
-                        "bsonType": "string",
-                        "description": "must be a string and is required"
-                    }
-                }
+                "bsonType": "string",
+                "description":"must be a string and is required"
             },
             "dest_address": {
-                "bsonType": "object",
-                "required": ["street", "city", "province", "postal"],
-                "properties": {
-                    "street": {
-                        "bsonType": "string",
-                        "description": "must be a string and is required"
-                    },
-                    "city": {
-                        "bsonType": "string",
-                        "description": "must be a string and is required"
-                    },
-                    "province": {
-                        "bsonType": "string",
-                        "description": "must be a string and is required"
-                    },
-                    "postal": {
-                        "bsonType": "string",
-                        "description": "must be a string and is required"
-                    }
-                }
+                "bsonType": "string",
+                "description":"must be a string and is required"
             },
             "distance": {
-                "bsonType": "double",
-                "description": "must be a double and is requried"
+                "bsonType": "string",
+                "description": "must be a string and is requried"
             }
         }
     }
