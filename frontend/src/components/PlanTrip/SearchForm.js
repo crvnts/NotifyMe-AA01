@@ -37,23 +37,23 @@ const SearchForm = ({
   };
 
   // useEffect to watch the variables and only then call onFormSubmit
-  useEffect(() => {
-    // Make sure all required states have values before submitting
-    if (submitFlag && localStartAddress && localEndAddress && transportMode) {
-      onFormSubmit({
-        start_address: localStartAddress,
-        end_address: localEndAddress,
-        mode: transportMode,
-      });
-      setSubmitFlag(false); // Reset the flag after submission
-    }
-  }, [
-    submitFlag,
-    localStartAddress,
-    localEndAddress,
-    transportMode,
-    onFormSubmit,
-  ]);
+  // useEffect(() => {
+  //   // Make sure all required states have values before submitting
+  //   if (submitFlag && localStartAddress && localEndAddress && transportMode) {
+  //     onFormSubmit({
+  //       start_address: localStartAddress,
+  //       end_address: localEndAddress,
+  //       mode: transportMode,
+  //     });
+  //     setSubmitFlag(false); // Reset the flag after submission
+  //   }
+  // }, [
+  //   submitFlag,
+  //   localStartAddress,
+  //   localEndAddress,
+  //   transportMode,
+  //   onFormSubmit,
+  // ]);
 
   const submitForm = () => {
     if (localStartAddress && localEndAddress && transportMode) {
