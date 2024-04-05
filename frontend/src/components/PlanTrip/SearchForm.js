@@ -205,6 +205,7 @@ const SearchForm = ({
           optionType="button"
           buttonStyle="solid"
           onChange={handleChange}
+          style={{paddingLeft: "5px"}}
         >
           <Radio value={"driving"}>Driving</Radio>
           <Radio value={"walking"}>Walking</Radio>
