@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Layout, Menu, Button, Avatar, Typography, Card } from "antd";
+import { Flex, Layout, Menu, Button, Avatar, Typography, Card, Spin } from "antd";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -7,6 +7,7 @@ import {
   ScheduleOutlined,
   UploadOutlined,
   RightSquareOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import "./TripPlanner.css";
 import InitMap from "./GoogleMap";
@@ -31,8 +32,8 @@ const TripPlanner = () => {
     username: "",
     tripCount: 0,
   });
+  const [cvLoading, setCVLoading] = useState(false);
 
-  //May not need : )
   const fetchUserDataFromCookies = () => {
     const userDataString = Cookies.get("userData");
 
@@ -40,11 +41,18 @@ const TripPlanner = () => {
       try {
         const userData = JSON.parse(userDataString);
         setUserData(userData);
+        setTripsCount(userData.tripCount);
       } catch (error) {
         console.error("Error parsing userData from cookies:", error);
         // Handle parsing error (e.g., corrupted cookie data)
       }
     }
+  };
+
+  const logoutHandler = () => {
+    Cookies.remove("authToken"); // Remove the authToken cookie
+    setUserData({ name: "", username: "", tripCount: 0 }); // Reset user data state
+    navigate("/login"); // Redirect to the login page
   };
 
   let navigate = useNavigate();
@@ -98,6 +106,7 @@ const TripPlanner = () => {
         setTotalDistance(distance);
 
         setMatchedHighways(response.data["Matched Highways"]);
+
       } catch (error) {
         console.error("Failed to fetch directions:", error);
         setError("Failed to fetch directions. Please try again.");
@@ -111,6 +120,7 @@ const TripPlanner = () => {
 
   // useEffect hook to listen for changes in transportMode, startAddress, or endAddress
   useEffect(() => {
+    fetchUserDataFromCookies();
     if (startAddress && endAddress && transportMode) {
       handleFormSubmit({ startAddress, endAddress, mode: transportMode });
     }
@@ -262,9 +272,23 @@ const TripPlanner = () => {
       </Sider>
       <Layout>
         <Header>
-          <Typography.Title style={{ color: "whitesmoke" }} level={2}>
-            Welcome back, {userData.name}
-          </Typography.Title>
+          <Flex align="center" justify="space-between">
+            <Typography.Title style={{ color: "whitesmoke" }} level={2}>
+              Welcome back, {userData.name}
+            </Typography.Title>
+            <Flex align="center" gap="3rem">
+              <Flex align="center" gap="8px">
+                <Button
+                  onClick={logoutHandler}
+                  type="primary"
+                  icon={<LogoutOutlined />}
+                  className="logout-button"
+                >
+                  Log out
+                </Button>
+              </Flex>
+            </Flex>
+          </Flex>
         </Header>
         <Content className="trip-container">
           <Card className="search-card">
@@ -283,13 +307,16 @@ const TripPlanner = () => {
             />
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>
+            <Card title="Directions" bordered>
             {isLoading ? (
-              <p>Loading directions...</p>
+              <Spin/>
             ) : (
               <PlannedDisplay key={directionsKey} directions={directions} />
             )}
-            
-            {Object.entries(highwayCongestionData).map(([highway, data]) => {
+            </Card>
+            <div>
+              <Card title="Traffic Information" loading={cvLoading}>
+                {Object.entries(highwayCongestionData).map(([highway, data]) => {
 
               const congestionPercentage = data.data && data.data[0] ? data.data[0].toFixed(2) : "0";
               const confidence = data.data && data.data[1] ? (data.data[1] * 100).toFixed(2) : data.message;
@@ -314,6 +341,8 @@ const TripPlanner = () => {
                 </div>
               );
             })}
+              </Card>
+            </div>
           </div>
         </Content>
       </Layout>

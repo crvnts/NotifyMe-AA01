@@ -96,8 +96,8 @@ const Account = () => {
             <Timeline.Item key={index}>
               <p className="trip-text">Date: {trip.date}</p>
               <p className="trip-text">Distance: {trip.distance} km</p>
-              <p className="trip-text">Start Address: {`${trip.start_address.street}, ${trip.start_address.city}`}</p>
-              <p className="trip-text">Destination Address: {`${trip.dest_address.street}, ${trip.dest_address.city}`}</p>
+              <p className="trip-text">Start Address: {trip.start_address}</p>
+              <p className="trip-text">Destination Address: {trip.dest_address}</p>
             </Timeline.Item>
           ))}
         </Timeline>

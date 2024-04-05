@@ -19,7 +19,7 @@ const { Header, Sider, Content } = Layout;
 
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const [setTripsCount] = useState(0);
+  const [userTrips, setTripsCount] = useState(0);
   const [userData, setUserData] = useState({
     name: "",
     username: "",

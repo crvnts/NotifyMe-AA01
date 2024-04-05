@@ -6,27 +6,12 @@ import {
   MenuUnfoldOutlined,
   UploadOutlined,
   UserOutlined,
-  CarOutlined,
-  MessageOutlined,
-  NotificationOutlined,
   ScheduleOutlined,
   RightSquareOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
-import {
-  Layout,
-  Menu,
-  Button,
-  theme,
-  ConfigProvider,
-  Col,
-  Divider,
-  Row,
-  Avatar,
-  Typography,
-  Flex,
-} from "antd";
+import { Layout, Menu, Button, Avatar, Typography, Flex } from "antd";
 import "../dashboardv2/Dashboard.css";
-import Search from "antd/es/input/Search";
 import Account from "./Account";
 
 const { Header, Sider, Content } = Layout;
@@ -52,6 +37,12 @@ const MyAccount = () => {
         // Handle parsing error (e.g., corrupted cookie data)
       }
     }
+  };
+
+  const logoutHandler = () => {
+    Cookies.remove("authToken"); // Remove the authToken cookie
+    setUserData({ name: "", username: "", tripCount: 0 }); // Reset user data state
+    navigate("/login"); // Redirect to the login page
   };
 
   let navigate = useNavigate();
@@ -177,11 +168,15 @@ const MyAccount = () => {
             </Typography.Title>
 
             <Flex align="center" gap="3rem">
-              <Search placeholder="Search Dashboard" allowClear></Search>
-
               <Flex align="center" gap="8px">
-                <MessageOutlined className="header-icon"></MessageOutlined>
-                <NotificationOutlined className="header-icon"></NotificationOutlined>
+                <Button
+                  onClick={logoutHandler}
+                  type="primary"
+                  icon={<LogoutOutlined />}
+                  className="logout-button"
+                >
+                  Log out
+                </Button>
               </Flex>
             </Flex>
           </Flex>
