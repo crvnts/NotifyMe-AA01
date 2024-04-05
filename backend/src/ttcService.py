@@ -84,7 +84,17 @@ def getTTCAlerts():
             # Iterate through alerts for the current route
             counter+=1
             alert_id = route['route']
-            description = route['title']
+            soup = BeautifulSoup(route['customHeaderText'], 'html.parser')
+            cleaned_text = soup.get_text()
+            index = cleaned_text.find("See ")
+            if index != -1:
+                description = cleaned_text[:index]
+            else: 
+                description = cleaned_text
+            newAlert = {
+                'route':alert_id,
+                'description':description
+            }
             newAlert = {
                 'route':alert_id,
                 'description':description
