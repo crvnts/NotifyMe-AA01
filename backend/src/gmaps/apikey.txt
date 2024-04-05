@@ -1,8 +1,0 @@
-Google api key
-AIzaSyDmEuVaPGPqgPpn0cttgHZXe2WTbKDTnxM
-
-Test Address
-Origin:
-60 Kensington Ave Units 6-14, Toronto, ON M5T 2K1
-Destination:
-350 Victoria St, Toronto, ON M5B 2K3
