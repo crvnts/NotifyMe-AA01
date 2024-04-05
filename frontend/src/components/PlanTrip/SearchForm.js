@@ -14,6 +14,11 @@ const SearchForm = ({
   const [localEndAddress, setLocalEndAddress] = useState("");
   const [transportMode, setTransportMode] = useState("");
   const [submitFlag, setSubmitFlag] = useState(false);
+  // const [userData, setUserData] = useState({
+  //   name: "",
+  //   username: "",
+  //   tripCount: 0,
+  // });
 
   const handleGetDirectionsClick = () => {
     setSubmitFlag(true); // Set the flag to trigger submission
@@ -42,7 +47,13 @@ const SearchForm = ({
       });
       setSubmitFlag(false); // Reset the flag after submission
     }
-  }, [submitFlag, localStartAddress, localEndAddress, transportMode, onFormSubmit]);
+  }, [
+    submitFlag,
+    localStartAddress,
+    localEndAddress,
+    transportMode,
+    onFormSubmit,
+  ]);
 
   const submitForm = () => {
     if (localStartAddress && localEndAddress && transportMode) {
@@ -86,6 +97,12 @@ const SearchForm = ({
       // axios automatically parses the JSON response, so no need for response.json()
       const responseData = response.data;
       console.log("Trip added successfully:", responseData);
+      // if (responseData && responseData.data) {
+      //   setUserData((currentUserData) => ({
+      //     ...currentUserData,
+      //     tripCount: responseData.data,
+      //   }));
+      // }
     } catch (error) {
       console.error("Error making POST request to add trip:", error);
     }
