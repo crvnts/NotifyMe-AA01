@@ -167,19 +167,20 @@ def getGoAlerts():
         for route in response['Messages']["Message"]:    
             # Iterate through alerts for the current route
             if route['Category'] != 'Amenity': 
-                counter+=1
                 alert_id = route['Lines']
                 description = route['BodyEnglish']
-                words = ["Click ", "Check ", "Note: ", "Ways " ]
+                words = ["Click ", "Check ", "Note: ", "Ways ", "We will ", "Before you " ]
                 for word in words:
                     index = description.find(word)
                     if index != -1:
                         description = description[:index]
-                newAlert = {
-                    'route':alert_id,
-                    'description':description
-                }
-                alerts_list.append(newAlert)
+                if len(description) < 250:
+                    newAlert = {
+                        'route':alert_id,
+                        'description':description
+                    }
+                    counter+=1
+                    alerts_list.append(newAlert)
     except Exception as e:
         return {
             "message":"Error parsing information",
