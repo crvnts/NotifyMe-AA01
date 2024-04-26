@@ -166,7 +166,7 @@ const TripPlanner = () => {
       for (const highway of matchedHighways) {
         try {
           const response = await fetch(
-            "http://humpback-smart-gently.ngrok-free.app/getHighwayCongestion",
+            "https://humpback-smart-gently.ngrok-free.app/getHighwayCongestion",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
