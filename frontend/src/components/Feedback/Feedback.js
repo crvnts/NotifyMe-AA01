@@ -222,9 +222,9 @@ const Dashboard = () => {
         </Header>
         <Content>
           <Flex className="feedback-container">
-            <Card className="feedback-card" title="Feedback">
+            <Card className="feedback-card" title="Contact Us">
               <div>
-                this is some text
+                Notice an issue? We're open to any and all feedback. Contact us via e-mail <a href="mailto:notifymecap@gmail.com" target="_blank"> here</a>
               </div>
             </Card>
           </Flex>
